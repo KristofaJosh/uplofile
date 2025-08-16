@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "composite": false,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "target": "es2020",
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*"]
+}
