@@ -51,4 +51,4 @@ export default function Basic() {
 
 ## Documentation
 
-Full docs, advanced usage, and examples are available on the [uplofile website](https://uplofile.dev).
+Full docs, advanced usage, and examples are available on the [uplofile website](https://uplofile.kristofajosh.dev/).
