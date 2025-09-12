@@ -1,5 +1,10 @@
-const nextConfig = {
-  reactStrictMode: true,
-};
+import nextra from "nextra";
 
-export default nextConfig;
+const withNextra = nextra({
+  // Add Nextra-specific options here
+});
+
+export default withNextra({
+  // Add regular Next.js options here
+  reactStrictMode: true,
+});
