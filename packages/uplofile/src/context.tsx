@@ -40,6 +40,7 @@ export const Root = ({
 
   // Hydrate initial items from the server and keep them marked as done
   useEffect(() => {
+    console.log('issue');
     const arr = initial ?? [];
     if (!Array.isArray(arr)) return;
 
