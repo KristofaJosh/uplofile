@@ -1,14 +1,21 @@
-import { type ComponentType } from "react";
+import { type ComponentType, useEffect, useState } from "react";
 
 export default function CodePreview({
-  component: PreviewComponent,
+  component,
   ...props
 }: {
   component?: ComponentType<any>;
 }) {
+  console.log(component);
+  const [Component, setComponent] = useState<ComponentType<any>>();
+
+  useEffect(() => {
+    setComponent(component)
+  }, [component]);
+
   return (
     <div className={"border rounded"}>
-      <PreviewComponent {...props} />
+      <Component {...props} />
     </div>
   );
 }

@@ -12,6 +12,7 @@ const key = `../examples/${exampleComponent}.tsx`;
 
 const loadMod = modules[key];
 const loadRaw = raws[key];
+
 if (!loadMod || !loadRaw) {
   throw new Error(`[component-preview] Missing example: ${key}`);
 }
@@ -31,7 +32,11 @@ if (!rawLoader.default && !moduleLoader.default) {
       <Code code={rawLoader.default} lang={lang} title={title ?? exampleComponent} wrap={true} />
     </TabItem>
     <TabItem label="Preview">
-      <CodePreviewClient client:load {...rest} component={moduleLoader.default}  />
+      {
+        moduleLoader.default({ client: true }) ?
+        <CodePreviewClient client:only="react" {...rest} component={moduleLoader.default}  />
+        : null
+      }
     </TabItem>
   </Tabs>
 </div>

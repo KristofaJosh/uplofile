@@ -10,7 +10,7 @@ export function makeFakeUploader() {
     if (setProgress) {
       let pct = 0;
       await new Promise<UploadResult>((resolve, reject) => {
-        const id = setInterval(() => {
+        const id: any = setInterval(() => {
           pct += 10;
           setProgress(Math.min(pct, 95));
         }, 100);

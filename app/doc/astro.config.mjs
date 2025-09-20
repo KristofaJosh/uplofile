@@ -32,13 +32,9 @@ export default defineConfig({
       {
         label: "Examples",
         items: [
-          // Each item here is one entry in the navigation menu.
           { label: "Basic", slug: "examples/basic"  },
+          { label: "Custom", slug: "examples/custom"  },
         ],
-      },
-      {
-        label: "Reference",
-        autogenerate: { directory: "reference" },
       },
     ],
     customCss: ['./src/styles/global.css'],
