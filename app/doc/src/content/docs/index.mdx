@@ -1,0 +1,58 @@
+---
+title: Uplofile
+description: Composable file upload components for React.
+template: splash
+hero:
+  tagline: Composable file upload components for React, accessible, and easy to integrate.
+  image:
+    file: ../../assets/uplofile-icon.svg
+  actions:
+    - text: Get started
+      link: /installation
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/KristofaJosh/uplofile
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Examples
+
+<CardGrid>
+    <Card title="Composable" icon="pencil">
+        Edit `src/content/docs/index.mdx` to see this page change.
+    </Card>
+    <Card title="Accessible" icon="add-document">
+        Add Markdown or MDX files to `src/content/docs` to create new pages.
+    </Card>
+    <Card title="Stylable" icon="setting">
+        Edit your `sidebar` and other config in `astro.config.mjs`.
+    </Card>
+    <Card title="Read the docs" icon="open-book">
+        Learn more in [the Starlight Docs](https://starlight.astro.build/).
+    </Card>
+</CardGrid>
+
+## FAQ
+
+<details>
+    <summary>Can I limit the number of files?</summary>
+    Use `maxCount` on `Root`.
+</details>
+
+<details>
+    <summary>Can I pre‑hydrate already‑uploaded files?</summary>
+    Pass `initial=[{ id?, uid?, name, url }]`. They’ll be shown as done and included in `HiddenInput`.
+</details>
+
+<details>
+    <summary>How do I do strict server‑side delete?</summary>
+    Set `removeMode="strict"` and implement `onRemove(item, signal)`.
+</details>
+
+<details>
+    <summary>Do I have to use Tailwind?</summary>
+    No. The components are unstyled besides minimal examples; you can render your own UI with the render props and actions.
+</details>
