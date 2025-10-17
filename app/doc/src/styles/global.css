@@ -1,5 +1,3 @@
-@layer base, starlight, theme, components, utilities;
+@import "tailwindcss";
 
-@import '@astrojs/starlight-tailwind';
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/utilities.css' layer(utilities);
+@source "../../node_modules/uplofile/src/**/*.{ts,tsx}";

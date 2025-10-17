@@ -11,10 +11,10 @@ const upload = async (file: File) => {
 export default function BasicExample() {
   return (
     <FileUploader upload={upload}>
-      <FileUploaderPreview className={"size-10 my-2 rounded-lg"} />
-      <FileUploaderTrigger className="rounded-lg border px-3 py-2">
+      <FileUploaderTrigger className="cursor-pointer rounded-lg border px-3 py-2">
         Select Image
       </FileUploaderTrigger>
+      <FileUploaderPreview />
     </FileUploader>
   );
 }

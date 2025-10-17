@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/file-uploader.tsx";
 import { makeFakeUploader } from "@/utils/fake-upload.ts";
 import React from "react";
-import "uplofile/output.css";
 
 const upload = makeFakeUploader();
 

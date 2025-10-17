@@ -1,21 +1,25 @@
-import { type ComponentType, useEffect, useState } from "react";
+import { type ComponentType } from "react";
+
+const exampleModules = import.meta.glob("../examples/*.tsx", { eager: true });
 
 export default function CodePreview({
-  component,
+  componentKey,
   ...props
 }: {
-  component?: ComponentType<any>;
+  componentKey: string;
 }) {
-  console.log(component);
-  const [Component, setComponent] = useState<ComponentType<any>>();
+  const loader = exampleModules[componentKey] as { default?: ComponentType<any> } | undefined;
+  const PreviewComponent = loader?.default;
 
-  useEffect(() => {
-    setComponent(component)
-  }, [component]);
+  if (!PreviewComponent) {
+    return (<div className='p-4 border border-gray-200'>
+      <p>Component not loaded</p>
+    </div>)
+  }
 
   return (
-    <div className={"border rounded"}>
-      <Component {...props} />
+    <div className={"border p-4 border-gray-200 h-full min-h-64"}>
+      <PreviewComponent client:only="react" key={componentKey} {...props} />
     </div>
   );
 }

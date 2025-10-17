@@ -8,7 +8,7 @@ export {
 } from "./components/preview";
 export { Root } from "./context";
 export { Trigger } from "./components/trigger";
-export { useImageUploader } from "./hook";
+export { useUplofile } from "./hook";
 export type {
   ImageUploaderContextValue,
   ItemActions,

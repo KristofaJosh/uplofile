@@ -1,7 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import React, { PropsWithChildren } from "react";
 
-import { useImageUploader } from "../hook";
+import { useUplofile } from "../hook";
 import type { TriggerRenderProps } from "../types";
 
 export const Trigger = ({
@@ -16,7 +16,7 @@ export const Trigger = ({
     children?: React.ReactNode | ((api: TriggerRenderProps) => React.ReactNode);
   } & React.HTMLAttributes<HTMLElement>
 >) => {
-  const { openFileDialog, disabled, items } = useImageUploader();
+  const { openFileDialog, disabled, items } = useUplofile();
   const Comp: any = asChild ? Slot : "button";
 
   const uploading = items.filter((i) => i.status === "uploading");

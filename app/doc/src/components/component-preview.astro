@@ -5,38 +5,29 @@ import { Code, Tabs, TabItem } from "@astrojs/starlight/components";
 
 import CodePreviewClient from "./code-preview";
 
-const modules = import.meta.glob("../examples/*.tsx", { eager: false });
 const raws = import.meta.glob("../examples/*.tsx", { query: "raw", eager: false });
-
 const key = `../examples/${exampleComponent}.tsx`;
 
-const loadMod = modules[key];
 const loadRaw = raws[key];
 
-if (!loadMod || !loadRaw) {
-  throw new Error(`[component-preview] Missing example: ${key}`);
+if (!loadRaw) {
+  throw new Error(`[component-preview] Cannot find example: ${key}`);
 }
 
 const rawLoader =  await loadRaw() as any
-const moduleLoader =  await loadMod() as any
-
-if (!rawLoader.default && !moduleLoader.default) {
-  throw new Error(`[component-preview] No React export found in ${key}.`);
-}
 
 ---
 
 <div class="code-preview">
   <Tabs>
     <TabItem label="Code">
-      <Code code={rawLoader.default} lang={lang} title={title ?? exampleComponent} wrap={true} />
+      <Code code={rawLoader.default} lang={lang} title={title || exampleComponent} wrap={true} />
     </TabItem>
     <TabItem label="Preview">
-      {
-        moduleLoader.default({ client: true }) ?
-        <CodePreviewClient client:only="react" {...rest} component={moduleLoader.default}  />
-        : null
-      }
+      <CodePreviewClient  client:only="react"
+         {...rest}
+         componentKey={key}
+      />
     </TabItem>
   </Tabs>
 </div>

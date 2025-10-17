@@ -37,12 +37,13 @@ export const Root = ({
   const controllers = useRef(new Map<string, AbortController>());
   const removeControllers = useRef(new Map<string, AbortController>());
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const hasHydratedInitialRef = useRef(false);
 
   // Hydrate initial items from the server and keep them marked as done
   useEffect(() => {
-    console.log('issue');
+    if (hasHydratedInitialRef.current) return;
     const arr = initial ?? [];
-    if (!Array.isArray(arr)) return;
+    if (!Array.isArray(arr) || arr.length === 0) return;
 
     const mapped: UploadFileItem[] = arr.map((it) => {
       return {
@@ -56,6 +57,7 @@ export const Root = ({
 
     // Only hydrate if the user hasn't already added/modified items locally
     setItems((prev) => (prev.length === 0 ? mapped : prev));
+    hasHydratedInitialRef.current = true;
   }, [initial]);
 
   const hiddenInputValue = useMemo(() => {
