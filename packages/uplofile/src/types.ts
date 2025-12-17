@@ -46,7 +46,7 @@ export type RootProps = PropsWithChildren<{
     signal: AbortSignal,
     setProgress?: (pct: number) => void,
   ) => Promise<UploadResult>;
-  onRemove?: (item: UploadFileItem, signal: AbortSignal) => Promise<void>;
+  onRemove?: (item: UploadFileItem, signal: AbortSignal) => Promise<void | any>;
 }>;
 
 export type ItemActions = {

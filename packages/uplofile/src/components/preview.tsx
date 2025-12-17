@@ -12,9 +12,7 @@ type Props = {
 export const Preview = ({ render }: Props) => {
   const { items, actions } = useUplofile();
 
-  if (render && typeof render === "function") {
-    return render({ items, actions });
-  }
+  if (render && typeof render === "function") return render({ items, actions });
 
   return (
     <div data-part="preview" className={"uplofile-preview"}>
@@ -70,8 +68,9 @@ export const Preview = ({ render }: Props) => {
                 type="button"
                 className="uplofile-preview__button uplofile-preview__button--remove rounded-xl bg-black/50 px-2 py-1 text-xs text-white"
                 onClick={() => actions.remove(item.uid)}
+                disabled={item.status === "removing"}
               >
-                Remove
+                {item.status === "removing" ? "Removing..." : "Remove"}
               </button>
             </div>
           </div>
@@ -90,12 +89,22 @@ export const HiddenInput = ({ name }: { name?: string }) => {
 
 type ButtonProps = {
   uid: string;
+  alwaysVisible?: boolean;
   asChild?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Cancel = ({ uid, asChild, ...rest }: ButtonProps) => {
-  const { actions } = useUplofile();
+export const Cancel = ({
+  uid,
+  asChild,
+  alwaysVisible = false,
+  ...rest
+}: ButtonProps) => {
+  const { actions, items } = useUplofile();
+  const isUploading = items.find((i) => i.uid === uid)?.status === "uploading";
   const Comp: any = asChild ? Slot : "button";
+
+  if (!isUploading && !alwaysVisible) return null;
+
   return (
     <Comp
       onClick={(e: { stopPropagation: () => void }) => {

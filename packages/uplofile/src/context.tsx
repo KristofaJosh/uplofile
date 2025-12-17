@@ -117,6 +117,7 @@ export const Root = ({
 
       try {
         const result = await upload(item.file, controller.signal, setProgress);
+
         emitChange((items) =>
           items.map((it) => {
             if (it.uid !== item.uid) return it;
@@ -128,7 +129,7 @@ export const Root = ({
                 /*fail silently*/
               }
             }
-            const serverPreview = (result as any).preview || result.url;
+            const serverPreview = (result as any)?.preview || result.url;
             return {
               ...it,
               status: "done",
@@ -274,13 +275,6 @@ export const Root = ({
             error: undefined,
             progress: 0,
           });
-          emitChange((items) =>
-            items.map((it) =>
-              it.uid === uidStr
-                ? { ...it, status: "idle", error: undefined, progress: 0 }
-                : it,
-            ),
-          );
         }
       },
     }),

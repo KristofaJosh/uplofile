@@ -6,7 +6,7 @@ const FileUploader = FileUploaderPrimitive.Root;
 
 const FileUploaderTrigger = FileUploaderPrimitive.Trigger;
 
-const FileUploaderInput = FileUploaderPrimitive.HiddenInput;
+const FileUploaderHiddenInput = FileUploaderPrimitive.HiddenInput;
 
 const FileUploaderDropzone = FileUploaderPrimitive.Dropzone;
 
@@ -19,7 +19,7 @@ const FileUploaderRetry = FileUploaderPrimitive.Retry;
 export {
   FileUploader,
   FileUploaderTrigger,
-  FileUploaderInput,
+  FileUploaderHiddenInput,
   FileUploaderDropzone,
   FileUploaderPreview,
   FileUploaderCancel,
