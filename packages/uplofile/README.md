@@ -29,6 +29,39 @@ pnpm add uplofile
 
 ## Quick Start
 
+```typescript
+import * as Uplofile from "uplofile";
+
+const UplofileRoot = Uplofile.Root;
+
+const UplofileTrigger = Uplofile.Trigger;
+
+const UplofileHiddenInput = Uplofile.HiddenInput;
+
+const UplofileDropzone = Uplofile.Dropzone;
+
+const UplofilePreview = Uplofile.Preview;
+
+const UplofileCancel = Uplofile.Cancel;
+
+const UplofileRetry = Uplofile.Retry;
+
+const UplofileRemove = Uplofile.Remove;
+
+export {
+  UplofileRoot,
+  UplofileTrigger,
+  UplofileHiddenInput,
+  UplofileDropzone,
+  UplofilePreview,
+  UplofileCancel,
+  UplofileRetry,
+  UplofileRemove,
+};
+
+```
+
+then in your React component:
 ```tsx
 "use client";
 
@@ -36,13 +69,17 @@ import * as FileUploader from "uplofile";
 
 export default function Basic() {
   return (
-    <FileUploader.Root
-      upload={async (file) => ({ url: URL.createObjectURL(file) })}
-    >
-      <FileUploader.Trigger>
-        <button type="button">Select file</button>
-      </FileUploader.Trigger>
-    </FileUploader.Root>
+      <UplofileRoot onRemove={onRemove} upload={upload} removeMode={"strict"}>
+          <UplofileDropzone className={"border p-2 rounded"}>
+              <span>Drop your files here or</span>{" "}
+              <UplofileTrigger className={"underline text-blue-500"}>
+                  Select file
+              </UplofileTrigger>
+              <div className={"border-t my-6 py-6"}>
+                  <UplofilePreview />
+              </div>
+          </UplofileDropzone>
+      </UplofileRoot>
   );
 }
 ```
