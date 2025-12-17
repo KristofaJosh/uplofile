@@ -22,16 +22,16 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid>
     <Card title="Composable" icon="pencil">
-        Edit `src/content/docs/index.mdx` to see this page change.
+        Headless primitives — `Root`, `Trigger`, `Preview`, `Dropzone`, `HiddenInput` — so you can compose any UI while Uplofile handles state and actions.
     </Card>
     <Card title="Accessible" icon="add-document">
-        Add Markdown or MDX files to `src/content/docs` to create new pages.
+        Keyboard and screen‑reader friendly, Works without drag‑and‑drop.
     </Card>
     <Card title="Stylable" icon="setting">
-        Edit your `sidebar` and other config in `astro.config.mjs`.
+        Unstyled by default. Use your own CSS, Tailwind, or design system; render‑props give full control over markup, classes, and interactions.
     </Card>
     <Card title="Read the docs" icon="open-book">
-        Learn more in [the Starlight Docs](https://starlight.astro.build/).
+        Learn more in [the uplofile docs](/installation).
     </Card>
 </CardGrid>
 
@@ -44,7 +44,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <details>
     <summary>Can I pre‑hydrate already‑uploaded files?</summary>
-    Pass `initial=[{ id?, uid?, name, url }]`. They’ll be shown as done and included in `HiddenInput`.
+    Pass <code>initial=[&#123; id, uid, name, url &#125;]</code> (id/uid optional). They’ll be shown as done and included in <code>HiddenInput</code>.
 </details>
 
 <details>

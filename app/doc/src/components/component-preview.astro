@@ -6,6 +6,7 @@ import { Code, Tabs, TabItem } from "@astrojs/starlight/components";
 import CodePreviewClient from "./code-preview";
 
 const raws = import.meta.glob("../examples/*.tsx", { query: "raw", eager: false });
+console.log({raws});
 const key = `../examples/${exampleComponent}.tsx`;
 
 const loadRaw = raws[key];

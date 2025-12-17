@@ -32,8 +32,14 @@ export default defineConfig({
       {
         label: "Examples",
         items: [
-          { label: "Basic", slug: "examples/basic"  },
-          { label: "Custom", slug: "examples/custom"  },
+          { label: "Basic", slug: "examples/basic" },
+          { label: "Custom", slug: "examples/custom" },
+          { label: "Card Type Upload", slug: "examples/card-type-upload" },
+          { label: "Controlled Form", slug: "examples/controlled-form" },
+          { label: "Dropzone Showcase", slug: "examples/dropzone-showcase" },
+          { label: "Max Count and Accept", slug: "examples/max-count-and-accept" },
+          { label: "Product Moderation", slug: "examples/product-moderation" },
+          { label: "Spinner Avatar Upload", slug: "examples/spinner-avatar-upload" },
         ],
       },
     ],
