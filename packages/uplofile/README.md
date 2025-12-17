@@ -1,7 +1,11 @@
 # Uplofile
 
+[![Beta](https://img.shields.io/badge/status-beta-yellow.svg)](https://uplofile.kristofajosh.dev)
+
 **Composable file‑upload components for React.**  
 Accessible, unstyled primitives for building your own upload UI — with drag‑and‑drop, progress indicators, cancel/retry/remove actions, and an optional hidden input for classic form posts.
+
+> Heads‑up: Uplofile is currently in Beta. Expect some rough edges and occasional API tweaks. We’d love your feedback — please kick the tires and open issues!
 
 ---
 
