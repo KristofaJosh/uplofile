@@ -6,7 +6,7 @@ import {
   UplofileCancel,
   UplofileRetry,
   UplofileRemove,
-} from "@/components/ui/file-uploader";
+} from "@/components/ui/uplofile.ts";
 import { upload, onRemove } from "@/utils/upload-simulator";
 import type { UploadStatus } from "uplofile";
 

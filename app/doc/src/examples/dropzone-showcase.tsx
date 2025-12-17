@@ -4,7 +4,7 @@ import {
   UplofileTrigger,
   UplofileDropzone,
   UplofilePreview,
-} from "@/components/ui/file-uploader";
+} from "@/components/ui/uplofile.ts";
 import { upload, onRemove } from "@/utils/upload-simulator";
 
 export default function DropzoneShowcase() {

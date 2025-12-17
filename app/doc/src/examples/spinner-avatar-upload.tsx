@@ -4,7 +4,7 @@ import {
   UplofileTrigger,
   UplofilePreview,
   UplofileRetry,
-} from "@/components/ui/file-uploader";
+} from "@/components/ui/uplofile.ts";
 import { upload } from "@/utils/upload-simulator";
 
 export default function SpinnerAvatarUpload() {

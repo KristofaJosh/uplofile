@@ -2,7 +2,7 @@ import {
   UplofileRoot,
   UplofileTrigger,
   UplofilePreview,
-} from "@/components/ui/file-uploader.tsx";
+} from "@/components/ui/uplofile.ts";
 import { upload } from "@/utils/upload-simulator.ts";
 
 export default function BasicExample() {
