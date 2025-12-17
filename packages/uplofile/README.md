@@ -1,7 +1,7 @@
 # Uplofile
 
-**Composable file upload components for React.**  
-Accessible primitives for building your own upload UI — with drag‑and‑drop, progress, cancel/retry/remove, and hidden inputs for form posts.
+**Composable file‑upload components for React.**  
+Accessible, unstyled primitives for building your own upload UI — with drag‑and‑drop, progress indicators, cancel/retry/remove actions, and an optional hidden input for classic form posts.
 
 ---
 
@@ -9,9 +9,9 @@ Accessible primitives for building your own upload UI — with drag‑and‑drop
 
 - React 16+ compatible  
 - Drag‑and‑drop or click‑to‑upload  
-- Upload progress, cancel, retry, and remove  
+- Upload progress, plus cancel/retry/remove actions  
 - Hidden input for form submissions  
-- Unstyled — bring your own design  
+- Unstyled — bring your own design
 
 ---
 
@@ -28,6 +28,8 @@ pnpm add uplofile
 ---
 
 ## Quick Start
+
+Import the primitives:
 
 ```typescript
 import * as Uplofile from "uplofile";
@@ -61,11 +63,19 @@ export {
 
 ```
 
-then in your React component:
+Then use them in your React component:
 ```tsx
 "use client";
 
-import * as FileUploader from "uplofile";
+import {
+    UplofileCancel,
+    UplofileDropzone,
+    UplofilePreview,
+    UplofileRemove,
+    UplofileRetry,
+    UplofileRoot,
+    UplofileTrigger,
+} from "./components/ui/uplofile";
 
 export default function Basic() {
   return (
@@ -88,4 +98,4 @@ export default function Basic() {
 
 ## Documentation
 
-Full docs, advanced usage, and examples are available on the [uplofile website](https://uplofile.kristofajosh.dev/).
+Full documentation, API reference, and examples are available on the [Uplofile website](https://uplofile.kristofajosh.dev/).
