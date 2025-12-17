@@ -36,11 +36,15 @@ export default function SpinnerAvatarUpload() {
                     <span className="animate-spin">○</span>
                   </button>
                 )}
-                {items[0] && ["error", "canceled"].includes(items[0].status) && (
-                  <UplofileRetry className="absolute inset-0 grid place-items-center rounded-full bg-black/60 text-white">
-                    Retry
-                  </UplofileRetry>
-                )}
+                {items[0] &&
+                  ["error", "canceled"].includes(items[0].status) && (
+                    <UplofileRetry
+                      className="absolute inset-0 grid place-items-center rounded-full bg-black/60 text-white"
+                      uid={items[0].uid}
+                    >
+                      Retry
+                    </UplofileRetry>
+                  )}
               </div>
             )}
           />

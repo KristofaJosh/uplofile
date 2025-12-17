@@ -15,13 +15,13 @@ export async function upload(
       progress += Math.floor(Math.random() * 16) + 5; // +5..+20
       if (setProgress) setProgress(Math.min(99, progress));
       if (progress >= 100) {
-        clearInterval(id);
+        clearInterval(id as any);
         resolve({ url: URL.createObjectURL(file) });
       }
     }, tickMs);
 
     const onAbort = () => {
-      clearInterval(id);
+      clearInterval(id as any);
       reject(new DOMException("Aborted", "AbortError"));
     };
     signal.addEventListener("abort", onAbort, { once: true });

@@ -14,5 +14,6 @@ export type {
   ItemActions,
   RootProps,
   UploadFileItem,
+  UploadStatus,
   UploadResult,
 } from "./types";

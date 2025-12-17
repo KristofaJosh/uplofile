@@ -8,6 +8,7 @@ import {
   UplofileRemove,
 } from "@/components/ui/file-uploader";
 import { upload, onRemove } from "@/utils/upload-simulator";
+import type { UploadStatus } from "uplofile";
 
 export default function CardTypeUpload() {
   return (
@@ -35,10 +36,15 @@ export default function CardTypeUpload() {
                     />
                   )}
                   {/* overlay */}
-                  {(["error", "uploading"] as const).includes(item.status) && (
+                  {(["error", "uploading"] as UploadStatus[]).includes(
+                    item.status,
+                  ) && (
                     <div className="absolute inset-0 z-10 grid place-items-center bg-black/60 text-white">
                       {item.status === "error" ? (
-                        <UplofileRetry className="rounded bg-white/10 px-2 py-1 text-xs">
+                        <UplofileRetry
+                          className="rounded bg-white/10 px-2 py-1 text-xs"
+                          uid={item.uid}
+                        >
                           Retry
                         </UplofileRetry>
                       ) : (
@@ -50,10 +56,14 @@ export default function CardTypeUpload() {
                     <UplofileCancel
                       className="rounded bg-white/60 px-2 py-1 text-xs"
                       alwaysVisible
+                      uid={item.uid}
                     >
                       Cancel
                     </UplofileCancel>
-                    <UplofileRemove className="rounded bg-white/90 px-2 py-1 text-xs">
+                    <UplofileRemove
+                      className="rounded bg-white/90 px-2 py-1 text-xs"
+                      uid={item.uid}
+                    >
                       Remove
                     </UplofileRemove>
                   </div>
