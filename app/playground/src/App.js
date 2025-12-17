@@ -1,7 +1,6 @@
 import "./App.css";
 import {
   UplofileCancel,
-  UplofileDropzone,
   UplofilePreview,
   UplofileRemove,
   UplofileRetry,
@@ -9,6 +8,15 @@ import {
   UplofileTrigger,
 } from "./components/ui/uplofile";
 import { clsx } from "clsx";
+import BasicUpload from "./components/uplofile-examples/basic";
+import {
+  CardTypeUpload,
+  ControlledFormExample,
+  DropzoneShowcase,
+  MaxCountAndAccept,
+  ProductModeration,
+  SpinnerAvatarUpload,
+} from "./components/uplofile-examples";
 
 const upload = async (file, signal, setProgress) => {
   return await new Promise((resolve, reject) => {
@@ -37,18 +45,13 @@ const onRemove = async (item) => {
 function App() {
   return (
     <div className="p-10">
-      <UplofileRoot onRemove={onRemove} upload={upload} removeMode={"strict"}>
-        <UplofileDropzone className={"border p-2 rounded"}>
-          <span> Drop your files here</span>{" "}
-          <UplofileTrigger className={"underline text-blue-500"}>
-            Select file
-          </UplofileTrigger>
-          <div className={"border-t my-6 py-6"}>
-            <UplofilePreview />
-          </div>
-        </UplofileDropzone>
-      </UplofileRoot>
-
+      <BasicUpload />
+      <CardTypeUpload />
+      <ControlledFormExample />
+      <DropzoneShowcase />
+      <MaxCountAndAccept />
+      <ProductModeration />
+      <SpinnerAvatarUpload />
       <div className={"mt-10"}>
         <UplofileRoot onRemove={onRemove} upload={upload}>
           <div className={"grid grid-cols-[auto_1fr] items-center gap-4"}>
@@ -73,7 +76,13 @@ function App() {
                               )}
                               uid={item.uid}
                             >
-                              {item.status === "error" ? "Retry" : <span className={'animate-spin font-semibold'}>O</span>}
+                              {item.status === "error" ? (
+                                "Retry"
+                              ) : (
+                                <span className={"animate-spin font-semibold"}>
+                                  O
+                                </span>
+                              )}
                             </UplofileRetry>
                           )}
                           <img

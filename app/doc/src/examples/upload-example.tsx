@@ -1,21 +1,18 @@
 "use client";
 
 import {
-  FileUploader,
-  FileUploaderInput,
-  FileUploaderPreview,
-  FileUploaderTrigger
-} from "@/components/ui/file-uploader.tsx";
-import { makeFakeUploader } from "@/utils/fake-upload.ts";
-import React from "react";
-
-const upload = makeFakeUploader();
+  UplofileRoot,
+  UplofileHiddenInput,
+  UplofilePreview,
+  UplofileTrigger,
+} from "@/components/ui/file-uploader";
+import { upload } from "@/utils/upload-simulator.ts";
 
 export default function UploadExample() {
   return (
     <form className="max-w-md">
-      <FileUploader multiple name="images" upload={upload}>
-        <FileUploaderTrigger
+      <UplofileRoot multiple name="images" upload={upload}>
+        <UplofileTrigger
           render={({ isUploading, totalProgress, items }) => (
             <button
               type="button"
@@ -30,7 +27,7 @@ export default function UploadExample() {
           )}
         />
 
-        <FileUploaderPreview
+        <UplofilePreview
           render={({ items, actions }) => (
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {items.map((item) => (
@@ -103,8 +100,8 @@ export default function UploadExample() {
           )}
         />
 
-        <FileUploaderInput />
-      </FileUploader>
+        <UplofileHiddenInput />
+      </UplofileRoot>
 
       <div className="mt-6">
         <button

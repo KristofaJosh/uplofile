@@ -1,20 +1,17 @@
 import {
-  FileUploader,
-  FileUploaderPreview,
-  FileUploaderTrigger,
+  UplofileRoot,
+  UplofilePreview,
+  UplofileTrigger,
 } from "@/components/ui/file-uploader.tsx";
-
-const upload = async (file: File) => {
-  return { url: URL.createObjectURL(file) };
-};
+import { upload } from "@/utils/upload-simulator.ts";
 
 export default function BasicExample() {
   return (
-    <FileUploader upload={upload}>
-      <FileUploaderPreview className={"size-10 my-2 rounded-lg"} />
-      <FileUploaderTrigger className="rounded-lg border px-3 py-2">
+    <UplofileRoot upload={upload}>
+      <UplofilePreview className="size-10 my-2 rounded-lg" />
+      <UplofileTrigger className="rounded-lg border px-3 py-2">
         Select Image
-      </FileUploaderTrigger>
-    </FileUploader>
+      </UplofileTrigger>
+    </UplofileRoot>
   );
 }

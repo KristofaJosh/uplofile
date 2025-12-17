@@ -1,27 +1,28 @@
-"use client";
+import * as Uplofile from "uplofile";
 
-import * as FileUploaderPrimitive from "uplofile";
+const UplofileRoot = Uplofile.Root;
 
-const FileUploader = FileUploaderPrimitive.Root;
+const UplofileTrigger = Uplofile.Trigger;
 
-const FileUploaderTrigger = FileUploaderPrimitive.Trigger;
+const UplofileHiddenInput = Uplofile.HiddenInput;
 
-const FileUploaderHiddenInput = FileUploaderPrimitive.HiddenInput;
+const UplofileDropzone = Uplofile.Dropzone;
 
-const FileUploaderDropzone = FileUploaderPrimitive.Dropzone;
+const UplofilePreview = Uplofile.Preview;
 
-const FileUploaderPreview = FileUploaderPrimitive.Preview;
+const UplofileCancel = Uplofile.Cancel;
 
-const FileUploaderCancel = FileUploaderPrimitive.Cancel;
+const UplofileRetry = Uplofile.Retry;
 
-const FileUploaderRetry = FileUploaderPrimitive.Retry;
+const UplofileRemove = Uplofile.Remove;
 
 export {
-  FileUploader,
-  FileUploaderTrigger,
-  FileUploaderHiddenInput,
-  FileUploaderDropzone,
-  FileUploaderPreview,
-  FileUploaderCancel,
-  FileUploaderRetry,
+  UplofileRoot,
+  UplofileTrigger,
+  UplofileHiddenInput,
+  UplofileDropzone,
+  UplofilePreview,
+  UplofileCancel,
+  UplofileRetry,
+  UplofileRemove,
 };
