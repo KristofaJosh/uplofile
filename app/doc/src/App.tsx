@@ -19,6 +19,7 @@ import ExampleImageGallery from "./pages/examples/ImageGallery";
 import ExampleAvatarUploader from "./pages/examples/AvatarUploader";
 import ExampleFileListWithActions from "./pages/examples/FileListWithActions";
 import ExampleFormIntegration from "./pages/examples/FormIntegration";
+import ExampleVideoUploader from "./pages/examples/VideoUploader";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/examples/avatar" element={<ExampleAvatarUploader />} />
           <Route path="/examples/file-list" element={<ExampleFileListWithActions />} />
           <Route path="/examples/form" element={<ExampleFormIntegration />} />
+          <Route path="/examples/video" element={<ExampleVideoUploader />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -34,6 +34,7 @@ const sidebarItems = [
       { title: "Image Gallery", href: "/examples/image-gallery" },
       { title: "Avatar Uploader", href: "/examples/avatar" },
       { title: "File List with Actions", href: "/examples/file-list" },
+      { title: "Video Uploader", href: "/examples/video" },
       { title: "Form Integration", href: "/examples/form" },
     ],
   },
