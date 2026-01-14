@@ -6,6 +6,9 @@ import {
   UplofilePreview,
 } from "@/components/ui/uplofile";
 import { mockUpload } from "@/lib/utils.ts";
+import BasicUploaderAdvance from "@/pages/examples/BasicUploaderAdvance.tsx";
+import SpinnerAvatarUpload from "@/pages/examples/SpinnerAvatarUploader.tsx";
+import ControlledFormExample from "@/pages/examples/ControlledFormUploader.tsx";
 
 const ExampleBasicUploader = () => {
   return (
@@ -32,13 +35,20 @@ const ExampleBasicUploader = () => {
                 render={({ items }) => (
                   <div className="mt-4 space-y-2">
                     {items.length === 0 ? (
-                      <p className="text-muted-foreground text-sm">No files selected</p>
+                      <p className="text-muted-foreground text-sm">
+                        No files selected
+                      </p>
                     ) : (
                       items.map((item) => (
-                        <div key={item.uid} className="text-sm text-foreground flex items-center gap-2">
+                        <div
+                          key={item.uid}
+                          className="text-sm text-foreground flex items-center gap-2"
+                        >
                           <span>{item.name}</span>
                           {item.status === "uploading" && (
-                            <span className="text-muted-foreground">({item.progress}%)</span>
+                            <span className="text-muted-foreground">
+                              ({item.progress}%)
+                            </span>
                           )}
                           {item.status === "done" && (
                             <span className="text-green-500">✓</span>
@@ -108,9 +118,18 @@ export function BasicUploader() {
             Key Points
           </h2>
           <ul className="space-y-2 text-muted-foreground">
-            <li>→ Uses <code className="code-inline">UplofileTrigger</code> with a custom button</li>
-            <li>→ Simple file list display with <code className="code-inline">UplofilePreview</code></li>
-            <li>→ Requires an <code className="code-inline">upload</code> function that returns <code className="code-inline">{`{ url, id }`}</code></li>
+            <li>
+              → Uses <code className="code-inline">UplofileTrigger</code> with a
+              custom button
+            </li>
+            <li>
+              → Simple file list display with{" "}
+              <code className="code-inline">UplofilePreview</code>
+            </li>
+            <li>
+              → Requires an <code className="code-inline">upload</code> function
+              that returns <code className="code-inline">{`{ url, id }`}</code>
+            </li>
           </ul>
         </section>
       </article>
