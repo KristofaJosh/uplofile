@@ -4,6 +4,7 @@ import {
   UplofileTrigger,
   UplofilePreview,
   UplofileHiddenInput,
+  UploadFileItem,
 } from "@/components/ui/uplofile";
 import { FileUp, Send, CheckCircle2, Loader2, Paperclip, AlertCircle } from "lucide-react";
 import { mockUpload } from "@/lib/utils.ts";
@@ -59,43 +60,17 @@ export default function FormIntegrationDemo() {
             render={({ items }) => (
               <div className="mt-4 space-y-2">
                 {items.map((item) => (
-                  <div
-                    key={item.uid}
-                    className="flex items-center justify-between p-3 rounded-lg border bg-white shadow-sm animate-in fade-in slide-in-from-top-1"
-                  >
-                    <div className="flex items-center gap-3 overflow-hidden">
-                      <div className={`p-1.5 rounded-md ${item.status === 'error' ? 'bg-destructive/10 text-destructive' : 'bg-muted text-muted-foreground'}`}>
-                        {item.status === 'error' ? <AlertCircle className="h-3 w-3" /> : <Paperclip className="h-3 w-3" />}
-                      </div>
-                      <span className={`text-xs font-medium truncate max-w-[200px] ${item.status === 'error' ? 'text-destructive' : ''}`}>
-                        {item.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {item.status === "uploading" && (
-                        <>
-                          <span className="text-[10px] font-bold text-muted-foreground">{item.progress}%</span>
-                          <Loader2 className="h-3 w-3 animate-spin text-primary" />
-                        </>
-                      )}
-                      {item.status === "done" && (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      )}
-                      {item.status === "error" && (
-                        <span className="text-[10px] font-bold text-destructive uppercase">Failed</span>
-                      )}
-                    </div>
-                  </div>
+                  <FormFileItem key={item.uid} item={item} />
                 ))}
               </div>
             )}
           />
         </UplofileRoot>
       </div>
-      
+
       <div className="pt-4 border-t">
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="w-full inline-flex items-center justify-center gap-2 rounded-lg text-sm font-bold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 h-11 px-8 shadow-lg active:scale-[0.98]"
         >
           <Send className="h-4 w-4" />
@@ -103,5 +78,46 @@ export default function FormIntegrationDemo() {
         </button>
       </div>
     </form>
+  );
+}
+
+function FormFileItem({ item }: { item: UploadFileItem }) {
+  return (
+    <div className="flex items-center justify-between p-3 rounded-lg border bg-white shadow-sm animate-in fade-in slide-in-from-top-1">
+      <div className="flex items-center gap-3 overflow-hidden">
+        <div
+          className={`p-1.5 rounded-md ${item.status === "error" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}
+        >
+          {item.status === "error" ? (
+            <AlertCircle className="h-3 w-3" />
+          ) : (
+            <Paperclip className="h-3 w-3" />
+          )}
+        </div>
+        <span
+          className={`text-xs font-medium truncate max-w-[200px] ${item.status === "error" ? "text-destructive" : ""}`}
+        >
+          {item.name}
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        {item.status === "uploading" && (
+          <>
+            <span className="text-[10px] font-bold text-muted-foreground">
+              {item.progress}%
+            </span>
+            <Loader2 className="h-3 w-3 animate-spin text-primary" />
+          </>
+        )}
+        {item.status === "done" && (
+          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+        )}
+        {item.status === "error" && (
+          <span className="text-[10px] font-bold text-destructive uppercase">
+            Failed
+          </span>
+        )}
+      </div>
+    </div>
   );
 }

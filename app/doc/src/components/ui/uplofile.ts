@@ -19,3 +19,5 @@ export {
   UplofileRetry,
   UplofileRemove,
 };
+
+export type { UploadFileItem, UploadStatus } from "uplofile";
