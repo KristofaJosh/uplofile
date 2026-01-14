@@ -27,7 +27,7 @@ const QuickStart = () => {
 } from "@/components/uplofile";
 
 function FileUploader() {
-  const upload = async (file, { signal, onProgress }) => {
+  const upload = async (file, signal, onProgress) => {
     const formData = new FormData();
     formData.append('file', file);
     
