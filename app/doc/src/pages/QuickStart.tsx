@@ -15,9 +15,10 @@ const QuickStart = () => {
             Complete Example
           </h2>
           <p className="text-muted-foreground">
-            Here's a complete example with styling, validation, and upload handling:
+            Here's a complete example with styling, validation, and upload
+            handling:
           </p>
-          
+
           <CodeBlock
             code={`import {
   UplofileRoot,
@@ -26,21 +27,25 @@ const QuickStart = () => {
   UplofilePreview,
 } from "@/components/uplofile";
 
+const upload = async (file, signal, onProgress) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData,
+    signal,
+  });
+  
+   // const res = await axios.post('/api/upload', formData, {
+   //    onUploadProgress: onProgress
+   // });
+  
+  if (!res.ok) throw new Error('Upload failed');
+  return await res.json();
+};
+  
 function FileUploader() {
-  const upload = async (file, signal, onProgress) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    const res = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-      signal,
-    });
-    
-    if (!res.ok) throw new Error('Upload failed');
-    return await res.json();
-  };
-
   return (
     <UplofileRoot upload={upload} removeMode="strict" onRemove={onRemove}>
       <UplofileDropzone className="border-2 border-dashed rounded-lg p-8">
@@ -64,9 +69,10 @@ function FileUploader() {
             With Pre-hydrated Files
           </h2>
           <p className="text-muted-foreground">
-            If you have existing files (e.g., when editing), pass them as initial values:
+            If you have existing files (e.g., when editing), pass them as
+            initial values:
           </p>
-          
+
           <CodeBlock
             code={`<UplofileRoot 
   initial={[
@@ -87,7 +93,7 @@ function FileUploader() {
           <p className="text-muted-foreground">
             For strict deletion that requires server confirmation:
           </p>
-          
+
           <CodeBlock
             code={`<UplofileRoot
   removeMode="strict"

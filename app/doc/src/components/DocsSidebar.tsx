@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-const sidebarItems = [
+export const sidebarItems = [
   {
     title: "Getting Started",
     items: [
