@@ -35,9 +35,9 @@ export const HeroSection = () => {
             </div>
           </div>
 
-          <div className="flex justify-center lg:justify-end animate-fade-up-delay-1">
+          <div className="flex justify-center max-w-2xl lg:justify-end animate-fade-up-delay-1">
             <div className="relative">
-              <AppIcon />
+              <AppIcon className="hidden lg:block max-h-80" />
             </div>
           </div>
         </div>
