@@ -1,6 +1,3 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
@@ -21,14 +18,13 @@ import ExampleFileListWithActions from "./pages/examples/FileListWithActions";
 import ExampleFormIntegration from "./pages/examples/FormIntegration";
 import ExampleVideoUploader from "./pages/examples/VideoUploader";
 import NotFound from "./pages/NotFound";
+import { Analytics } from "@vercel/analytics/react";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+  <>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -38,21 +34,34 @@ const App = () => (
           <Route path="/components/trigger" element={<ComponentTrigger />} />
           <Route path="/components/preview" element={<ComponentPreview />} />
           <Route path="/components/dropzone" element={<ComponentDropzone />} />
-          <Route path="/components/hidden-input" element={<ComponentHiddenInput />} />
+          <Route
+            path="/components/hidden-input"
+            element={<ComponentHiddenInput />}
+          />
           <Route path="/api/props" element={<ApiProps />} />
           <Route path="/api/actions" element={<ApiActions />} />
           <Route path="/examples/basic" element={<ExampleBasicUploader />} />
-          <Route path="/examples/dropzone" element={<ExampleDropzoneUploader />} />
-          <Route path="/examples/image-gallery" element={<ExampleImageGallery />} />
+          <Route
+            path="/examples/dropzone"
+            element={<ExampleDropzoneUploader />}
+          />
+          <Route
+            path="/examples/image-gallery"
+            element={<ExampleImageGallery />}
+          />
           <Route path="/examples/avatar" element={<ExampleAvatarUploader />} />
-          <Route path="/examples/file-list" element={<ExampleFileListWithActions />} />
+          <Route
+            path="/examples/file-list"
+            element={<ExampleFileListWithActions />}
+          />
           <Route path="/examples/form" element={<ExampleFormIntegration />} />
           <Route path="/examples/video" element={<ExampleVideoUploader />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+    </QueryClientProvider>
+    <Analytics />
+  </>
 );
 
 export default App;

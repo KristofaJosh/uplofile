@@ -14,7 +14,7 @@ const Index = () => {
       </main>
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-muted-foreground">
-          <p>Built with Uplofile — Composable file upload for React</p>
+          <p>Composable file upload for React</p>
         </div>
       </footer>
     </div>
