@@ -11,6 +11,7 @@
     "moduleResolution": "bundler",
     "module": "esnext",
     "target": "es2020",
+    "lib": ["ES2020", "DOM"],
     "jsx": "react-jsx"
   },
   "include": ["src/**/*"]

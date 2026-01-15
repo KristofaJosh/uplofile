@@ -35,7 +35,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bunchee src/index.ts --dts --external react,react-dom --format esm",
+    "build": "bunchee src/index.ts --dts --external react,react-dom --format esm && sed -i '' '1i\\\n/// <reference lib=\"es2015.iterable\" />\n' dist/index.d.ts",
     "clean": "rm -rf dist",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
