@@ -30,12 +30,12 @@ export const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
     <div className="fixed inset-0 z-50 lg:hidden">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm" 
+        className="fixed inset-0 bg-black/60 animate-in fade-in duration-300" 
         onClick={onClose}
       />
       
       {/* Sidebar Content */}
-      <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-background border-r p-6 shadow-lg animate-in slide-in-from-left duration-300">
+      <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-background border-r p-6 shadow-xl animate-in slide-in-from-left duration-300">
         <div className="flex items-center justify-between mb-8">
           <span className="text-lg font-bold">Menu</span>
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -43,7 +43,7 @@ export const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
           </Button>
         </div>
         
-        <nav className="space-y-6 overflow-y-auto max-h-[calc(100vh-8rem)] bg-background">
+        <nav className="space-y-6 overflow-y-auto max-h-[calc(100vh-8rem)]">
           {sidebarItems.map((section) => (
             <div key={section.title}>
               <h4 className="font-semibold text-sm mb-2">{section.title}</h4>
