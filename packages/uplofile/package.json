@@ -35,7 +35,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bunchee src/index.ts --dts --external react,react-dom --format esm && node -e \"const fs=require('fs');const f='dist/index.d.ts';fs.writeFileSync(f,'/// <reference lib=\\\"es2015.iterable\\\" />\\n'+fs.readFileSync(f,'utf8'))\"",
+    "build": "bunchee src/index.ts --dts --external react,react-dom --format esm && node scripts/postbuild.cjs",
     "clean": "rm -rf dist",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
