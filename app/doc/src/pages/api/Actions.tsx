@@ -1,7 +1,10 @@
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import {useUplofile} from "uplofile";
 
 const ApiActions = () => {
+  const { actions:{ cancel, remove, retry }, items, openFileDialog } = useUplofile();
+
   return (
     <DocsLayout>
       <article className="prose prose-slate dark:prose-invert max-w-none">
@@ -56,18 +59,29 @@ const ApiActions = () => {
           </h2>
           
           <CodeBlock
-            code={`import { useUplofile } from "uplofile";
-
-function CustomControls() {
-  const { files, add, remove, clear, open } = useUplofile();
-  
-  return (
-    <div>
-      <button onClick={open}>Open Picker</button>
-      <button onClick={clear}>Clear All ({files.length})</button>
-    </div>
-  );
-}`}
+            code={`
+            import { useUplofile } from "uplofile";
+            
+            function CustomControls() {
+              const {actions: {cancel, remove, retry}, items, openFileDialog} = useUplofile();
+            
+              return (
+                  <div>
+                    <button onClick={openFileDialog}>Open File</button>
+                    <div>
+                      {items.map((item) => {
+                        return <div>
+                          <div>{item.name}</div>
+                          <button onClick={() => remove(item.uid)}>Remove</button>
+                          {item.status === 'uploading' && <button onClick={() => cancel(item.uid)}>Retry</button>}
+                          {item.status === 'error' && <button onClick={() => retry(item.uid)}>Retry</button>}
+                        </div>
+                      })}
+                    </div>
+                  </div>
+              );
+            }
+            `}
             language="tsx"
           />
         </section>
