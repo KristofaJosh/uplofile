@@ -30,7 +30,9 @@ export default function VideoUploaderDemo() {
         }
       `}</style>
       <UplofileRoot
-        upload={(file, signal, progress) => mockUpload(file, signal, progress, 0.4)}
+        upload={(file, signal, progress) =>
+          mockUpload(file, signal, progress, 0.4)
+        }
         multiple
         accept="video/*"
       >
@@ -50,7 +52,9 @@ export default function VideoUploaderDemo() {
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold tracking-tight">Click or drag video to upload</p>
+                    <p className="text-sm font-bold tracking-tight">
+                      Click or drag video to upload
+                    </p>
                     <p className="text-xs text-muted-foreground max-w-[200px] mx-auto leading-relaxed">
                       Support for MP4, WebM or OGG up to 100MB
                     </p>
@@ -123,7 +127,9 @@ function VideoItem({ item }: { item: UploadFileItem }) {
                   stroke="currentColor"
                   strokeWidth="8"
                   strokeDasharray={282.7}
-                  strokeDashoffset={282.7 - (282.7 * (item.progress ?? 0)) / 100}
+                  strokeDashoffset={
+                    282.7 - (282.7 * (item.progress ?? 0)) / 100
+                  }
                   className="text-primary transition-all duration-300 ease-out"
                   strokeLinecap="round"
                 />

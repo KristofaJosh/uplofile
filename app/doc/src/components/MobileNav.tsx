@@ -29,11 +29,11 @@ export const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/60 animate-in fade-in duration-300" 
+      <div
+        className="fixed inset-0 bg-black/60 animate-in fade-in duration-300"
         onClick={onClose}
       />
-      
+
       {/* Sidebar Content */}
       <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-background border-r p-6 shadow-xl animate-in slide-in-from-left duration-300">
         <div className="flex items-center justify-between mb-8">
@@ -42,7 +42,7 @@ export const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
             <X className="h-6 w-6" />
           </Button>
         </div>
-        
+
         <nav className="space-y-6 overflow-y-auto max-h-[calc(100vh-8rem)]">
           {sidebarItems.map((section) => (
             <div key={section.title}>
@@ -57,7 +57,7 @@ export const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
                         "block text-sm py-2 px-3 rounded-md transition-colors",
                         location.pathname === item.href
                           ? "bg-primary/10 text-primary font-medium"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted",
                       )}
                     >
                       {item.title}

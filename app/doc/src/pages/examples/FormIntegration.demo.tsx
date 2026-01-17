@@ -6,7 +6,14 @@ import {
   UplofileHiddenInput,
   UploadFileItem,
 } from "@/components/ui/uplofile";
-import { FileUp, Send, CheckCircle2, Loader2, Paperclip, AlertCircle } from "lucide-react";
+import {
+  FileUp,
+  Send,
+  CheckCircle2,
+  Loader2,
+  Paperclip,
+  AlertCircle,
+} from "lucide-react";
 import { mockUpload } from "@/lib/utils.ts";
 
 export default function FormIntegrationDemo() {
@@ -20,7 +27,9 @@ export default function FormIntegrationDemo() {
   return (
     <form className="space-y-6 max-w-2xl mx-auto" onSubmit={handleSubmit}>
       <div className="grid gap-2">
-        <label className="text-sm font-bold text-gray-700 uppercase tracking-tight">Title</label>
+        <label className="text-sm font-bold text-gray-700 uppercase tracking-tight">
+          Title
+        </label>
         <input
           type="text"
           name="title"
@@ -29,15 +38,15 @@ export default function FormIntegrationDemo() {
           required
         />
       </div>
-      
+
       <div className="grid gap-2">
         <label className="text-sm font-bold text-gray-700 uppercase tracking-tight flex items-center gap-2">
-           <Paperclip className="h-3 w-3" />
-           Attachments
+          <Paperclip className="h-3 w-3" />
+          Attachments
         </label>
         <UplofileRoot upload={mockUpload} multiple name="attachments">
           <UplofileHiddenInput />
-          
+
           <UplofileDropzone className="group relative border-2 border-dashed border-muted-foreground/20 rounded-xl p-8 text-center transition-all hover:border-primary/50 hover:bg-primary/5 data-[dragging=true]:border-primary data-[dragging=true]:bg-primary/10">
             <UplofileTrigger>
               <div className="flex flex-col items-center gap-3 cursor-pointer">
@@ -45,12 +54,12 @@ export default function FormIntegrationDemo() {
                   <FileUp className="h-6 w-6" />
                 </div>
                 <div className="grid gap-0.5">
-                   <span className="text-sm font-semibold text-gray-900">
-                     Click to upload or drag and drop
-                   </span>
-                   <span className="text-xs text-muted-foreground">
-                     PDF, PNG, JPG up to 10MB
-                   </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    Click to upload or drag and drop
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    PDF, PNG, JPG up to 10MB
+                  </span>
                 </div>
               </div>
             </UplofileTrigger>

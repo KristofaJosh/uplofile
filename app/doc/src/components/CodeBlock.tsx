@@ -19,7 +19,7 @@ export const CodeBlock = ({ code, language = "tsx" }: CodeBlockProps) => {
 
   return (
     <div className="relative group">
-      <Highlight theme={themes.nightOwl} code={code.trim()} language={language}>
+      <Highlight theme={themes.vsDark} code={code.trim()} language={language}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre
             className={`${className} rounded-lg border border-border p-4 overflow-x-auto text-sm`}

@@ -9,9 +9,18 @@ const ExampleVideoUploader = () => {
       description="A video-specific uploader with progress tracking, cancelable uploads, and retry logic for failed transfers."
       code={code}
       keyPoints={[
-        <>Uses <code className="code-inline">UplofileCancel</code> to abort ongoing uploads</>,
-        <>Uses <code className="code-inline">UplofileRetry</code> to restart failed uploads</>,
-        <>Video-specific previews using HTML5 <code className="code-inline">&lt;video&gt;</code> tags</>,
+        <>
+          Uses <code className="code-inline">UplofileCancel</code> to abort
+          ongoing uploads
+        </>,
+        <>
+          Uses <code className="code-inline">UplofileRetry</code> to restart
+          failed uploads
+        </>,
+        <>
+          Video-specific previews using HTML5{" "}
+          <code className="code-inline">&lt;video&gt;</code> tags
+        </>,
         <>Custom status indicators for different upload states</>,
       ]}
     >

@@ -9,7 +9,10 @@ const ExampleFileListWithActions = () => {
       description="A detailed file list with file info, progress indicators, and remove buttons."
       code={code}
       keyPoints={[
-        <>Uses <code className="code-inline">UplofileRemove</code> component with <code className="code-inline">uid</code> prop</>,
+        <>
+          Uses <code className="code-inline">UplofileRemove</code> component
+          with <code className="code-inline">uid</code> prop
+        </>,
         <>File type icons based on extension</>,
         <>Human-readable file sizes</>,
         <>Status shown inline (uploading %, done, error)</>,

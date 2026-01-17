@@ -14,7 +14,7 @@ const ComponentTrigger = () => {
           <h2 className="text-xl font-semibold border-b border-border pb-2">
             Usage
           </h2>
-          
+
           <CodeBlock
             code={`import { UplofileRoot, UplofileTrigger } from "@/components/uplofile";
 
@@ -32,9 +32,10 @@ const ComponentTrigger = () => {
             With Custom Element
           </h2>
           <p className="text-muted-foreground">
-            Use <code className="code-inline">asChild</code> to render your own element:
+            Use <code className="code-inline">asChild</code> to render your own
+            element:
           </p>
-          
+
           <CodeBlock
             code={`<UplofileTrigger asChild>
   <button className="custom-button">
@@ -49,24 +50,30 @@ const ComponentTrigger = () => {
           <h2 className="text-xl font-semibold border-b border-border pb-2">
             Props
           </h2>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left py-3 px-2 font-semibold">Prop</th>
                   <th className="text-left py-3 px-2 font-semibold">Type</th>
-                  <th className="text-left py-3 px-2 font-semibold">Description</th>
+                  <th className="text-left py-3 px-2 font-semibold">
+                    Description
+                  </th>
                 </tr>
               </thead>
               <tbody className="text-muted-foreground">
                 <tr className="border-b border-border">
-                  <td className="py-3 px-2"><code className="code-inline">asChild</code></td>
+                  <td className="py-3 px-2">
+                    <code className="code-inline">asChild</code>
+                  </td>
                   <td className="py-3 px-2">boolean</td>
                   <td className="py-3 px-2">Merge props onto child element</td>
                 </tr>
                 <tr className="border-b border-border">
-                  <td className="py-3 px-2"><code className="code-inline">disabled</code></td>
+                  <td className="py-3 px-2">
+                    <code className="code-inline">disabled</code>
+                  </td>
                   <td className="py-3 px-2">boolean</td>
                   <td className="py-3 px-2">Disable the trigger</td>
                 </tr>
