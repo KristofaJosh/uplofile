@@ -1,4 +1,6 @@
 import { DocsLayout } from "@/components/DocsLayout";
+import { CodeBlock } from "@/components/CodeBlock";
+import code from "./Props.demo.tsx?raw";
 
 const ApiProps = () => {
   return (
@@ -6,12 +8,12 @@ const ApiProps = () => {
       <article className="prose prose-slate dark:prose-invert max-w-none">
         <h1 className="text-3xl font-bold mb-2">Props Reference</h1>
         <p className="text-lg text-muted-foreground mb-8">
-          Complete reference for all component props.
+          Complete reference for the core data types.
         </p>
 
         <section className="space-y-4 mb-12">
           <h2 className="text-xl font-semibold border-b border-border pb-2">
-            FileItem Type
+            UploadFileItem Type
           </h2>
 
           <div className="overflow-x-auto">
@@ -53,24 +55,26 @@ const ApiProps = () => {
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
-                    <code className="code-inline">size</code>
+                    <code className="code-inline">status</code>
                   </td>
-                  <td className="py-3 px-2">number</td>
-                  <td className="py-3 px-2">File size in bytes</td>
+                  <td className="py-3 px-2">UploadStatus</td>
+                  <td className="py-3 px-2">
+                    Current status: <code className="code-inline">"idle"</code>, <code className="code-inline">"uploading"</code>, <code className="code-inline">"done"</code>, <code className="code-inline">"error"</code>, <code className="code-inline">"canceled"</code>, <code className="code-inline">"removing"</code>
+                  </td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
-                    <code className="code-inline">type</code>
+                    <code className="code-inline">progress</code>
                   </td>
-                  <td className="py-3 px-2">string</td>
-                  <td className="py-3 px-2">MIME type</td>
+                  <td className="py-3 px-2">number?</td>
+                  <td className="py-3 px-2">Upload progress (0-100)</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
-                    <code className="code-inline">preview</code>
+                    <code className="code-inline">previewUrl</code>
                   </td>
                   <td className="py-3 px-2">string?</td>
-                  <td className="py-3 px-2">Object URL for image preview</td>
+                  <td className="py-3 px-2">URL for image preview (object URL or remote URL)</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
@@ -78,8 +82,15 @@ const ApiProps = () => {
                   </td>
                   <td className="py-3 px-2">string?</td>
                   <td className="py-3 px-2">
-                    Remote URL for pre-hydrated files
+                    Remote URL of the uploaded file
                   </td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-2">
+                    <code className="code-inline">error</code>
+                  </td>
+                  <td className="py-3 px-2">string?</td>
+                  <td className="py-3 px-2">Error message if upload fails</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
@@ -87,19 +98,19 @@ const ApiProps = () => {
                   </td>
                   <td className="py-3 px-2">File?</td>
                   <td className="py-3 px-2">
-                    The original File object (undefined for pre-hydrated)
+                    The original File object (undefined for pre-hydrated files)
                   </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">status</code>
-                  </td>
-                  <td className="py-3 px-2">"pending" | "done" | "error"</td>
-                  <td className="py-3 px-2">Upload status</td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold border-b border-border pb-2">
+            Usage Example
+          </h2>
+          <CodeBlock code={code} language="tsx" />
         </section>
       </article>
     </DocsLayout>
