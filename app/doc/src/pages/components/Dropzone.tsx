@@ -1,5 +1,6 @@
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import code from "./Dropzone.demo.tsx?raw";
 
 const ComponentDropzone = () => {
   return (
@@ -15,30 +16,12 @@ const ComponentDropzone = () => {
             Usage
           </h2>
 
-          <CodeBlock
-            code={`import {
-  UplofileRoot,
-  UplofileDropzone,
-  UplofileTrigger,
-  UplofilePreview,
-} from "@/components/uplofile";
-
-<UplofileRoot>
-  <UplofileDropzone className="border-2 border-dashed p-8 rounded-lg">
-    <span>Drop files here or </span>
-    <UplofileTrigger className="underline text-blue-500">
-      click to browse
-    </UplofileTrigger>
-    <UplofilePreview />
-  </UplofileDropzone>
-</UplofileRoot>`}
-            language="tsx"
-          />
+          <CodeBlock code={code} language="tsx" />
         </section>
 
         <section className="space-y-4">
           <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Render Props
+            Props
           </h2>
 
           <div className="overflow-x-auto">
@@ -55,11 +38,20 @@ const ComponentDropzone = () => {
               <tbody className="text-muted-foreground">
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
-                    <code className="code-inline">isDragging</code>
+                    <code className="code-inline">asChild</code>
                   </td>
                   <td className="py-3 px-2">boolean</td>
                   <td className="py-3 px-2">
-                    True when files are being dragged over the zone
+                    Merge props onto the child element
+                  </td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-2">
+                    <code className="code-inline">...rest</code>
+                  </td>
+                  <td className="py-3 px-2">HTMLAttributes</td>
+                  <td className="py-3 px-2">
+                    Supports all standard HTML attributes
                   </td>
                 </tr>
               </tbody>

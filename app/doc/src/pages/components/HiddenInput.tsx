@@ -1,5 +1,6 @@
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import code from "./HiddenInput.demo.tsx?raw";
 
 const ComponentHiddenInput = () => {
   return (
@@ -18,18 +19,7 @@ const ComponentHiddenInput = () => {
             Include this component to make files available in form submissions:
           </p>
 
-          <CodeBlock
-            code={`import { UplofileRoot, UplofileHiddenInput } from "@/components/uplofile";
-
-<form onSubmit={handleSubmit}>
-  <UplofileRoot>
-    {/* ... other components */}
-    <UplofileHiddenInput name="attachments" />
-  </UplofileRoot>
-  <button type="submit">Submit</button>
-</form>`}
-            language="tsx"
-          />
+          <CodeBlock code={code} language="tsx" />
         </section>
 
         <section className="space-y-4">
@@ -54,7 +44,9 @@ const ComponentHiddenInput = () => {
                     <code className="code-inline">name</code>
                   </td>
                   <td className="py-3 px-2">string</td>
-                  <td className="py-3 px-2">Form field name for the files</td>
+                  <td className="py-3 px-2">
+                    Form field name. If not provided, it uses the <code className="code-inline">name</code> from <code className="code-inline">UplofileRoot</code>.
+                  </td>
                 </tr>
               </tbody>
             </table>

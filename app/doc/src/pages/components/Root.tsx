@@ -1,5 +1,6 @@
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import code from "./Root.demo.tsx?raw";
 
 const ComponentRoot = () => {
   return (
@@ -16,14 +17,7 @@ const ComponentRoot = () => {
             Usage
           </h2>
 
-          <CodeBlock
-            code={`import { UplofileRoot } from "@/components/uplofile";
-
-<UplofileRoot upload={upload} removeMode="strict" onRemove={onRemove}>
-  {/* Child components */}
-</UplofileRoot>`}
-            language="tsx"
-          />
+          <CodeBlock code={code} language="tsx" />
         </section>
 
         <section className="space-y-4 mb-12">
@@ -46,56 +40,70 @@ const ComponentRoot = () => {
               <tbody className="text-muted-foreground">
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
-                    <code className="code-inline">maxCount</code>
+                    <code className="code-inline">upload</code>
                   </td>
-                  <td className="py-3 px-2">number</td>
-                  <td className="py-3 px-2">Infinity</td>
-                  <td className="py-3 px-2">Maximum number of files allowed</td>
+                  <td className="py-3 px-2">Function</td>
+                  <td className="py-3 px-2">-</td>
+                  <td className="py-3 px-2">
+                    <strong>Required</strong>. Function that handles the file upload. 
+                    Must return a Promise with <code className="code-inline">{`{ url: string, id?: string }`}</code>.
+                  </td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
-                    <code className="code-inline">maxSize</code>
+                    <code className="code-inline">multiple</code>
+                  </td>
+                  <td className="py-3 px-2">boolean</td>
+                  <td className="py-3 px-2">true</td>
+                  <td className="py-3 px-2">Whether to allow multiple file selection</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-2">
+                    <code className="code-inline">maxCount</code>
                   </td>
                   <td className="py-3 px-2">number</td>
-                  <td className="py-3 px-2">Infinity</td>
-                  <td className="py-3 px-2">Maximum file size in bytes</td>
+                  <td className="py-3 px-2">-</td>
+                  <td className="py-3 px-2">Maximum number of files allowed</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
                     <code className="code-inline">accept</code>
                   </td>
                   <td className="py-3 px-2">string</td>
-                  <td className="py-3 px-2">*</td>
+                  <td className="py-3 px-2">"image/*"</td>
                   <td className="py-3 px-2">
-                    Accepted file types (MIME types or extensions)
+                    Accepted file types (HTML5 input accept attribute)
                   </td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
                     <code className="code-inline">initial</code>
                   </td>
-                  <td className="py-3 px-2">FileItem[]</td>
+                  <td className="py-3 px-2">Array</td>
                   <td className="py-3 px-2">[]</td>
                   <td className="py-3 px-2">
-                    Pre-hydrated files to display as already uploaded
+                    Pre-hydrated files from server
                   </td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
                     <code className="code-inline">removeMode</code>
                   </td>
-                  <td className="py-3 px-2">"instant" | "strict"</td>
-                  <td className="py-3 px-2">"instant"</td>
-                  <td className="py-3 px-2">How file removal is handled</td>
+                  <td className="py-3 px-2">"optimistic" | "strict"</td>
+                  <td className="py-3 px-2">"optimistic"</td>
+                  <td className="py-3 px-2">
+                    <strong>optimistic</strong>: UI updates immediately.<br/>
+                    <strong>strict</strong>: UI waits for <code className="code-inline">onRemove</code> to resolve.
+                  </td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
-                    <code className="code-inline">onFilesChange</code>
+                    <code className="code-inline">onChange</code>
                   </td>
-                  <td className="py-3 px-2">(files) =&gt; void</td>
+                  <td className="py-3 px-2">(items) =&gt; void</td>
                   <td className="py-3 px-2">-</td>
                   <td className="py-3 px-2">
-                    Called when files are added or removed
+                    Called when the file list changes
                   </td>
                 </tr>
                 <tr className="border-b border-border">
@@ -105,7 +113,27 @@ const ComponentRoot = () => {
                   <td className="py-3 px-2">(item, signal) =&gt; Promise</td>
                   <td className="py-3 px-2">-</td>
                   <td className="py-3 px-2">
-                    Called when removing a file in strict mode
+                    Function to handle server-side file deletion
+                  </td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-2">
+                    <code className="code-inline">name</code>
+                  </td>
+                  <td className="py-3 px-2">string</td>
+                  <td className="py-3 px-2">"images"</td>
+                  <td className="py-3 px-2">
+                    Name used for the hidden input field
+                  </td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-2">
+                    <code className="code-inline">disabled</code>
+                  </td>
+                  <td className="py-3 px-2">boolean</td>
+                  <td className="py-3 px-2">false</td>
+                  <td className="py-3 px-2">
+                    Disable all interactions
                   </td>
                 </tr>
               </tbody>
