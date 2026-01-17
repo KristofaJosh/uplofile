@@ -45,7 +45,9 @@ const ComponentHiddenInput = () => {
                   </td>
                   <td className="py-3 px-2">string</td>
                   <td className="py-3 px-2">
-                    Form field name. If not provided, it uses the <code className="code-inline">name</code> from <code className="code-inline">UplofileRoot</code>.
+                    Form field name. If not provided, it uses the{" "}
+                    <code className="code-inline">name</code> from{" "}
+                    <code className="code-inline">UplofileRoot</code>.
                   </td>
                 </tr>
               </tbody>

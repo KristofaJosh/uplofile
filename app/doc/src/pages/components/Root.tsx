@@ -45,8 +45,10 @@ const ComponentRoot = () => {
                   <td className="py-3 px-2">Function</td>
                   <td className="py-3 px-2">-</td>
                   <td className="py-3 px-2">
-                    <strong>Required</strong>. Function that handles the file upload. 
-                    Must return a Promise with <code className="code-inline">{`{ url: string, id?: string }`}</code>.
+                    <strong>Required</strong>. Function that handles the file
+                    upload. Must return a Promise with{" "}
+                    <code className="code-inline">{`{ url: string, id?: string }`}</code>
+                    .
                   </td>
                 </tr>
                 <tr className="border-b border-border">
@@ -55,7 +57,9 @@ const ComponentRoot = () => {
                   </td>
                   <td className="py-3 px-2">boolean</td>
                   <td className="py-3 px-2">true</td>
-                  <td className="py-3 px-2">Whether to allow multiple file selection</td>
+                  <td className="py-3 px-2">
+                    Whether to allow multiple file selection
+                  </td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
@@ -81,9 +85,7 @@ const ComponentRoot = () => {
                   </td>
                   <td className="py-3 px-2">Array</td>
                   <td className="py-3 px-2">[]</td>
-                  <td className="py-3 px-2">
-                    Pre-hydrated files from server
-                  </td>
+                  <td className="py-3 px-2">Pre-hydrated files from server</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
@@ -92,8 +94,10 @@ const ComponentRoot = () => {
                   <td className="py-3 px-2">"optimistic" | "strict"</td>
                   <td className="py-3 px-2">"optimistic"</td>
                   <td className="py-3 px-2">
-                    <strong>optimistic</strong>: UI updates immediately.<br/>
-                    <strong>strict</strong>: UI waits for <code className="code-inline">onRemove</code> to resolve.
+                    <strong>optimistic</strong>: UI updates immediately.
+                    <br />
+                    <strong>strict</strong>: UI waits for{" "}
+                    <code className="code-inline">onRemove</code> to resolve.
                   </td>
                 </tr>
                 <tr className="border-b border-border">
@@ -132,9 +136,7 @@ const ComponentRoot = () => {
                   </td>
                   <td className="py-3 px-2">boolean</td>
                   <td className="py-3 px-2">false</td>
-                  <td className="py-3 px-2">
-                    Disable all interactions
-                  </td>
+                  <td className="py-3 px-2">Disable all interactions</td>
                 </tr>
               </tbody>
             </table>

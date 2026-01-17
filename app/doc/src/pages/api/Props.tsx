@@ -59,7 +59,12 @@ const ApiProps = () => {
                   </td>
                   <td className="py-3 px-2">UploadStatus</td>
                   <td className="py-3 px-2">
-                    Current status: <code className="code-inline">"idle"</code>, <code className="code-inline">"uploading"</code>, <code className="code-inline">"done"</code>, <code className="code-inline">"error"</code>, <code className="code-inline">"canceled"</code>, <code className="code-inline">"removing"</code>
+                    Current status: <code className="code-inline">"idle"</code>,{" "}
+                    <code className="code-inline">"uploading"</code>,{" "}
+                    <code className="code-inline">"done"</code>,{" "}
+                    <code className="code-inline">"error"</code>,{" "}
+                    <code className="code-inline">"canceled"</code>,{" "}
+                    <code className="code-inline">"removing"</code>
                   </td>
                 </tr>
                 <tr className="border-b border-border">
@@ -74,16 +79,16 @@ const ApiProps = () => {
                     <code className="code-inline">previewUrl</code>
                   </td>
                   <td className="py-3 px-2">string?</td>
-                  <td className="py-3 px-2">URL for image preview (object URL or remote URL)</td>
+                  <td className="py-3 px-2">
+                    URL for image preview (object URL or remote URL)
+                  </td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
                     <code className="code-inline">url</code>
                   </td>
                   <td className="py-3 px-2">string?</td>
-                  <td className="py-3 px-2">
-                    Remote URL of the uploaded file
-                  </td>
+                  <td className="py-3 px-2">Remote URL of the uploaded file</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
