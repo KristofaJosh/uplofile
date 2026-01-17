@@ -9,9 +9,15 @@ const ExampleDropzoneUploader = () => {
       description="A drag-and-drop zone with visual feedback when files are dragged over."
       code={code}
       keyPoints={[
-        <>Uses <code className="code-inline">data-[dragging=true]</code> for visual feedback on drag</>,
+        <>
+          Uses <code className="code-inline">data-[dragging=true]</code> for
+          visual feedback on drag
+        </>,
         <>Combines dropzone with clickable trigger</>,
-        <><code className="code-inline">multiple</code> prop enables multi-file selection</>,
+        <>
+          <code className="code-inline">multiple</code> prop enables multi-file
+          selection
+        </>,
       ]}
     >
       <Demo />

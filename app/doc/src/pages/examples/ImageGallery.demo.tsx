@@ -5,7 +5,13 @@ import {
   UplofilePreview,
   UploadFileItem,
 } from "@/components/ui/uplofile";
-import { ImagePlus, ImageIcon, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  ImagePlus,
+  ImageIcon,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { mockUpload } from "@/lib/utils.ts";
 
 export default function ImageGalleryDemo() {
@@ -24,7 +30,9 @@ export default function ImageGalleryDemo() {
                   <div className="p-3 rounded-full bg-muted group-hover:bg-primary/10 transition-colors">
                     <ImagePlus className="h-6 w-6" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider">Add Image</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider">
+                    Add Image
+                  </span>
                 </div>
               </UplofileTrigger>
             </UplofileDropzone>

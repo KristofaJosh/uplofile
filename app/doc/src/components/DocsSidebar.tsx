@@ -58,7 +58,7 @@ export const DocsSidebar = () => {
                       "block text-sm py-1.5 px-3 rounded-md transition-colors",
                       location.pathname === item.href
                         ? "bg-primary/10 text-primary font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted",
                     )}
                   >
                     {item.title}

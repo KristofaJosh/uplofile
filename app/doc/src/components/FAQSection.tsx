@@ -20,7 +20,9 @@ const faqItems = [
     answer: (
       <p>
         Pass{" "}
-        <code className="code-inline">initial=[{`{ id, uid, name, url }`}]</code>{" "}
+        <code className="code-inline">
+          initial=[{`{ id, uid, name, url }`}]
+        </code>{" "}
         (id/uid optional). They'll be shown as done and included in{" "}
         <code className="code-inline">HiddenInput</code>.
       </p>
@@ -31,8 +33,7 @@ const faqItems = [
     answer: (
       <p>
         Set <code className="code-inline">removeMode="strict"</code> and
-        implement{" "}
-        <code className="code-inline">onRemove(item, signal)</code>.
+        implement <code className="code-inline">onRemove(item, signal)</code>.
       </p>
     ),
   },
@@ -52,7 +53,7 @@ export const FAQSection = () => {
     <section className="py-20 border-t border-border">
       <div className="container max-w-3xl">
         <h2 className="mb-8 text-3xl font-bold tracking-tight">FAQ</h2>
-        
+
         <Accordion type="single" collapsible className="w-full">
           {faqItems.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
