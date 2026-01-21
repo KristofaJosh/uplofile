@@ -10,17 +10,19 @@
   },
   "homepage": "https://uplofile.kristofajosh.dev",
   "keywords": [
-    "beta",
     "react",
     "react-component",
-    "file-upload",
-    "file-uploader",
     "upload",
+    "uploads",
+    "file",
+    "file upload",
+    "file uploader",
+    "multipart form",
     "uploader",
     "dropzone",
     "drag-and-drop",
     "composable",
-    "customizable"
+    "form"
   ],
   "type": "module",
   "main": "./dist/index.mjs",
