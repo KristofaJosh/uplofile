@@ -29,9 +29,11 @@ export const sidebarItems = [
   {
     title: "Examples",
     items: [
+      { title: "Default Preview", href: "/examples/default-preview" },
       { title: "Basic Uploader", href: "/examples/basic" },
       { title: "Dropzone", href: "/examples/dropzone" },
       { title: "Image Gallery", href: "/examples/image-gallery" },
+      { title: "Sortable Gallery", href: "/examples/sortable-gallery" },
       { title: "Avatar Uploader", href: "/examples/avatar" },
       { title: "File List with Actions", href: "/examples/file-list" },
       { title: "Video Uploader", href: "/examples/video" },

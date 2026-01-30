@@ -17,6 +17,8 @@ import ExampleAvatarUploader from "./pages/examples/AvatarUploader";
 import ExampleFileListWithActions from "./pages/examples/FileListWithActions";
 import ExampleFormIntegration from "./pages/examples/FormIntegration";
 import ExampleVideoUploader from "./pages/examples/VideoUploader";
+import ExampleDefaultPreview from "./pages/examples/DefaultPreview";
+import ExampleSortableGallery from "./pages/examples/SortableGallery";
 import NotFound from "./pages/NotFound";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -56,6 +58,14 @@ const App = () => (
           />
           <Route path="/examples/form" element={<ExampleFormIntegration />} />
           <Route path="/examples/video" element={<ExampleVideoUploader />} />
+          <Route
+            path="/examples/default-preview"
+            element={<ExampleDefaultPreview />}
+          />
+          <Route
+            path="/examples/sortable-gallery"
+            element={<ExampleSortableGallery />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
