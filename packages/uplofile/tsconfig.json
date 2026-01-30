@@ -3,7 +3,7 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "emitDeclarationOnly": false,
     "composite": false,
     "skipLibCheck": true,
