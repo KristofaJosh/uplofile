@@ -3,5 +3,4 @@ src/
 tsconfig.json
 *.test.*
 *.spec.*
-dist/index.d.mts
-dist/index.d.mts.map
+dist/index.d.ts.map
