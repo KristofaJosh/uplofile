@@ -57,6 +57,7 @@ export type ItemActions = {
 
 export type ImageUploaderContextValue = {
   items: UploadFileItem[];
+  setItems: (items: UploadFileItem[]) => void;
   disabled?: boolean;
   multiple: boolean;
   accept: string;
@@ -94,5 +95,6 @@ export type TriggerRenderProps = {
 
 export type PreviewRenderProps = {
   items: UploadFileItem[];
+  setItems: (items: UploadFileItem[]) => void;
   actions: ItemActions;
 };

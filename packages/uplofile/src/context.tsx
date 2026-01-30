@@ -315,6 +315,7 @@ export const Root = ({
       "data-disabled": disabled ? "" : undefined,
       "data-multiple": multiple ? "" : undefined,
     }),
+    setItems,
     hiddenInputValue,
     name,
   };
