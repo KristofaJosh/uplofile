@@ -202,6 +202,7 @@ export const Root = ({
     (e: DragEvent) => {
       e.preventDefault();
       if (disabled) return;
+      // TODO: validate drop target - check accepted MIME types
       selectFiles(e.dataTransfer.files);
     },
     [disabled, selectFiles],
