@@ -17,6 +17,7 @@ import ExampleAvatarUploader from "./pages/examples/AvatarUploader";
 import ExampleFileListWithActions from "./pages/examples/FileListWithActions";
 import ExampleFormIntegration from "./pages/examples/FormIntegration";
 import ExampleVideoUploader from "./pages/examples/VideoUploader";
+import ExampleBeforeUploadValidation from "./pages/examples/BeforeUploadValidation";
 import ExampleDefaultPreview from "./pages/examples/DefaultPreview";
 import ExampleSortableGallery from "./pages/examples/SortableGallery";
 import ExampleRootImperative from "./pages/examples/RootImperative";
@@ -59,6 +60,10 @@ const App = () => (
           />
           <Route path="/examples/form" element={<ExampleFormIntegration />} />
           <Route path="/examples/video" element={<ExampleVideoUploader />} />
+          <Route
+            path="/examples/validation"
+            element={<ExampleBeforeUploadValidation />}
+          />
           <Route
             path="/examples/default-preview"
             element={<ExampleDefaultPreview />}

@@ -10,6 +10,7 @@ Accessible, unstyled primitives for building your own upload UI — with drag‑
 - React 16+ compatible  
 - Drag‑and‑drop or click‑to‑upload  
 - Upload progress, plus cancel/retry/remove actions  
+- **Custom Validation:** Use `beforeUpload` to validate files before they start uploading
 - Hidden input for form submissions  
 - Unstyled — bring your own design
 

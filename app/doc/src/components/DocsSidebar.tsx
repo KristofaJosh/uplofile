@@ -37,6 +37,7 @@ export const sidebarItems = [
       { title: "Avatar Uploader", href: "/examples/avatar" },
       { title: "File List with Actions", href: "/examples/file-list" },
       { title: "Video Uploader", href: "/examples/video" },
+      { title: "Validation", href: "/examples/validation" },
       { title: "Form Integration", href: "/examples/form" },
       { title: "Imperative Root", href: "/examples/root-imperative" },
     ],
