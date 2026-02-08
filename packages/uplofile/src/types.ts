@@ -41,6 +41,16 @@ export type UplofileRootRef<TMeta = any> = {
   actions: ItemActions;
 };
 
+export type BeforeUploadResult<TMeta = any> =
+  | boolean
+  | Array<{
+      valid: boolean;
+      meta?: TMeta;
+      id?: string;
+      uid: string;
+      reason?: string;
+    }>;
+
 export type RootProps<TMeta = any> = PropsWithChildren<{
   multiple?: boolean;
   initial?: Array<
@@ -55,6 +65,9 @@ export type RootProps<TMeta = any> = PropsWithChildren<{
   maxCount?: number;
   disabled?: boolean;
   accept?: string;
+  beforeUpload?: (
+    items: UploadFileItem<TMeta>[],
+  ) => BeforeUploadResult<TMeta> | Promise<BeforeUploadResult<TMeta>>;
   onChange?: (items: UploadFileItem<TMeta>[]) => Promise<void> | void;
   upload: (
     file: File,

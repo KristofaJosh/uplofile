@@ -33,6 +33,7 @@ export const Root = forwardRef(
       removeMode = "optimistic",
       onRemove,
       accept = "image/*",
+      beforeUpload,
       name = "image",
       maxCount,
       disabled,
@@ -144,7 +145,7 @@ export const Root = forwardRef(
               ...it,
               status: "done",
               url: result.url,
-              id: result.id,
+              id: result.id ?? it.id,
               previewUrl: serverPreview,
               progress: 100,
             };
@@ -173,7 +174,7 @@ export const Root = forwardRef(
   );
 
   const selectFiles = useCallback(
-    (files: FileList | File[] | null) => {
+    async (files: FileList | File[] | null) => {
       if (!files) return;
       const selected = Array.isArray(files) ? files : Array.from(files);
       if (selected.length === 0) return;
@@ -186,7 +187,7 @@ export const Root = forwardRef(
       const toUse =
         typeof remaining === "number" ? selected.slice(0, remaining) : selected;
 
-      const newItems: UploadFileItem<TMeta>[] = toUse.map((file) => ({
+      let newItems: UploadFileItem<TMeta>[] = toUse.map((file) => ({
         uid: uid(),
         name: file.name,
         file,
@@ -195,10 +196,60 @@ export const Root = forwardRef(
         progress: 0,
       }));
 
-      emitChange([...items, ...newItems]);
-      newItems.forEach((it) => startUpload(it));
+      if (beforeUpload) {
+        const result = await beforeUpload(newItems);
+        if (result === false) {
+          newItems.forEach((it) => {
+            if (it.previewUrl) URL.revokeObjectURL(it.previewUrl);
+          });
+          return;
+        }
+
+        if (Array.isArray(result)) {
+          const resultMap = new Map(result.map((r) => [r.uid, r]));
+          const processedItems: UploadFileItem<TMeta>[] = [];
+
+          for (const item of newItems) {
+            const validation = resultMap.get(item.uid);
+            if (!validation) {
+              if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+              continue;
+            }
+
+            if (validation.valid) {
+              processedItems.push({
+                ...item,
+                meta:
+                  validation.meta !== undefined ? validation.meta : item.meta,
+                id: validation.id !== undefined ? validation.id : item.id,
+              });
+            } else if (validation.reason) {
+              processedItems.push({
+                ...item,
+                status: "error",
+                error: validation.reason,
+                meta:
+                  validation.meta !== undefined ? validation.meta : item.meta,
+                id: validation.id !== undefined ? validation.id : item.id,
+              });
+            } else {
+              if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+            }
+          }
+          newItems = processedItems;
+        }
+      }
+
+      if (newItems.length === 0) return;
+
+      emitChange((prev) => [...prev, ...newItems]);
+      newItems.forEach((it) => {
+        if (it.status === "idle") {
+          startUpload(it);
+        }
+      });
     },
-    [emitChange, items, maxCount, startUpload],
+    [beforeUpload, emitChange, items, maxCount, startUpload],
   );
 
   const onInputChange = useCallback(

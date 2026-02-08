@@ -133,6 +133,17 @@ const ComponentRoot = () => {
                 </tr>
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
+                    <code className="code-inline">beforeUpload</code>
+                  </td>
+                  <td className="py-3 px-2">Function</td>
+                  <td className="py-3 px-2">-</td>
+                  <td className="py-3 px-2">
+                    Hook to validate or enrich files before upload begins.
+                    Supports async validation and per-file granular control.
+                  </td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-2">
                     <code className="code-inline">initial</code>
                   </td>
                   <td className="py-3 px-2">Array</td>
