@@ -1,8 +1,10 @@
 import type { DragEvent, RefObject } from "react";
 import React, {
   createContext,
+  forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -13,95 +15,103 @@ import type {
   ItemActions,
   RootProps,
   UploadFileItem,
+  UplofileRootRef,
 } from "./types";
-import { uid } from "./utils";
+import { uid, acceptsFile } from "./utils";
 
 export const UploaderCtx = createContext<ImageUploaderContextValue | null>(
   null,
 );
 
-export const Root = ({
-  multiple = true,
-  initial = [],
-  onChange,
-  upload,
-  removeMode = "optimistic",
-  onRemove,
-  accept = "image/*",
-  name = "images",
-  maxCount,
-  disabled,
-  children,
-}: RootProps) => {
-  const [items, setItems] = useState<UploadFileItem[]>([]);
-  const controllers = useRef(new Map<string, AbortController>());
-  const removeControllers = useRef(new Map<string, AbortController>());
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const hasHydratedInitialRef = useRef(false);
+export const Root = forwardRef(
+  <TMeta = any,>(
+    {
+      multiple = true,
+      initial = [],
+      onChange,
+      upload,
+      removeMode = "optimistic",
+      onRemove,
+      accept = "image/*",
+      name = "image",
+      maxCount,
+      disabled,
+      children,
+    }: RootProps<TMeta>,
+    ref: React.Ref<UplofileRootRef<TMeta>>,
+  ) => {
+    const [items, setItems] = useState<UploadFileItem<TMeta>[]>([]);
+    const controllers = useRef(new Map<string, AbortController>());
+    const removeControllers = useRef(new Map<string, AbortController>());
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const hasHydratedInitialRef = useRef(false);
 
-  // Hydrate initial items from the server and keep them marked as done
-  useEffect(() => {
-    if (hasHydratedInitialRef.current) return;
-    const arr = initial ?? [];
-    if (!Array.isArray(arr) || arr.length === 0) return;
+    // Hydrate initial items from the server and keep them marked as done
+    useEffect(() => {
+      if (hasHydratedInitialRef.current) return;
+      const arr = initial ?? [];
+      if (!Array.isArray(arr) || arr.length === 0) return;
 
-    const mapped: UploadFileItem[] = arr.map((it) => {
-      return {
-        uid: it.uid || it.id,
-        id: it.id,
-        name: it.name,
-        url: it.url,
-        status: "done",
-      } as UploadFileItem;
-    });
-
-    // Only hydrate if the user hasn't already added/modified items locally
-    setItems((prev) => (prev.length === 0 ? mapped : prev));
-    hasHydratedInitialRef.current = true;
-  }, [initial]);
-
-  const hiddenInputValue = useMemo(() => {
-    const done = items.filter((i) => i.status === "done" && i.url);
-    return JSON.stringify(
-      done.map(
-        ({
-          uid: _u,
-          previewUrl: _p,
-          file: _f,
-          status: _s,
-          progress: _pr,
-          error: _e,
-          ...rest
-        }) => rest,
-      ),
-    );
-  }, [items]);
-
-  const emitChange = useCallback(
-    (
-      next: UploadFileItem[] | ((prev: UploadFileItem[]) => UploadFileItem[]),
-    ) => {
-      setItems((prev) => {
-        const nextState =
-          typeof next === "function" ? (next as any)(prev) : next;
-        if (onChange) Promise.resolve(onChange(nextState)).catch(() => {});
-        return nextState;
+      const mapped: UploadFileItem<TMeta>[] = arr.map((it) => {
+        return {
+          uid: it.uid || it.id,
+          id: it.id,
+          name: it.name,
+          url: it.url,
+          status: "done",
+          meta: it.meta,
+        } as UploadFileItem<TMeta>;
       });
-    },
-    [onChange],
-  );
 
-  const startUpload = useCallback(
-    async (item: UploadFileItem) => {
-      if (!item.file) return;
-      const controller = new AbortController();
-      controllers.current.set(item.uid, controller);
+      // Only hydrate if the user hasn't already added/modified items locally
+      setItems((prev) => (prev.length === 0 ? mapped : prev));
+      hasHydratedInitialRef.current = true;
+    }, [initial]);
 
-      const setProgress = (pct: number) => {
-        emitChange((items) =>
-          items.map((it) =>
-            it.uid === item.uid
-              ? { ...it, progress: Math.max(0, Math.min(100, pct)) }
+    const hiddenInputValue = useMemo(() => {
+      const done = items.filter((i) => i.status === "done" && i.url);
+      return JSON.stringify(
+        done.map(
+          ({
+            uid: _u,
+            previewUrl: _p,
+            file: _f,
+            status: _s,
+            progress: _pr,
+            error: _e,
+            ...rest
+          }) => rest,
+        ),
+      );
+    }, [items]);
+
+    const emitChange = useCallback(
+      (
+        next:
+          | UploadFileItem<TMeta>[]
+          | ((prev: UploadFileItem<TMeta>[]) => UploadFileItem<TMeta>[]),
+      ) => {
+        setItems((prev) => {
+          const nextState =
+            typeof next === "function" ? (next as any)(prev) : next;
+          if (onChange) Promise.resolve(onChange(nextState)).catch(() => {});
+          return nextState;
+        });
+      },
+      [onChange],
+    );
+
+    const startUpload = useCallback(
+      async (item: UploadFileItem<TMeta>) => {
+        if (!item.file) return;
+        const controller = new AbortController();
+        controllers.current.set(item.uid, controller);
+
+        const setProgress = (pct: number) => {
+          emitChange((items) =>
+            items.map((it) =>
+              it.uid === item.uid
+                ? { ...it, progress: Math.max(0, Math.min(100, pct)) }
               : it,
           ),
         );
@@ -163,9 +173,10 @@ export const Root = ({
   );
 
   const selectFiles = useCallback(
-    (files: FileList | null) => {
-      if (!files || files.length === 0) return;
-      const selected = Array.from(files);
+    (files: FileList | File[] | null) => {
+      if (!files) return;
+      const selected = Array.isArray(files) ? files : Array.from(files);
+      if (selected.length === 0) return;
       const remaining = maxCount
         ? Math.max(
             0,
@@ -175,7 +186,7 @@ export const Root = ({
       const toUse =
         typeof remaining === "number" ? selected.slice(0, remaining) : selected;
 
-      const newItems: UploadFileItem[] = toUse.map((file) => ({
+      const newItems: UploadFileItem<TMeta>[] = toUse.map((file) => ({
         uid: uid(),
         name: file.name,
         file,
@@ -202,9 +213,13 @@ export const Root = ({
     (e: DragEvent) => {
       e.preventDefault();
       if (disabled) return;
-      selectFiles(e.dataTransfer.files);
+      const dtFiles = e.dataTransfer?.files;
+      if (!dtFiles || dtFiles.length === 0) return;
+      const accepted = Array.from(dtFiles).filter((f) => acceptsFile(f, accept));
+      if (accepted.length === 0) return;
+      selectFiles(accepted);
     },
-    [disabled, selectFiles],
+    [disabled, selectFiles, accept],
   );
 
   const onDragOver = useCallback((e: DragEvent) => e.preventDefault(), []);
@@ -289,7 +304,7 @@ export const Root = ({
     [],
   );
 
-  const ctx: ImageUploaderContextValue = {
+  const ctx: ImageUploaderContextValue<TMeta> = {
     items,
     disabled,
     multiple,
@@ -320,6 +335,20 @@ export const Root = ({
     name,
   };
 
+  // Expose imperative methods via ref
+  useImperativeHandle(
+    ref,
+    () => ({
+      setItems: emitChange,
+      getItems: () => items,
+      onDrop,
+      onDragOver,
+      openFileDialog: () => inputRef.current?.click(),
+      actions,
+    }),
+    [emitChange, items, onDrop, onDragOver, actions],
+  );
+
   return (
     <UploaderCtx.Provider value={ctx}>
       <div data-part="root">
@@ -328,4 +357,4 @@ export const Root = ({
       </div>
     </UploaderCtx.Provider>
   );
-};
+});

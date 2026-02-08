@@ -1,6 +1,7 @@
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./Root.demo.tsx?raw";
+import codeImperative from "./RootImperativeIntro.demo.tsx?raw";
 
 const ComponentRoot = () => {
   return (
@@ -18,6 +19,57 @@ const ComponentRoot = () => {
           </h2>
 
           <CodeBlock code={code} language="tsx" />
+        </section>
+
+        <section className="space-y-4 mb-12">
+          <h2 className="text-xl font-semibold border-b border-border pb-2">
+            Using Ref for Imperative Control
+          </h2>
+
+          <p>
+            You can access Root's methods outside the context using a ref. This
+            is useful when you need to use drop handlers or methods from a
+            parent component while maintaining context for children.
+          </p>
+
+          <p>
+            The following example demonstrates how to turn a whole parent
+            container into a dropzone by imperatively calling{" "}
+            <code className="code-inline">onDrop</code> and{" "}
+            <code className="code-inline">onDragOver</code> on the ref.
+          </p>
+
+          <CodeBlock code={codeImperative} language="tsx" />
+
+          <div className="mt-4">
+            <h3 className="font-semibold mb-2">Available ref methods:</h3>
+            <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+              <li>
+                <code className="code-inline">setItems(items | updater)</code> -
+                Update items state
+              </li>
+              <li>
+                <code className="code-inline">getItems()</code> - Get current
+                items
+              </li>
+              <li>
+                <code className="code-inline">onDrop(e)</code> - Handle drop
+                events
+              </li>
+              <li>
+                <code className="code-inline">onDragOver(e)</code> - Handle drag
+                over events
+              </li>
+              <li>
+                <code className="code-inline">openFileDialog()</code> - Open
+                file picker
+              </li>
+              <li>
+                <code className="code-inline">actions</code> - Access cancel,
+                remove, retry methods
+              </li>
+            </ul>
+          </div>
         </section>
 
         <section className="space-y-4 mb-12">

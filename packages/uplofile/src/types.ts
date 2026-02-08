@@ -13,7 +13,7 @@ export type UploadStatus =
   | "canceled"
   | "removing";
 
-export type UploadFileItem = {
+export type UploadFileItem<TMeta = any> = {
   uid: string;
   id?: string;
   name: string;
@@ -23,14 +23,29 @@ export type UploadFileItem = {
   status: UploadStatus;
   progress?: number;
   error?: string;
-  data?: any;
+  meta?: TMeta;
 };
 
 export type UploadResult = { url: string; id?: string };
 
-export type RootProps = PropsWithChildren<{
+export type UplofileRootRef<TMeta = any> = {
+  setItems: (
+    items:
+      | UploadFileItem<TMeta>[]
+      | ((prev: UploadFileItem<TMeta>[]) => UploadFileItem<TMeta>[]),
+  ) => void;
+  getItems: () => UploadFileItem<TMeta>[];
+  onDrop: (e: DragEvent) => void;
+  onDragOver: (e: DragEvent) => void;
+  openFileDialog: () => void;
+  actions: ItemActions;
+};
+
+export type RootProps<TMeta = any> = PropsWithChildren<{
   multiple?: boolean;
-  initial?: Array<Pick<UploadFileItem, "uid" | "id" | "name" | "url">>;
+  initial?: Array<
+    Pick<UploadFileItem<TMeta>, "uid" | "id" | "name" | "url" | "meta">
+  >;
   /**
    * optimistic (default): remove from UI immediately, call onRemove in the background; if it fails, restore the item and show error.
    * strict: call onRemove first; only remove from UI if it succeeds.
@@ -40,13 +55,16 @@ export type RootProps = PropsWithChildren<{
   maxCount?: number;
   disabled?: boolean;
   accept?: string;
-  onChange?: (items: UploadFileItem[]) => Promise<void> | void;
+  onChange?: (items: UploadFileItem<TMeta>[]) => Promise<void> | void;
   upload: (
     file: File,
     signal: AbortSignal,
     setProgress?: (pct: number) => void,
   ) => Promise<UploadResult>;
-  onRemove?: (item: UploadFileItem, signal: AbortSignal) => Promise<void | any>;
+  onRemove?: (
+    item: UploadFileItem<TMeta>,
+    signal: AbortSignal,
+  ) => Promise<void | any>;
 }>;
 
 export type ItemActions = {
@@ -55,9 +73,9 @@ export type ItemActions = {
   retry: (uid: string) => void;
 };
 
-export type ImageUploaderContextValue = {
-  items: UploadFileItem[];
-  setItems: (items: UploadFileItem[]) => void;
+export type ImageUploaderContextValue<TMeta = any> = {
+  items: UploadFileItem<TMeta>[];
+  setItems: (items: UploadFileItem<TMeta>[]) => void;
   disabled?: boolean;
   multiple: boolean;
   accept: string;
@@ -83,8 +101,8 @@ export type ImageUploaderContextValue = {
   name: string;
 };
 
-export type TriggerRenderProps = {
-  items: UploadFileItem[];
+export type TriggerRenderProps<TMeta = any> = {
+  items: UploadFileItem<TMeta>[];
   isUploading: boolean;
   uploadingCount: number;
   doneCount: number;
@@ -93,8 +111,8 @@ export type TriggerRenderProps = {
   open: () => void;
 };
 
-export type PreviewRenderProps = {
-  items: UploadFileItem[];
-  setItems: (items: UploadFileItem[]) => void;
+export type PreviewRenderProps<TMeta = any> = {
+  items: UploadFileItem<TMeta>[];
+  setItems: (items: UploadFileItem<TMeta>[]) => void;
   actions: ItemActions;
 };

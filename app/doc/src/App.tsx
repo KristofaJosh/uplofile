@@ -19,6 +19,7 @@ import ExampleFormIntegration from "./pages/examples/FormIntegration";
 import ExampleVideoUploader from "./pages/examples/VideoUploader";
 import ExampleDefaultPreview from "./pages/examples/DefaultPreview";
 import ExampleSortableGallery from "./pages/examples/SortableGallery";
+import ExampleRootImperative from "./pages/examples/RootImperative";
 import NotFound from "./pages/NotFound";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -65,6 +66,10 @@ const App = () => (
           <Route
             path="/examples/sortable-gallery"
             element={<ExampleSortableGallery />}
+          />
+          <Route
+            path="/examples/root-imperative"
+            element={<ExampleRootImperative />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
