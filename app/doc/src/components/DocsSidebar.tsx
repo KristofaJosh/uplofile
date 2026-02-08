@@ -38,6 +38,7 @@ export const sidebarItems = [
       { title: "File List with Actions", href: "/examples/file-list" },
       { title: "Video Uploader", href: "/examples/video" },
       { title: "Form Integration", href: "/examples/form" },
+      { title: "Imperative Root", href: "/examples/root-imperative" },
     ],
   },
 ];

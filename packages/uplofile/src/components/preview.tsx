@@ -6,12 +6,12 @@ import { isVideoFile } from "../utils";
 
 import type { PreviewRenderProps } from "../types";
 
-type Props = {
-  render?: (api: PreviewRenderProps) => React.ReactNode;
+type Props<TMeta = any> = {
+  render?: (api: PreviewRenderProps<TMeta>) => React.ReactNode;
 };
 
-export const Preview = ({ render }: Props) => {
-  const { items, actions, setItems } = useUplofile();
+export const Preview = <TMeta = any>({ render }: Props<TMeta>) => {
+  const { items, actions, setItems } = useUplofile<TMeta>();
 
   if (render && typeof render === "function")
     return render({ items, setItems, actions });
@@ -265,11 +265,12 @@ export const Cancel = ({
 
   return (
     <Comp
-      onClick={(e: { stopPropagation: () => void }) => {
+      {...rest}
+      onClick={(e: Event) => {
         e.stopPropagation();
         actions.cancel(uid);
+        rest.onClick?.(e as any);
       }}
-      {...rest}
     />
   );
 };
@@ -279,11 +280,12 @@ export const Retry = ({ uid, asChild, ...rest }: ButtonProps) => {
   const Comp: any = asChild ? Slot : "button";
   return (
     <Comp
-      onClick={(e: { stopPropagation: () => void }) => {
+      {...rest}
+      onClick={(e: Event) => {
         e.stopPropagation();
         actions.retry(uid);
+        rest.onClick?.(e as any);
       }}
-      {...rest}
     />
   );
 };
@@ -293,11 +295,12 @@ export const Remove = ({ uid, asChild, ...rest }: ButtonProps) => {
   const Comp: any = asChild ? Slot : "button";
   return (
     <Comp
-      onClick={(e: { stopPropagation: () => void }) => {
+      {...rest}
+      onClick={(e: Event) => {
         e.stopPropagation();
         actions.remove(uid);
+        rest.onClick?.(e as any);
       }}
-      {...rest}
     />
   );
 };
