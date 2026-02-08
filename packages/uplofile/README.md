@@ -30,53 +30,17 @@ pnpm add uplofile
 
 ## Quick Start
 
-Import the primitives:
+Import and use the components in your React component:
 
-```typescript
-import * as Uplofile from "uplofile";
-
-const UplofileRoot = Uplofile.Root;
-
-const UplofileTrigger = Uplofile.Trigger;
-
-const UplofileHiddenInput = Uplofile.HiddenInput;
-
-const UplofileDropzone = Uplofile.Dropzone;
-
-const UplofilePreview = Uplofile.Preview;
-
-const UplofileCancel = Uplofile.Cancel;
-
-const UplofileRetry = Uplofile.Retry;
-
-const UplofileRemove = Uplofile.Remove;
-
-export {
-  UplofileRoot,
-  UplofileTrigger,
-  UplofileHiddenInput,
-  UplofileDropzone,
-  UplofilePreview,
-  UplofileCancel,
-  UplofileRetry,
-  UplofileRemove,
-};
-
-```
-
-Then use them in your React component:
 ```tsx
 "use client";
 
 import {
-    UplofileCancel,
     UplofileDropzone,
     UplofilePreview,
-    UplofileRemove,
-    UplofileRetry,
     UplofileRoot,
     UplofileTrigger,
-} from "./components/ui/uplofile";
+} from "uplofile";
 
 export default function Basic() {
   return (
