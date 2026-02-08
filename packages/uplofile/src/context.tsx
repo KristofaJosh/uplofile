@@ -1,8 +1,10 @@
 import type { DragEvent, RefObject } from "react";
 import React, {
   createContext,
+  forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -13,6 +15,7 @@ import type {
   ItemActions,
   RootProps,
   UploadFileItem,
+  UplofileRootRef,
 } from "./types";
 import { uid } from "./utils";
 
@@ -20,19 +23,23 @@ export const UploaderCtx = createContext<ImageUploaderContextValue | null>(
   null,
 );
 
-export const Root = ({
-  multiple = true,
-  initial = [],
-  onChange,
-  upload,
-  removeMode = "optimistic",
-  onRemove,
-  accept = "image/*",
-  name = "images",
-  maxCount,
-  disabled,
-  children,
-}: RootProps) => {
+export const Root = forwardRef<UplofileRootRef, RootProps>(
+  (
+    {
+      multiple = true,
+      initial = [],
+      onChange,
+      upload,
+      removeMode = "optimistic",
+      onRemove,
+      accept = "image/*",
+      name = "images",
+      maxCount,
+      disabled,
+      children,
+    },
+    ref,
+  ) => {
   const [items, setItems] = useState<UploadFileItem[]>([]);
   const controllers = useRef(new Map<string, AbortController>());
   const removeControllers = useRef(new Map<string, AbortController>());
@@ -321,6 +328,20 @@ export const Root = ({
     name,
   };
 
+  // Expose imperative methods via ref
+  useImperativeHandle(
+    ref,
+    () => ({
+      setItems: emitChange,
+      getItems: () => items,
+      onDrop,
+      onDragOver,
+      openFileDialog: () => inputRef.current?.click(),
+      actions,
+    }),
+    [emitChange, items, onDrop, onDragOver, actions],
+  );
+
   return (
     <UploaderCtx.Provider value={ctx}>
       <div data-part="root">
@@ -329,4 +350,4 @@ export const Root = ({
       </div>
     </UploaderCtx.Provider>
   );
-};
+});

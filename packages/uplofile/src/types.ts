@@ -28,6 +28,17 @@ export type UploadFileItem = {
 
 export type UploadResult = { url: string; id?: string };
 
+export type UplofileRootRef = {
+  setItems: (
+    items: UploadFileItem[] | ((prev: UploadFileItem[]) => UploadFileItem[]),
+  ) => void;
+  getItems: () => UploadFileItem[];
+  onDrop: (e: DragEvent) => void;
+  onDragOver: (e: DragEvent) => void;
+  openFileDialog: () => void;
+  actions: ItemActions;
+};
+
 export type RootProps = PropsWithChildren<{
   multiple?: boolean;
   initial?: Array<Pick<UploadFileItem, "uid" | "id" | "name" | "url">>;

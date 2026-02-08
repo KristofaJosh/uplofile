@@ -17,4 +17,5 @@ export type {
   UploadFileItem,
   UploadStatus,
   UploadResult,
+  UplofileRootRef,
 } from "./types";
