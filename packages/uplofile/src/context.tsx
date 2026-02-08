@@ -17,7 +17,7 @@ import type {
   UploadFileItem,
   UplofileRootRef,
 } from "./types";
-import { uid } from "./utils";
+import { uid, acceptsFile } from "./utils";
 
 export const UploaderCtx = createContext<ImageUploaderContextValue | null>(
   null,
@@ -33,7 +33,7 @@ export const Root = forwardRef(
       removeMode = "optimistic",
       onRemove,
       accept = "image/*",
-      name = "images",
+      name = "image",
       maxCount,
       disabled,
       children,
@@ -173,9 +173,10 @@ export const Root = forwardRef(
   );
 
   const selectFiles = useCallback(
-    (files: FileList | null) => {
-      if (!files || files.length === 0) return;
-      const selected = Array.from(files);
+    (files: FileList | File[] | null) => {
+      if (!files) return;
+      const selected = Array.isArray(files) ? files : Array.from(files);
+      if (selected.length === 0) return;
       const remaining = maxCount
         ? Math.max(
             0,
@@ -212,10 +213,13 @@ export const Root = forwardRef(
     (e: DragEvent) => {
       e.preventDefault();
       if (disabled) return;
-      // TODO: validate drop target - check accepted MIME types
-      selectFiles(e.dataTransfer.files);
+      const dtFiles = e.dataTransfer?.files;
+      if (!dtFiles || dtFiles.length === 0) return;
+      const accepted = Array.from(dtFiles).filter((f) => acceptsFile(f, accept));
+      if (accepted.length === 0) return;
+      selectFiles(accepted);
     },
-    [disabled, selectFiles],
+    [disabled, selectFiles, accept],
   );
 
   const onDragOver = useCallback((e: DragEvent) => e.preventDefault(), []);

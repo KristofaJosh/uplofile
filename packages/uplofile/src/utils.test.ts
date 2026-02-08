@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isVideoFile, isImageFile, getExtension } from "./utils";
+import { isVideoFile, isImageFile, getExtension, acceptsFile } from "./utils";
 
 describe("utils", () => {
   describe("isVideoFile", () => {
@@ -124,6 +124,42 @@ describe("utils", () => {
       // In some environments, URL constructor might fail for relative paths without base
       // The catch block handles this
       expect(getExtension("some/local/file.webp?v=1")).toBe("webp");
+    });
+  });
+
+  describe("acceptsFile", () => {
+    const makeFile = (name: string, type: string): File => {
+      // Using Blob to construct a File-like; in browser env this is fine for type
+      return new File(["content"], name, { type });
+    };
+
+    it("allows when accept is empty", () => {
+      const f = makeFile("photo.jpg", "image/jpeg");
+      expect(acceptsFile(f, "")).toBe(true);
+    });
+
+    it("matches exact MIME type", () => {
+      const f = makeFile("photo.png", "image/png");
+      expect(acceptsFile(f, "image/png")).toBe(true);
+      expect(acceptsFile(f, "image/jpeg")).toBe(false);
+    });
+
+    it("matches wildcard MIME type", () => {
+      const f = makeFile("photo.webp", "image/webp");
+      expect(acceptsFile(f, "image/*")).toBe(true);
+      expect(acceptsFile(f, "video/*")).toBe(false);
+    });
+
+    it("matches extension tokens with and without dot", () => {
+      const f = makeFile("movie.mp4", "video/mp4");
+      expect(acceptsFile(f, ".mp4")).toBe(true);
+      expect(acceptsFile(f, "mp4")).toBe(true);
+      expect(acceptsFile(f, ".mov")).toBe(false);
+    });
+
+    it("handles comma-separated tokens and whitespace", () => {
+      const f = makeFile("icon.svg", "image/svg+xml");
+      expect(acceptsFile(f, "image/png, image/*, .svg")).toBe(true);
     });
   });
 });
