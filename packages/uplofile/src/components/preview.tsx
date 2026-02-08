@@ -6,12 +6,12 @@ import { isVideoFile } from "../utils";
 
 import type { PreviewRenderProps } from "../types";
 
-type Props = {
-  render?: (api: PreviewRenderProps) => React.ReactNode;
+type Props<TMeta = any> = {
+  render?: (api: PreviewRenderProps<TMeta>) => React.ReactNode;
 };
 
-export const Preview = ({ render }: Props) => {
-  const { items, actions, setItems } = useUplofile();
+export const Preview = <TMeta = any>({ render }: Props<TMeta>) => {
+  const { items, actions, setItems } = useUplofile<TMeta>();
 
   if (render && typeof render === "function")
     return render({ items, setItems, actions });

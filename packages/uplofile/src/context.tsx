@@ -23,8 +23,8 @@ export const UploaderCtx = createContext<ImageUploaderContextValue | null>(
   null,
 );
 
-export const Root = forwardRef<UplofileRootRef, RootProps>(
-  (
+export const Root = forwardRef(
+  <TMeta = any,>(
     {
       multiple = true,
       initial = [],
@@ -37,78 +37,81 @@ export const Root = forwardRef<UplofileRootRef, RootProps>(
       maxCount,
       disabled,
       children,
-    },
-    ref,
+    }: RootProps<TMeta>,
+    ref: React.Ref<UplofileRootRef<TMeta>>,
   ) => {
-  const [items, setItems] = useState<UploadFileItem[]>([]);
-  const controllers = useRef(new Map<string, AbortController>());
-  const removeControllers = useRef(new Map<string, AbortController>());
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const hasHydratedInitialRef = useRef(false);
+    const [items, setItems] = useState<UploadFileItem<TMeta>[]>([]);
+    const controllers = useRef(new Map<string, AbortController>());
+    const removeControllers = useRef(new Map<string, AbortController>());
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const hasHydratedInitialRef = useRef(false);
 
-  // Hydrate initial items from the server and keep them marked as done
-  useEffect(() => {
-    if (hasHydratedInitialRef.current) return;
-    const arr = initial ?? [];
-    if (!Array.isArray(arr) || arr.length === 0) return;
+    // Hydrate initial items from the server and keep them marked as done
+    useEffect(() => {
+      if (hasHydratedInitialRef.current) return;
+      const arr = initial ?? [];
+      if (!Array.isArray(arr) || arr.length === 0) return;
 
-    const mapped: UploadFileItem[] = arr.map((it) => {
-      return {
-        uid: it.uid || it.id,
-        id: it.id,
-        name: it.name,
-        url: it.url,
-        status: "done",
-      } as UploadFileItem;
-    });
-
-    // Only hydrate if the user hasn't already added/modified items locally
-    setItems((prev) => (prev.length === 0 ? mapped : prev));
-    hasHydratedInitialRef.current = true;
-  }, [initial]);
-
-  const hiddenInputValue = useMemo(() => {
-    const done = items.filter((i) => i.status === "done" && i.url);
-    return JSON.stringify(
-      done.map(
-        ({
-          uid: _u,
-          previewUrl: _p,
-          file: _f,
-          status: _s,
-          progress: _pr,
-          error: _e,
-          ...rest
-        }) => rest,
-      ),
-    );
-  }, [items]);
-
-  const emitChange = useCallback(
-    (
-      next: UploadFileItem[] | ((prev: UploadFileItem[]) => UploadFileItem[]),
-    ) => {
-      setItems((prev) => {
-        const nextState =
-          typeof next === "function" ? (next as any)(prev) : next;
-        if (onChange) Promise.resolve(onChange(nextState)).catch(() => {});
-        return nextState;
+      const mapped: UploadFileItem<TMeta>[] = arr.map((it) => {
+        return {
+          uid: it.uid || it.id,
+          id: it.id,
+          name: it.name,
+          url: it.url,
+          status: "done",
+          meta: it.meta,
+        } as UploadFileItem<TMeta>;
       });
-    },
-    [onChange],
-  );
 
-  const startUpload = useCallback(
-    async (item: UploadFileItem) => {
-      if (!item.file) return;
-      const controller = new AbortController();
-      controllers.current.set(item.uid, controller);
+      // Only hydrate if the user hasn't already added/modified items locally
+      setItems((prev) => (prev.length === 0 ? mapped : prev));
+      hasHydratedInitialRef.current = true;
+    }, [initial]);
 
-      const setProgress = (pct: number) => {
-        emitChange((items) =>
-          items.map((it) =>
-            it.uid === item.uid
-              ? { ...it, progress: Math.max(0, Math.min(100, pct)) }
+    const hiddenInputValue = useMemo(() => {
+      const done = items.filter((i) => i.status === "done" && i.url);
+      return JSON.stringify(
+        done.map(
+          ({
+            uid: _u,
+            previewUrl: _p,
+            file: _f,
+            status: _s,
+            progress: _pr,
+            error: _e,
+            ...rest
+          }) => rest,
+        ),
+      );
+    }, [items]);
+
+    const emitChange = useCallback(
+      (
+        next:
+          | UploadFileItem<TMeta>[]
+          | ((prev: UploadFileItem<TMeta>[]) => UploadFileItem<TMeta>[]),
+      ) => {
+        setItems((prev) => {
+          const nextState =
+            typeof next === "function" ? (next as any)(prev) : next;
+          if (onChange) Promise.resolve(onChange(nextState)).catch(() => {});
+          return nextState;
+        });
+      },
+      [onChange],
+    );
+
+    const startUpload = useCallback(
+      async (item: UploadFileItem<TMeta>) => {
+        if (!item.file) return;
+        const controller = new AbortController();
+        controllers.current.set(item.uid, controller);
+
+        const setProgress = (pct: number) => {
+          emitChange((items) =>
+            items.map((it) =>
+              it.uid === item.uid
+                ? { ...it, progress: Math.max(0, Math.min(100, pct)) }
               : it,
           ),
         );
@@ -182,7 +185,7 @@ export const Root = forwardRef<UplofileRootRef, RootProps>(
       const toUse =
         typeof remaining === "number" ? selected.slice(0, remaining) : selected;
 
-      const newItems: UploadFileItem[] = toUse.map((file) => ({
+      const newItems: UploadFileItem<TMeta>[] = toUse.map((file) => ({
         uid: uid(),
         name: file.name,
         file,
@@ -297,7 +300,7 @@ export const Root = forwardRef<UplofileRootRef, RootProps>(
     [],
   );
 
-  const ctx: ImageUploaderContextValue = {
+  const ctx: ImageUploaderContextValue<TMeta> = {
     items,
     disabled,
     multiple,

@@ -3,7 +3,7 @@ export const uid = () =>
 
 import { UploadFileItem } from "./types";
 
-export const isVideoFile = (item: UploadFileItem): boolean => {
+export const isVideoFile = (item: UploadFileItem<any>): boolean => {
   if (item.file) {
     return item.file.type.startsWith("video/");
   }

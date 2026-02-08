@@ -4,7 +4,7 @@ import React, { PropsWithChildren } from "react";
 import { useUplofile } from "../hook";
 import type { TriggerRenderProps } from "../types";
 
-export const Trigger = ({
+export const Trigger = <TMeta = any>({
   asChild,
   children,
   render,
@@ -12,11 +12,13 @@ export const Trigger = ({
 }: PropsWithChildren<
   {
     asChild?: boolean;
-    render?: (api: TriggerRenderProps) => React.ReactNode;
-    children?: React.ReactNode | ((api: TriggerRenderProps) => React.ReactNode);
+    render?: (api: TriggerRenderProps<TMeta>) => React.ReactNode;
+    children?:
+      | React.ReactNode
+      | ((api: TriggerRenderProps<TMeta>) => React.ReactNode);
   } & React.HTMLAttributes<HTMLElement>
 >) => {
-  const { openFileDialog, disabled, items } = useUplofile();
+  const { openFileDialog, disabled, items } = useUplofile<TMeta>();
   const Comp: any = asChild ? Slot : "button";
 
   const uploading = items.filter((i) => i.status === "uploading");
