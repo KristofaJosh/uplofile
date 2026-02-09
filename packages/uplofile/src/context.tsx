@@ -29,6 +29,7 @@ export const Root = forwardRef(
       multiple = true,
       initial = [],
       onChange,
+      onLoadingChange,
       upload,
       removeMode = "optimistic",
       onRemove,
@@ -42,33 +43,49 @@ export const Root = forwardRef(
     ref: React.Ref<UplofileRootRef<TMeta>>,
   ) => {
     const [items, setItems] = useState<UploadFileItem<TMeta>[]>([]);
+    const [isLoading, setIsLoading] = useState(
+      Array.isArray(initial) ? initial.length > 0 : !!initial,
+    );
     const controllers = useRef(new Map<string, AbortController>());
     const removeControllers = useRef(new Map<string, AbortController>());
     const inputRef = useRef<HTMLInputElement | null>(null);
     const hasHydratedInitialRef = useRef(false);
+    const onLoadingChangeRef = useRef(onLoadingChange);
+
+    useEffect(() => {
+      onLoadingChangeRef.current = onLoadingChange;
+    }, [onLoadingChange]);
+
+    useEffect(() => {
+      onLoadingChangeRef.current?.(isLoading);
+    }, [isLoading]);
 
     // Hydrate initial items from the server and keep them marked as done
     useEffect(() => {
       if (hasHydratedInitialRef.current) return;
 
       const hydrate = async () => {
-        const arr = await initial;
-        if (!Array.isArray(arr) || arr.length === 0) return;
+        try {
+          const arr = await initial;
+          if (!Array.isArray(arr) || arr.length === 0) return;
 
-        const mapped: UploadFileItem<TMeta>[] = arr.map((it) => {
-          return {
-            uid: it.uid || it.id,
-            id: it.id,
-            name: it.name,
-            url: it.url,
-            status: "done",
-            meta: it.meta,
-          } as UploadFileItem<TMeta>;
-        });
+          const mapped: UploadFileItem<TMeta>[] = arr.map((it) => {
+            return {
+              uid: it.uid || it.id,
+              id: it.id,
+              name: it.name,
+              url: it.url,
+              status: "done",
+              meta: it.meta,
+            } as UploadFileItem<TMeta>;
+          });
 
-        // Only hydrate if the user hasn't already added/modified items locally
-        setItems((prev) => (prev.length === 0 ? mapped : prev));
-        hasHydratedInitialRef.current = true;
+          // Only hydrate if the user hasn't already added/modified items locally
+          setItems((prev) => (prev.length === 0 ? mapped : prev));
+          hasHydratedInitialRef.current = true;
+        } finally {
+          setIsLoading(false);
+        }
       };
 
       void hydrate();
@@ -372,6 +389,7 @@ export const Root = forwardRef(
 
     const ctx: ImageUploaderContextValue<TMeta> = {
       items,
+      isLoading,
       disabled,
       multiple,
       accept,
@@ -407,12 +425,19 @@ export const Root = forwardRef(
       () => ({
         setItems: emitChange,
         getItems: () => items,
+        isLoading,
         onDrop,
         onDragOver,
         openFileDialog: () => inputRef.current?.click(),
         actions,
+        get onLoadingChange() {
+          return onLoadingChangeRef.current;
+        },
+        set onLoadingChange(callback) {
+          onLoadingChangeRef.current = callback;
+        },
       }),
-      [emitChange, items, onDrop, onDragOver, actions],
+      [emitChange, items, isLoading, onDrop, onDragOver, actions],
     );
 
     return (

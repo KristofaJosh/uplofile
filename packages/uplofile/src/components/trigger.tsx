@@ -18,7 +18,7 @@ export const Trigger = <TMeta = any,>({
       | ((api: TriggerRenderProps<TMeta>) => React.ReactNode);
   } & React.HTMLAttributes<HTMLElement>
 >) => {
-  const { openFileDialog, disabled, items } = useUplofile<TMeta>();
+  const { openFileDialog, disabled, items, isLoading } = useUplofile<TMeta>();
   const Comp: any = asChild ? Slot : "button";
 
   const uploading = items.filter((i) => i.status === "uploading");
@@ -37,6 +37,7 @@ export const Trigger = <TMeta = any,>({
 
   const api: TriggerRenderProps = {
     items,
+    isLoading,
     isUploading: uploadingCount > 0,
     uploadingCount,
     doneCount,

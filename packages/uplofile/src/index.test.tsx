@@ -5,6 +5,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { Root } from "./context";
+import { Trigger } from "./components/trigger";
 import { UplofileRootRef } from "./types";
 
 // Mock URL methods
@@ -72,6 +73,112 @@ describe("Root Component", () => {
 
       await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
       expect(ref!.getItems()[0].name).toBe("test3.jpg");
+    });
+
+    it("should provide isLoading state during hydration", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      let isLoadingValue = false;
+
+      render(
+        <Root upload={mockUpload} initial={initial}>
+          <Trigger
+            render={({ isLoading }) => {
+              isLoadingValue = isLoading;
+              return null;
+            }}
+          />
+        </Root>,
+      );
+
+      expect(isLoadingValue).toBe(true);
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "4", name: "test4.jpg", url: "https://example.com/4.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(isLoadingValue).toBe(false));
+    });
+
+    it("should provide isLoading state via imperative ref", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      expect(ref!.isLoading).toBe(true);
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "5", name: "test5.jpg", url: "https://example.com/5.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(ref!.isLoading).toBe(false));
+    });
+
+    it("should call onLoadingChange prop when isLoading changes", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      const onLoadingChange = vi.fn();
+
+      render(
+        <Root
+          upload={mockUpload}
+          initial={initial}
+          onLoadingChange={onLoadingChange}
+        >
+          <div />
+        </Root>,
+      );
+
+      expect(onLoadingChange).toHaveBeenCalledWith(true);
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "6", name: "test6.jpg", url: "https://example.com/6.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(onLoadingChange).toHaveBeenCalledWith(false));
+    });
+
+    it("should call onLoadingChange set via imperative ref", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      const onLoadingChange = vi.fn();
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      ref!.onLoadingChange = onLoadingChange;
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "7", name: "test7.jpg", url: "https://example.com/7.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(onLoadingChange).toHaveBeenCalledWith(false));
     });
   });
 

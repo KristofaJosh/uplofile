@@ -11,10 +11,10 @@ type Props<TMeta = any> = {
 };
 
 export const Preview = <TMeta = any,>({ render }: Props<TMeta>) => {
-  const { items, actions, setItems } = useUplofile<TMeta>();
+  const { items, actions, setItems, isLoading } = useUplofile<TMeta>();
 
   if (render && typeof render === "function")
-    return render({ items, setItems, actions });
+    return render({ items, setItems, actions, isLoading });
 
   if (items.length === 0) return null;
 
