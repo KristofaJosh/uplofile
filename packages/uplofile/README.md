@@ -7,11 +7,11 @@ Accessible, unstyled primitives for building your own upload UI — with drag‑
 
 ## Features
 
-- React 16+ compatible  
-- Drag‑and‑drop or click‑to‑upload  
-- Upload progress, plus cancel/retry/remove actions  
+- React 16+ compatible
+- Drag‑and‑drop or click‑to‑upload
+- Upload progress, plus cancel/retry/remove actions
 - **Custom Validation:** Use `beforeUpload` to validate files before they start uploading
-- Hidden input for form submissions  
+- Hidden input for form submissions
 - Unstyled — bring your own design
 
 ---
@@ -36,25 +36,25 @@ Import and use the components in your React component:
 "use client";
 
 import {
-    UplofileDropzone,
-    UplofilePreview,
-    UplofileRoot,
-    UplofileTrigger,
+  UplofileDropzone,
+  UplofilePreview,
+  UplofileRoot,
+  UplofileTrigger,
 } from "uplofile";
 
 export default function Basic() {
   return (
-      <UplofileRoot onRemove={onRemove} upload={upload} removeMode={"strict"}>
-          <UplofileDropzone className={"border p-2 rounded"}>
-              <span>Drop your files here or</span>{" "}
-              <UplofileTrigger className={"underline text-blue-500"}>
-                  Select file
-              </UplofileTrigger>
-              <div className={"border-t my-6 py-6"}>
-                  <UplofilePreview />
-              </div>
-          </UplofileDropzone>
-      </UplofileRoot>
+    <UplofileRoot onRemove={onRemove} upload={upload} removeMode={"strict"}>
+      <UplofileDropzone className={"border p-2 rounded"}>
+        <span>Drop your files here or</span>{" "}
+        <UplofileTrigger className={"underline text-blue-500"}>
+          Select file
+        </UplofileTrigger>
+        <div className={"border-t my-6 py-6"}>
+          <UplofilePreview />
+        </div>
+      </UplofileDropzone>
+    </UplofileRoot>
   );
 }
 ```

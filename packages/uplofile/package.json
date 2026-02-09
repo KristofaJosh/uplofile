@@ -1,6 +1,6 @@
 {
   "name": "uplofile",
-  "version": "2.1.0",
+  "version": "2.2.2",
   "description": "Composable file‑upload components for React.",
   "license": "MIT",
   "author": "Chris Josh <KristofaJosh>",
@@ -41,7 +41,8 @@
     "clean": "rm -rf dist",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
-    "test": "vitest"
+    "test": "vitest",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.1.0"

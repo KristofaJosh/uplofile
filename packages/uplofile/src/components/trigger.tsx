@@ -4,10 +4,11 @@ import React, { PropsWithChildren } from "react";
 import { useUplofile } from "../hook";
 import type { TriggerRenderProps } from "../types";
 
-export const Trigger = <TMeta = any>({
+export const Trigger = <TMeta = any,>({
   asChild,
   children,
   render,
+  onClick,
   ...rest
 }: PropsWithChildren<
   {
@@ -18,7 +19,7 @@ export const Trigger = <TMeta = any>({
       | ((api: TriggerRenderProps<TMeta>) => React.ReactNode);
   } & React.HTMLAttributes<HTMLElement>
 >) => {
-  const { openFileDialog, disabled, items } = useUplofile<TMeta>();
+  const { openFileDialog, disabled, items, isLoading } = useUplofile<TMeta>();
   const Comp: any = asChild ? Slot : "button";
 
   const uploading = items.filter((i) => i.status === "uploading");
@@ -37,6 +38,7 @@ export const Trigger = <TMeta = any>({
 
   const api: TriggerRenderProps = {
     items,
+    isLoading,
     isUploading: uploadingCount > 0,
     uploadingCount,
     doneCount,
@@ -50,12 +52,13 @@ export const Trigger = <TMeta = any>({
       type={asChild ? undefined : "button"}
       aria-disabled={disabled}
       data-part="trigger"
+      {...rest}
       onClick={(e: any) => {
         if (disabled) return;
-        (rest as any).onClick?.(e);
+        (onClick as any)?.(e);
+        if (e.defaultPrevented) return;
         openFileDialog();
       }}
-      {...rest}
     >
       {render ? render(api) : children}
     </Comp>

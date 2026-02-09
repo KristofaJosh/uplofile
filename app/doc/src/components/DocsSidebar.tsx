@@ -40,6 +40,7 @@ export const sidebarItems = [
       { title: "Validation", href: "/examples/validation" },
       { title: "Form Integration", href: "/examples/form" },
       { title: "Imperative Root", href: "/examples/root-imperative" },
+      { title: "Loading State", href: "/examples/loading-state" },
     ],
   },
 ];

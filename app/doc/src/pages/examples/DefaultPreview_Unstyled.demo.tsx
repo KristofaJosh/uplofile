@@ -15,7 +15,9 @@ export default function DefaultPreviewUnstyledDemo() {
       </UplofileTrigger>
 
       <div className="mt-8 border-t pt-8">
-        <h3 className="text-sm font-medium mb-4">Unstyled Preview (Custom Render):</h3>
+        <h3 className="text-sm font-medium mb-4">
+          Unstyled Preview (Custom Render):
+        </h3>
         <UplofilePreview
           render={({ items, actions }) => (
             <ul className="list-disc pl-5 space-y-2">

@@ -5,13 +5,13 @@ import {
   UplofilePreview,
   UploadFileItem,
 } from "@/components/ui/uplofile";
-import { 
-  ImagePlus, 
-  ImageIcon, 
-  Loader2, 
-  CheckCircle2, 
+import {
+  ImagePlus,
+  ImageIcon,
+  Loader2,
+  CheckCircle2,
   AlertCircle,
-  GripVertical
+  GripVertical,
 } from "lucide-react";
 import { mockUpload } from "@/lib/utils.ts";
 import {
@@ -38,7 +38,7 @@ export default function SortableGalleryDemo() {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   return (
@@ -49,9 +49,11 @@ export default function SortableGalleryDemo() {
             const { active, over } = event;
 
             if (over && active.id !== over.id) {
-              const oldIndex = items.findIndex((item) => item.uid === active.id);
+              const oldIndex = items.findIndex(
+                (item) => item.uid === active.id,
+              );
               const newIndex = items.findIndex((item) => item.uid === over.id);
-              
+
               setItems(arrayMove(items, oldIndex, newIndex));
             }
           }
@@ -79,7 +81,9 @@ export default function SortableGalleryDemo() {
                     <div className="p-3 rounded-full bg-muted group-hover:bg-primary/10 transition-colors">
                       <ImagePlus className="h-6 w-6" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Add Image</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">
+                      Add Image
+                    </span>
                   </div>
                 </UplofileTrigger>
               </UplofileDropzone>
@@ -92,7 +96,7 @@ export default function SortableGalleryDemo() {
 }
 
 function SortableImageItem({ item }: { item: UploadFileItem }) {
-  const isDraggable = item.status === 'done';
+  const isDraggable = item.status === "done";
   const {
     attributes,
     listeners,
@@ -100,9 +104,9 @@ function SortableImageItem({ item }: { item: UploadFileItem }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ 
+  } = useSortable({
     id: item.uid,
-    disabled: !isDraggable
+    disabled: !isDraggable,
   });
 
   const style = {
@@ -115,7 +119,7 @@ function SortableImageItem({ item }: { item: UploadFileItem }) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`group relative aspect-square rounded-xl overflow-hidden bg-white border shadow-sm animate-in fade-in zoom-in-95 duration-200 ${isDragging ? 'opacity-50' : ''}`}
+      className={`group relative aspect-square rounded-xl overflow-hidden bg-white border shadow-sm animate-in fade-in zoom-in-95 duration-200 ${isDragging ? "opacity-50" : ""}`}
     >
       {item.previewUrl ? (
         <img

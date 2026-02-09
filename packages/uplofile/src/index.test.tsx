@@ -5,6 +5,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { Root } from "./context";
+import { Trigger } from "./components/trigger";
 import { UplofileRootRef } from "./types";
 
 // Mock URL methods
@@ -14,11 +15,174 @@ if (typeof window !== "undefined") {
 }
 
 describe("Root Component", () => {
-  describe("beforeUpload feature", () => {
-    const mockUpload = vi
-      .fn()
-      .mockResolvedValue({ url: "https://example.com/file.jpg" });
+  const mockUpload = vi
+    .fn()
+    .mockResolvedValue({ url: "https://example.com/file.jpg" });
 
+  describe("initial prop", () => {
+    it("should hydrate from synchronous array", async () => {
+      const initial = [
+        { uid: "1", name: "test1.jpg", url: "https://example.com/1.jpg" },
+      ];
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+      expect(ref!.getItems()[0].name).toBe("test1.jpg");
+      expect(ref!.getItems()[0].status).toBe("done");
+    });
+
+    it("should hydrate from immediate promise", async () => {
+      const initial = Promise.resolve([
+        { uid: "2", name: "test2.jpg", url: "https://example.com/2.jpg" },
+      ]);
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+      expect(ref!.getItems()[0].name).toBe("test2.jpg");
+    });
+
+    it("should hydrate from delayed promise", async () => {
+      const initial = new Promise<any[]>((resolve) => {
+        setTimeout(
+          () =>
+            resolve([
+              { uid: "3", name: "test3.jpg", url: "https://example.com/3.jpg" },
+            ]),
+          10,
+        );
+      });
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+      expect(ref!.getItems()[0].name).toBe("test3.jpg");
+    });
+
+    it("should provide isLoading state during hydration", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      let isLoadingValue = false;
+
+      render(
+        <Root upload={mockUpload} initial={initial}>
+          <Trigger
+            render={({ isLoading }) => {
+              isLoadingValue = isLoading;
+              return null;
+            }}
+          />
+        </Root>,
+      );
+
+      expect(isLoadingValue).toBe(true);
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "4", name: "test4.jpg", url: "https://example.com/4.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(isLoadingValue).toBe(false));
+    });
+
+    it("should provide isLoading state via imperative ref", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      expect(ref!.isLoading).toBe(true);
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "5", name: "test5.jpg", url: "https://example.com/5.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(ref!.isLoading).toBe(false));
+    });
+
+    it("should call onLoadingChange prop when isLoading changes", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      const onLoadingChange = vi.fn();
+
+      render(
+        <Root
+          upload={mockUpload}
+          initial={initial}
+          onLoadingChange={onLoadingChange}
+        >
+          <div />
+        </Root>,
+      );
+
+      expect(onLoadingChange).toHaveBeenCalledWith(true);
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "6", name: "test6.jpg", url: "https://example.com/6.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(onLoadingChange).toHaveBeenCalledWith(false));
+    });
+
+    it("should call onLoadingChange set via imperative ref", async () => {
+      let resolveHydration: (value: any[]) => void;
+      const initial = new Promise<any[]>((resolve) => {
+        resolveHydration = resolve;
+      });
+      const onLoadingChange = vi.fn();
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      ref!.onLoadingChange = onLoadingChange;
+
+      await waitFor(() => {
+        resolveHydration([
+          { uid: "7", name: "test7.jpg", url: "https://example.com/7.jpg" },
+        ]);
+      });
+
+      await waitFor(() => expect(onLoadingChange).toHaveBeenCalledWith(false));
+    });
+  });
+
+  describe("beforeUpload feature", () => {
     beforeEach(() => {
       vi.clearAllMocks();
     });
@@ -204,6 +368,42 @@ describe("Root Component", () => {
       const items = ref!.getItems();
       expect(items[0].meta).toEqual({ custom: "data" });
       expect(items[0].id).toBe("predefined-id");
+    });
+  });
+
+  describe("Upload result handling", () => {
+    it("should apply meta and previewUrl from upload result", async () => {
+      const customResult = {
+        url: "https://example.com/final.jpg",
+        previewUrl: "https://example.com/preview.jpg",
+        meta: { custom: "data" },
+      };
+      const upload = vi.fn().mockResolvedValue(customResult);
+      let ref: UplofileRootRef<any> | null = null;
+
+      render(
+        <Root upload={upload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [file],
+        },
+      } as any);
+
+      await waitFor(() => expect(upload).toHaveBeenCalled());
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const item = ref!.getItems()[0];
+      expect(item.url).toBe(customResult.url);
+      expect(item.previewUrl).toBe(customResult.previewUrl);
+      expect(item.meta).toEqual(customResult.meta);
     });
   });
 });
