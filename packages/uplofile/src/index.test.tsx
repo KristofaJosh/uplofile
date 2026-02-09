@@ -263,4 +263,40 @@ describe("Root Component", () => {
       expect(items[0].id).toBe("predefined-id");
     });
   });
+
+  describe("Upload result handling", () => {
+    it("should apply meta and previewUrl from upload result", async () => {
+      const customResult = {
+        url: "https://example.com/final.jpg",
+        previewUrl: "https://example.com/preview.jpg",
+        meta: { custom: "data" },
+      };
+      const upload = vi.fn().mockResolvedValue(customResult);
+      let ref: UplofileRootRef<any> | null = null;
+
+      render(
+        <Root upload={upload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [file],
+        },
+      } as any);
+
+      await waitFor(() => expect(upload).toHaveBeenCalled());
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const item = ref!.getItems()[0];
+      expect(item.url).toBe(customResult.url);
+      expect(item.previewUrl).toBe(customResult.previewUrl);
+      expect(item.meta).toEqual(customResult.meta);
+    });
+  });
 });

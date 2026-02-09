@@ -28,7 +28,12 @@ export type UploadFileItem<TMeta = any> = {
   meta?: TMeta;
 };
 
-export type UploadResult = { url: string; id?: string };
+export type UploadResult<TMeta = any> = {
+  url: string;
+  id?: string;
+  meta?: TMeta;
+  previewUrl?: string;
+};
 
 export type UplofileRootRef<TMeta = any> = {
   setItems: (
@@ -75,7 +80,7 @@ export type RootProps<TMeta = any> = PropsWithChildren<{
     file: File,
     signal: AbortSignal,
     setProgress?: (pct: number) => void,
-  ) => Promise<UploadResult>;
+  ) => Promise<UploadResult<TMeta>>;
   onRemove?: (
     item: UploadFileItem<TMeta>,
     signal: AbortSignal,

@@ -145,13 +145,14 @@ export const Root = forwardRef(
                 /*fail silently*/
               }
             }
-            const serverPreview = (result as any)?.preview || result.url;
+            const serverPreview = result.previewUrl ?? (result as any).preview ?? result.url;
             return {
               ...it,
               status: "done",
               url: result.url,
               id: result.id ?? it.id,
               previewUrl: serverPreview,
+              meta: result.meta ?? it.meta,
               progress: 100,
             };
           }),
