@@ -4,7 +4,7 @@ import React, { PropsWithChildren } from "react";
 import { useUplofile } from "../hook";
 import type { TriggerRenderProps } from "../types";
 
-export const Trigger = <TMeta = any>({
+export const Trigger = <TMeta = any,>({
   asChild,
   children,
   render,

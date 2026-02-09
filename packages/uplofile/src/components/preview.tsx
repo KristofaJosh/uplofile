@@ -10,7 +10,7 @@ type Props<TMeta = any> = {
   render?: (api: PreviewRenderProps<TMeta>) => React.ReactNode;
 };
 
-export const Preview = <TMeta = any>({ render }: Props<TMeta>) => {
+export const Preview = <TMeta = any,>({ render }: Props<TMeta>) => {
   const { items, actions, setItems } = useUplofile<TMeta>();
 
   if (render && typeof render === "function")

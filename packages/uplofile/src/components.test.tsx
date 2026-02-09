@@ -17,7 +17,9 @@ if (typeof window !== "undefined") {
 }
 
 describe("Components", () => {
-  const mockUpload = vi.fn().mockResolvedValue({ url: "https://example.com/file.jpg" });
+  const mockUpload = vi
+    .fn()
+    .mockResolvedValue({ url: "https://example.com/file.jpg" });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -27,10 +29,8 @@ describe("Components", () => {
     it("should render and apply dropzone props", () => {
       render(
         <Root upload={mockUpload}>
-          <Dropzone data-testid="dropzone">
-            Drop files here
-          </Dropzone>
-        </Root>
+          <Dropzone data-testid="dropzone">Drop files here</Dropzone>
+        </Root>,
       );
 
       const dropzone = screen.getByTestId("dropzone");
@@ -46,7 +46,7 @@ describe("Components", () => {
           <Dropzone asChild>
             <section data-testid="custom-dropzone">Custom Dropzone</section>
           </Dropzone>
-        </Root>
+        </Root>,
       );
 
       const dropzone = screen.getByTestId("custom-dropzone");
@@ -60,13 +60,13 @@ describe("Components", () => {
       render(
         <Root upload={mockUpload}>
           <Trigger data-testid="trigger">Upload</Trigger>
-        </Root>
+        </Root>,
       );
 
       const trigger = screen.getByTestId("trigger");
       expect(trigger.tagName).toBe("BUTTON");
       expect(trigger.getAttribute("data-part")).toBe("trigger");
-      
+
       fireEvent.click(trigger);
       // Clicking should trigger openFileDialog which eventually calls input click.
       // We can't easily test the file picker opening in JSDOM, but we can verify it doesn't throw.
@@ -80,7 +80,7 @@ describe("Components", () => {
               <span data-testid="uploading-count">{uploadingCount}</span>
             )}
           />
-        </Root>
+        </Root>,
       );
 
       expect(screen.getByTestId("uploading-count").textContent).toBe("0");
@@ -90,7 +90,7 @@ describe("Components", () => {
       render(
         <Root upload={mockUpload} disabled>
           <Trigger data-testid="trigger-disabled">Upload</Trigger>
-        </Root>
+        </Root>,
       );
 
       const trigger = screen.getByTestId("trigger-disabled");
@@ -100,8 +100,19 @@ describe("Components", () => {
 
   describe("Preview", () => {
     const items: Partial<UploadFileItem>[] = [
-      { uid: "1", name: "test1.jpg", status: "done", url: "https://example.com/1.jpg" },
-      { uid: "2", name: "test2.mp4", status: "uploading", progress: 50, previewUrl: "blob:mock-url" },
+      {
+        uid: "1",
+        name: "test1.jpg",
+        status: "done",
+        url: "https://example.com/1.jpg",
+      },
+      {
+        uid: "2",
+        name: "test2.mp4",
+        status: "uploading",
+        progress: 50,
+        previewUrl: "blob:mock-url",
+      },
       { uid: "3", name: "test3.png", status: "error", error: "Upload failed" },
     ];
 
@@ -109,7 +120,7 @@ describe("Components", () => {
       render(
         <Root upload={mockUpload}>
           <Preview />
-        </Root>
+        </Root>,
       );
 
       expect(document.querySelector('[data-part="preview"]')).toBeNull();
@@ -119,7 +130,7 @@ describe("Components", () => {
       render(
         <Root upload={mockUpload} initial={items as any}>
           <Preview />
-        </Root>
+        </Root>,
       );
 
       await waitFor(() => {
@@ -144,7 +155,7 @@ describe("Components", () => {
               </ul>
             )}
           />
-        </Root>
+        </Root>,
       );
 
       await waitFor(() => {

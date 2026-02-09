@@ -18,5 +18,5 @@ export type {
   UploadStatus,
   UploadResult,
   UplofileRootRef,
-  BeforeUploadResult
+  BeforeUploadResult,
 } from "./types";

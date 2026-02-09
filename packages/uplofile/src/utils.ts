@@ -99,8 +99,10 @@ export const isImageFile = (
   return false;
 };
 
-
-export const acceptsFile = (file: File, accept: string | undefined): boolean => {
+export const acceptsFile = (
+  file: File,
+  accept: string | undefined,
+): boolean => {
   if (!accept || accept.trim() === "") return true;
   const type = (file.type || "").toLowerCase();
   const name = (file.name || "").toLowerCase();
