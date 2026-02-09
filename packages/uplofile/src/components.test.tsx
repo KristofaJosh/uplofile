@@ -72,6 +72,56 @@ describe("Components", () => {
       // We can't easily test the file picker opening in JSDOM, but we can verify it doesn't throw.
     });
 
+    it("opens the hidden input once on click by default", () => {
+      const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
+      const { getByTestId } = render(
+        <Root upload={mockUpload}>
+          <Trigger data-testid="trigger-default">Upload</Trigger>
+        </Root>,
+      );
+
+      fireEvent.click(getByTestId("trigger-default"));
+      expect(clickSpy).toHaveBeenCalledTimes(1);
+      clickSpy.mockRestore();
+    });
+
+    it("composes consumer onClick and still opens when not prevented", () => {
+      const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
+      const handler = vi.fn();
+      const { getByTestId } = render(
+        <Root upload={mockUpload}>
+          <Trigger data-testid="trigger-compose" onClick={handler}>
+            Upload
+          </Trigger>
+        </Root>,
+      );
+
+      fireEvent.click(getByTestId("trigger-compose"));
+      expect(handler).toHaveBeenCalled();
+      expect(clickSpy).toHaveBeenCalledTimes(1);
+      clickSpy.mockRestore();
+    });
+
+    it("allows consumer to prevent default open via onClick", () => {
+      const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
+      const { getByTestId } = render(
+        <Root upload={mockUpload}>
+          <Trigger
+            data-testid="trigger-prevent"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            Upload
+          </Trigger>
+        </Root>,
+      );
+
+      fireEvent.click(getByTestId("trigger-prevent"));
+      expect(clickSpy).not.toHaveBeenCalled();
+      clickSpy.mockRestore();
+    });
+
     it("should support render prop with api", () => {
       render(
         <Root upload={mockUpload}>

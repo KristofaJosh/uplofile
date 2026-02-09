@@ -38,10 +38,7 @@ const ComponentPreview = () => {
             The default preview component provides a responsive grid layout with
             image thumbnails, progress bars, and action buttons.
           </p>
-          <CodeBlock
-            code={`<UplofilePreview />`}
-            language="tsx"
-          />
+          <CodeBlock code={`<UplofilePreview />`} language="tsx" />
         </section>
 
         <section className="space-y-4 mb-12">
@@ -97,17 +94,25 @@ const ComponentPreview = () => {
               </thead>
               <tbody className="text-muted-foreground">
                 <tr className="border-b border-border">
-                  <td className="py-3 px-2"><code className="code-inline">items</code></td>
+                  <td className="py-3 px-2">
+                    <code className="code-inline">items</code>
+                  </td>
                   <td className="py-3 px-2">UploadFileItem[]</td>
                   <td className="py-3 px-2">Array of selected files</td>
                 </tr>
                 <tr className="border-b border-border">
-                  <td className="py-3 px-2"><code className="code-inline">setItems</code></td>
+                  <td className="py-3 px-2">
+                    <code className="code-inline">setItems</code>
+                  </td>
                   <td className="py-3 px-2">(items) =&gt; void</td>
-                  <td className="py-3 px-2">Function to update the items list</td>
+                  <td className="py-3 px-2">
+                    Function to update the items list
+                  </td>
                 </tr>
                 <tr className="border-b border-border">
-                  <td className="py-3 px-2"><code className="code-inline">actions</code></td>
+                  <td className="py-3 px-2">
+                    <code className="code-inline">actions</code>
+                  </td>
                   <td className="py-3 px-2">ItemActions</td>
                   <td className="py-3 px-2">
                     Actions to manage items (remove, retry, cancel)

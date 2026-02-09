@@ -21,6 +21,7 @@ import ExampleBeforeUploadValidation from "./pages/examples/BeforeUploadValidati
 import ExampleDefaultPreview from "./pages/examples/DefaultPreview";
 import ExampleSortableGallery from "./pages/examples/SortableGallery";
 import ExampleRootImperative from "./pages/examples/RootImperative";
+import ExampleLoadingState from "./pages/examples/LoadingState";
 import NotFound from "./pages/NotFound";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -75,6 +76,10 @@ const App = () => (
           <Route
             path="/examples/root-imperative"
             element={<ExampleRootImperative />}
+          />
+          <Route
+            path="/examples/loading-state"
+            element={<ExampleLoadingState />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>

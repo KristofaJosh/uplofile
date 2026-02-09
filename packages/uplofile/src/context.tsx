@@ -80,8 +80,14 @@ export const Root = forwardRef(
             } as UploadFileItem<TMeta>;
           });
 
-          // Only hydrate if the user hasn't already added/modified items locally
-          setItems((prev) => (prev.length === 0 ? mapped : prev));
+          // Append server items if user already added files while loading; avoid replacing
+          setItems((prev) => {
+            if (prev.length === 0) return mapped;
+            const existing = new Set(prev.map((i) => i.uid));
+            const toAppend = mapped.filter((m) => !existing.has(m.uid));
+            if (toAppend.length === 0) return prev;
+            return [...prev, ...toAppend];
+          });
           hasHydratedInitialRef.current = true;
         } finally {
           setIsLoading(false);

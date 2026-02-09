@@ -7,16 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- **uplofile**: Add `onLoadingChange` callback prop and imperative ref support to track `isLoading` state changes.
-
 ## [2.2.2] - 2026-02-09
 
 ### Added
-- **uplofile**: Add `isLoading` state to context and render props to track async hydration.
 - **uplofile**: Support async initialization of `initial` prop with `MaybePromise` type.
 - **uplofile**: Add support for `previewUrl` and `meta` in `UploadResult` for enhanced file handling.
 - **uplofile**: Export `BeforeUploadResult` type for improved type safety in hooks and components.
+- **uplofile**: Add `onLoadingChange` callback prop and imperative ref support to track `isLoading` state changes.
+- **docs**: Add examples for waiting on initial files using `isLoading` and subscribing via `ref.onLoadingChange` under Examples → Loading State.
 
 ## [2.1.0] - 2026-02-08
 

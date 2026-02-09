@@ -7,10 +7,16 @@ import unstyledCode from "./DefaultPreview_Unstyled.demo.tsx?raw";
 
 const ExampleDefaultPreview = () => {
   const keyPoints = [
-    <>Built-in <code className="code-inline">UplofilePreview</code> with polished default styling</>,
+    <>
+      Built-in <code className="code-inline">UplofilePreview</code> with
+      polished default styling
+    </>,
     <>Grid layout with aspect-ratio squares and hover overlays</>,
     <>Integrated progress bars, retry, and cancel actions</>,
-    <>Custom <code className="code-inline">render</code> prop for a barebones, unstyled list</>,
+    <>
+      Custom <code className="code-inline">render</code> prop for a barebones,
+      unstyled list
+    </>,
   ];
 
   return (
@@ -18,7 +24,8 @@ const ExampleDefaultPreview = () => {
       <article className="prose prose-slate dark:prose-invert max-w-none">
         <h1 className="text-3xl font-bold mb-2">Default & Unstyled Preview</h1>
         <p className="text-lg text-muted-foreground mb-8">
-          Compare the built-in styled preview with a completely unstyled custom render.
+          Compare the built-in styled preview with a completely unstyled custom
+          render.
         </p>
 
         <section className="space-y-4 mb-12">

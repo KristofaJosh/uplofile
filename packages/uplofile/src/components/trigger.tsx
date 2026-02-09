@@ -8,6 +8,7 @@ export const Trigger = <TMeta = any,>({
   asChild,
   children,
   render,
+  onClick,
   ...rest
 }: PropsWithChildren<
   {
@@ -51,12 +52,13 @@ export const Trigger = <TMeta = any,>({
       type={asChild ? undefined : "button"}
       aria-disabled={disabled}
       data-part="trigger"
+      {...rest}
       onClick={(e: any) => {
         if (disabled) return;
-        (rest as any).onClick?.(e);
+        (onClick as any)?.(e);
+        if (e.defaultPrevented) return;
         openFileDialog();
       }}
-      {...rest}
     >
       {render ? render(api) : children}
     </Comp>

@@ -35,9 +35,7 @@ export default function RootImperativeDemo() {
   return (
     <div
       className={`flex flex-col items-center justify-center min-h-[400px] p-10 border-4 border-dashed transition-colors ${
-        isDragging
-          ? "border-primary bg-primary/10"
-          : "border-muted bg-muted/5"
+        isDragging ? "border-primary bg-primary/10" : "border-muted bg-muted/5"
       }`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}

@@ -8,9 +8,13 @@ import type { PreviewRenderProps } from "../types";
 
 type Props<TMeta = any> = {
   render?: (api: PreviewRenderProps<TMeta>) => React.ReactNode;
+  className?: string;
 };
 
-export const Preview = <TMeta = any,>({ render }: Props<TMeta>) => {
+export const Preview = <TMeta = any,>({
+  render,
+  className = "",
+}: Props<TMeta>) => {
   const { items, actions, setItems, isLoading } = useUplofile<TMeta>();
 
   if (render && typeof render === "function")
@@ -20,7 +24,14 @@ export const Preview = <TMeta = any,>({ render }: Props<TMeta>) => {
 
   return (
     <div data-part="preview" className="uplofile-preview">
-      <div className="uplofile-preview__wrapper grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div
+        className={[
+          "uplofile-preview__wrapper grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
+          className,
+        ]
+          .join(" ")
+          .trim()}
+      >
         {items.map((item) => (
           <div
             key={item.uid}
