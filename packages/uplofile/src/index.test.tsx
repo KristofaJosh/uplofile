@@ -14,11 +14,68 @@ if (typeof window !== "undefined") {
 }
 
 describe("Root Component", () => {
-  describe("beforeUpload feature", () => {
-    const mockUpload = vi
-      .fn()
-      .mockResolvedValue({ url: "https://example.com/file.jpg" });
+  const mockUpload = vi
+    .fn()
+    .mockResolvedValue({ url: "https://example.com/file.jpg" });
 
+  describe("initial prop", () => {
+    it("should hydrate from synchronous array", async () => {
+      const initial = [
+        { uid: "1", name: "test1.jpg", url: "https://example.com/1.jpg" },
+      ];
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+      expect(ref!.getItems()[0].name).toBe("test1.jpg");
+      expect(ref!.getItems()[0].status).toBe("done");
+    });
+
+    it("should hydrate from immediate promise", async () => {
+      const initial = Promise.resolve([
+        { uid: "2", name: "test2.jpg", url: "https://example.com/2.jpg" },
+      ]);
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+      expect(ref!.getItems()[0].name).toBe("test2.jpg");
+    });
+
+    it("should hydrate from delayed promise", async () => {
+      const initial = new Promise<any[]>((resolve) => {
+        setTimeout(
+          () =>
+            resolve([
+              { uid: "3", name: "test3.jpg", url: "https://example.com/3.jpg" },
+            ]),
+          10,
+        );
+      });
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+      expect(ref!.getItems()[0].name).toBe("test3.jpg");
+    });
+  });
+
+  describe("beforeUpload feature", () => {
     beforeEach(() => {
       vi.clearAllMocks();
     });

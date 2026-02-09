@@ -5,6 +5,8 @@ import type {
   RefObject,
 } from "react";
 
+export type MaybePromise<T> = T | Promise<T>;
+
 export type UploadStatus =
   | "idle"
   | "uploading"
@@ -53,8 +55,8 @@ export type BeforeUploadResult<TMeta = any> =
 
 export type RootProps<TMeta = any> = PropsWithChildren<{
   multiple?: boolean;
-  initial?: Array<
-    Pick<UploadFileItem<TMeta>, "uid" | "id" | "name" | "url" | "meta">
+  initial?: MaybePromise<
+    Array<Pick<UploadFileItem<TMeta>, "uid" | "id" | "name" | "url" | "meta">>
   >;
   /**
    * optimistic (default): remove from UI immediately, call onRemove in the background; if it fails, restore the item and show error.

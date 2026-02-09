@@ -50,23 +50,28 @@ export const Root = forwardRef(
     // Hydrate initial items from the server and keep them marked as done
     useEffect(() => {
       if (hasHydratedInitialRef.current) return;
-      const arr = initial ?? [];
-      if (!Array.isArray(arr) || arr.length === 0) return;
 
-      const mapped: UploadFileItem<TMeta>[] = arr.map((it) => {
-        return {
-          uid: it.uid || it.id,
-          id: it.id,
-          name: it.name,
-          url: it.url,
-          status: "done",
-          meta: it.meta,
-        } as UploadFileItem<TMeta>;
-      });
+      const hydrate = async () => {
+        const arr = await initial;
+        if (!Array.isArray(arr) || arr.length === 0) return;
 
-      // Only hydrate if the user hasn't already added/modified items locally
-      setItems((prev) => (prev.length === 0 ? mapped : prev));
-      hasHydratedInitialRef.current = true;
+        const mapped: UploadFileItem<TMeta>[] = arr.map((it) => {
+          return {
+            uid: it.uid || it.id,
+            id: it.id,
+            name: it.name,
+            url: it.url,
+            status: "done",
+            meta: it.meta,
+          } as UploadFileItem<TMeta>;
+        });
+
+        // Only hydrate if the user hasn't already added/modified items locally
+        setItems((prev) => (prev.length === 0 ? mapped : prev));
+        hasHydratedInitialRef.current = true;
+      };
+
+      void hydrate();
     }, [initial]);
 
     const hiddenInputValue = useMemo(() => {

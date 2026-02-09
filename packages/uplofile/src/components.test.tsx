@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
 import { Root } from "./context";
 import { Dropzone } from "./components/dropzone";
 import { Trigger } from "./components/trigger";
@@ -115,22 +115,24 @@ describe("Components", () => {
       expect(document.querySelector('[data-part="preview"]')).toBeNull();
     });
 
-    it("should render items correctly", () => {
+    it("should render items correctly", async () => {
       render(
         <Root upload={mockUpload} initial={items as any}>
           <Preview />
         </Root>
       );
 
-      expect(screen.getByAltText("test1.jpg")).toBeDefined();
-      // test2.mp4 is video (detected by .mp4 extension)
-      expect(document.querySelector("video")).toBeDefined();
-      // test3.png is error
-      const errorItem = document.querySelector('[data-state="error"]');
-      expect(errorItem).toBeDefined();
+      await waitFor(() => {
+        expect(screen.getByAltText("test1.jpg")).toBeDefined();
+        // test2.mp4 is video (detected by .mp4 extension)
+        expect(document.querySelector("video")).toBeDefined();
+        // test3.png is error
+        const errorItem = document.querySelector('[data-state="error"]');
+        expect(errorItem).toBeDefined();
+      });
     });
 
-    it("should support render prop", () => {
+    it("should support render prop", async () => {
       render(
         <Root upload={mockUpload} initial={items as any}>
           <Preview
@@ -145,9 +147,11 @@ describe("Components", () => {
         </Root>
       );
 
-      const list = screen.getByTestId("custom-preview");
-      expect(list.children).toHaveLength(3);
-      expect(list.children[0].textContent).toBe("test1.jpg");
+      await waitFor(() => {
+        const list = screen.getByTestId("custom-preview");
+        expect(list.children).toHaveLength(3);
+        expect(list.children[0].textContent).toBe("test1.jpg");
+      });
     });
   });
 });
