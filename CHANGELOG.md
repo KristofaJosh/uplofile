@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **uplofile**: Allow `Dropzone` `className` to be a function that receives drag state for styling.
+
 ## [2.2.4] - 2026-02-14
 
 ### Added

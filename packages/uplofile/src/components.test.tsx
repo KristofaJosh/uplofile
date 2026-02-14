@@ -53,6 +53,28 @@ describe("Components", () => {
       expect(dropzone.tagName).toBe("SECTION");
       expect(dropzone.getAttribute("data-part")).toBe("dropzone");
     });
+
+    it("should support className as a function with drag state", () => {
+      const className = vi.fn(({ isDragging }) =>
+        isDragging ? "dragging" : "idle",
+      );
+      render(
+        <Root upload={mockUpload}>
+          <Dropzone data-testid="dropzone-fn" className={className}>
+            Drop files here
+          </Dropzone>
+        </Root>,
+      );
+
+      const dropzone = screen.getByTestId("dropzone-fn");
+      expect(dropzone.className).toBe("idle");
+
+      fireEvent.dragEnter(dropzone);
+      expect(dropzone.className).toBe("dragging");
+
+      fireEvent.dragLeave(dropzone);
+      expect(dropzone.className).toBe("idle");
+    });
   });
 
   describe("Trigger", () => {

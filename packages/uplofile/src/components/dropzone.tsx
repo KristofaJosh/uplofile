@@ -3,11 +3,34 @@ import { HTMLAttributes } from "react";
 
 import { useUplofile } from "../hook";
 
+export type DropzoneClassNameProps = {
+  isDragging: boolean;
+  disabled?: boolean;
+  multiple: boolean;
+};
+
+export type DropzoneProps = {
+  asChild?: boolean;
+  className?: string | ((props: DropzoneClassNameProps) => string);
+} & Omit<HTMLAttributes<HTMLElement>, "className">;
+
 export const Dropzone = ({
   asChild,
+  className,
   ...rest
-}: { asChild?: boolean } & HTMLAttributes<HTMLElement>) => {
-  const { getDropzoneProps } = useUplofile();
+}: DropzoneProps) => {
+  const { getDropzoneProps, isDragging, disabled, multiple } = useUplofile();
   const Comp: any = asChild ? Slot : "div";
-  return <Comp data-part="dropzone" {...getDropzoneProps()} {...rest} />;
+  const resolvedClassName =
+    typeof className === "function"
+      ? className({ isDragging, disabled, multiple })
+      : className;
+  return (
+    <Comp
+      data-part="dropzone"
+      {...getDropzoneProps()}
+      {...rest}
+      className={resolvedClassName}
+    />
+  );
 };
