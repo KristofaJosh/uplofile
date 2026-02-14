@@ -70,6 +70,26 @@ describe("Components", () => {
       fireEvent.dragLeave(dropzone);
       expect(dropzone.getAttribute("data-dragging")).toBeNull();
     });
+
+    it("should not share drag state across multiple dropzones", () => {
+      render(
+        <Root upload={mockUpload}>
+          <Dropzone data-testid="dropzone-a">A</Dropzone>
+          <Dropzone data-testid="dropzone-b">B</Dropzone>
+        </Root>,
+      );
+
+      const dropzoneA = screen.getByTestId("dropzone-a");
+      const dropzoneB = screen.getByTestId("dropzone-b");
+
+      fireEvent.dragEnter(dropzoneA);
+      expect(dropzoneA.getAttribute("data-dragging")).toBe("true");
+      expect(dropzoneB.getAttribute("data-dragging")).toBeNull();
+
+      fireEvent.dragLeave(dropzoneA);
+      expect(dropzoneA.getAttribute("data-dragging")).toBeNull();
+      expect(dropzoneB.getAttribute("data-dragging")).toBeNull();
+    });
   });
 
   describe("Trigger", () => {

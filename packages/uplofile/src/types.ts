@@ -123,7 +123,6 @@ export type ImageUploaderContextValue<TMeta = any> = {
   items: UploadFileItem<TMeta>[];
   setItems: (items: UploadFileItem<TMeta>[]) => void;
   isLoading: boolean;
-  isDragging: boolean;
   disabled?: boolean;
   multiple: boolean;
   accept: string;
@@ -141,10 +140,7 @@ export type ImageUploaderContextValue<TMeta = any> = {
     tabIndex: number;
     onDrop: (e: DragEvent) => void;
     onDragOver: (e: DragEvent) => void;
-    onDragEnter: (e: DragEvent) => void;
-    onDragLeave: (e: DragEvent) => void;
     onKeyDown: (e: KeyboardEvent) => void;
-    "data-dragging"?: "true";
     "data-disabled"?: string;
     "data-multiple"?: string;
   };
