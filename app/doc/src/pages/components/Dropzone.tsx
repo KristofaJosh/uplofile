@@ -38,6 +38,18 @@ const ComponentDropzone = () => {
               <tbody className="text-muted-foreground">
                 <tr className="border-b border-border">
                   <td className="py-3 px-2">
+                    <code className="code-inline">className</code>
+                  </td>
+                  <td className="py-3 px-2">
+                    string | (props) =&gt; string
+                  </td>
+                  <td className="py-3 px-2">
+                    Accepts a className string or a function that receives drag
+                    state
+                  </td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-3 px-2">
                     <code className="code-inline">asChild</code>
                   </td>
                   <td className="py-3 px-2">boolean</td>

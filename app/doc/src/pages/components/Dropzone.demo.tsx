@@ -3,7 +3,7 @@ import {
   UplofileDropzone,
   UplofileTrigger,
   UplofilePreview,
-} from "uplofile";
+} from "@/components/ui/uplofile";
 
 export default function DropzoneDemo() {
   return (

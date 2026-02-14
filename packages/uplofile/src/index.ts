@@ -1,4 +1,5 @@
 export { Dropzone } from "./components/dropzone";
+export type { DropzoneClassNameProps, DropzoneProps } from "./components/dropzone";
 export {
   Cancel,
   HiddenInput,

@@ -301,9 +301,18 @@ export const Root = forwardRef(
       [selectFiles],
     );
 
+    const [isDragging, setIsDragging] = useState(false);
+    const dragCounter = useRef(0);
+
+    const resetDragState = useCallback(() => {
+      dragCounter.current = 0;
+      setIsDragging(false);
+    }, []);
+
     const onDrop = useCallback(
       (e: DragEvent) => {
         e.preventDefault();
+        resetDragState();
         if (disabled) return;
         const dtFiles = e.dataTransfer?.files;
         if (!dtFiles || dtFiles.length === 0) return;
@@ -313,10 +322,30 @@ export const Root = forwardRef(
         if (accepted.length === 0) return;
         void selectFiles(accepted);
       },
-      [disabled, selectFiles, accept],
+      [disabled, selectFiles, accept, resetDragState],
     );
 
     const onDragOver = useCallback((e: DragEvent) => e.preventDefault(), []);
+
+    const onDragEnter = useCallback(
+      (e: DragEvent) => {
+        e.preventDefault();
+        if (disabled) return;
+        dragCounter.current += 1;
+        setIsDragging(true);
+      },
+      [disabled],
+    );
+
+    const onDragLeave = useCallback(
+      (e: DragEvent) => {
+        e.preventDefault();
+        if (disabled) return;
+        dragCounter.current = Math.max(0, dragCounter.current - 1);
+        if (dragCounter.current === 0) setIsDragging(false);
+      },
+      [disabled],
+    );
 
     const actions: ItemActions = useMemo(
       () => ({
@@ -401,6 +430,7 @@ export const Root = forwardRef(
     const ctx: ImageUploaderContextValue<TMeta> = {
       items,
       isLoading,
+      isDragging,
       disabled,
       multiple,
       accept,
@@ -418,10 +448,13 @@ export const Root = forwardRef(
         tabIndex: 0,
         onDrop,
         onDragOver,
+        onDragEnter,
+        onDragLeave,
         onKeyDown: (e) => {
           if (disabled) return;
           if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
         },
+        "data-dragging": isDragging ? "true" : undefined,
         "data-disabled": disabled ? "" : undefined,
         "data-multiple": multiple ? "" : undefined,
       }),
