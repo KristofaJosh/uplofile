@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.5] - 2026-02-14
+## [2.2.6] - 2026-02-14
 
 ### Added
 
-- **uplofile**: Allow `Dropzone` `className` to be a function that receives drag state for styling.
+- **uplofile**: Expose `data-dragging` on `Dropzone` for styling drag state.
 - **uplofile**: Enhance `beforeUpload` hook to accept previous items and remaining count.
 
 ## [2.2.2] - 2026-02-09

@@ -40,12 +40,9 @@ const ComponentDropzone = () => {
                   <td className="py-3 px-2">
                     <code className="code-inline">className</code>
                   </td>
+                  <td className="py-3 px-2">string</td>
                   <td className="py-3 px-2">
-                    string | (props) =&gt; string
-                  </td>
-                  <td className="py-3 px-2">
-                    Accepts a className string or a function that receives drag
-                    state
+                    Use data attributes like <code className="code-inline">data-dragging</code> for styling
                   </td>
                 </tr>
                 <tr className="border-b border-border">
