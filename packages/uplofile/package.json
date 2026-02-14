@@ -36,6 +36,7 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "bunchee src/index.ts --dts --external react,react-dom --format esm && node scripts/postbuild.cjs",
     "clean": "rm -rf dist",
