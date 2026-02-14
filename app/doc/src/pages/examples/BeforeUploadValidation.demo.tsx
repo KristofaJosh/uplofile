@@ -6,8 +6,9 @@ import {
 } from "@/components/ui/uplofile";
 import { FileIcon, CheckCircle2, Loader2, X, AlertCircle } from "lucide-react";
 import { mockUpload } from "@/lib/utils.ts";
+import { BeforeUploadFn } from "uplofile";
 
-const beforeUpload = async (items: UploadFileItem[]) => {
+const beforeUpload: BeforeUploadFn = async (items: UploadFileItem[]) => {
   return items.map((item) => {
     // Example: Reject files larger than 2MB
     if (item.file && item.file.size > 2 * 1024 * 1024) {

@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **uplofile**: Enhance `beforeUpload` hook to accept previous items and remaining count.
+
 ## [2.2.2] - 2026-02-09
 
 ### Added
+
 - **uplofile**: Support async initialization of `initial` prop with `MaybePromise` type.
 - **uplofile**: Add support for `previewUrl` and `meta` in `UploadResult` for enhanced file handling.
 - **uplofile**: Export `BeforeUploadResult` type for improved type safety in hooks and components.
@@ -19,38 +24,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.0] - 2026-02-08
 
 ### Added
+
 - **uplofile**: Add `beforeUpload` hook for custom file validation and enrichment (#7).
 
 ### Changed
+
 - **docs**: Update import examples in README for improved clarity.
 
 ## [2.0.0] - 2026-02-08
 
 ### Added
+
 - **uplofile**: Major feature "outcontext" (#6) allowing usage outside of context providers.
 
 ### Changed
+
 - Major release with updated internal architecture.
 
 ## [1.1.1] - 2026-01-30
 
 ### Fixed
+
 - **build**: Update `.npmignore` to ensure clean package distribution.
 
 ## [1.1.0] - 2026-01-30
 
 ### Added
+
 - **uplofile**: Expose `setItems` function (#5) to allow manual state management of uploaded items.
 
 ## [1.0.1] - 2026-01-11
 
 ### Changed
+
 - **docs**: Remove beta status from documentation and README.
 - **build**: Optimize package bundling by deduping `react` and `react-dom` in Vite config (#3).
 
 ## [1.0.0] - 2024-12-15
 
 ### Added
+
 - Full production release.
 - **docs**: Integration with Vercel adapter and analytics.
 - **docs**: Comprehensive file upload examples and playground.
@@ -58,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **docs**: Mobile navigation for documentation.
 
 ### Changed
+
 - **docs**: Replaced Astro with React for documentation site for better component reuse.
 - **docs**: Significant improvements to README and API documentation.
 - **build**: Extracted postbuild scripts for better maintenance.
@@ -65,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0-beta.1] - 2024-12-15
 
 ### Added
+
 - Initial beta release.
 - **uplofile**: Core `uplofile` component implementation.
 - **docs**: Basic documentation and installation instructions.
@@ -72,5 +87,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2024-08-10
 
 ### Added
+
 - Initial setup and project structure.
 - Basic file upload functionality.
