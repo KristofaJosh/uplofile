@@ -1,7 +1,7 @@
 .idea/
 .vscode/
 node_modules/
-dist/
+**/dist/
 .DS_Store
 **/.next/
 **/_pagefind/

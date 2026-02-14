@@ -1,8 +1,8 @@
-import { Slot } from "@radix-ui/react-slot";
 import React, { PropsWithChildren } from "react";
 
 import { useUplofile } from "../hook";
 import type { TriggerRenderProps } from "../types";
+import { Slot } from "../shared/Slot";
 
 export const Trigger = <TMeta = any,>({
   asChild,

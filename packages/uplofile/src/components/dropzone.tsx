@@ -1,4 +1,4 @@
-import { Slot } from "@radix-ui/react-slot";
+import { Slot } from "../shared/Slot";
 import { HTMLAttributes } from "react";
 
 import { useUplofile } from "../hook";
