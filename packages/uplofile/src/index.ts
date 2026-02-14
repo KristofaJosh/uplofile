@@ -19,4 +19,5 @@ export type {
   UploadResult,
   UplofileRootRef,
   BeforeUploadResult,
+  BeforeUploadFn,
 } from "./types";

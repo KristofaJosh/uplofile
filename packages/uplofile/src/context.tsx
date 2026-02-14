@@ -233,7 +233,12 @@ export const Root = forwardRef(
         }));
 
         if (beforeUpload) {
-          const result = await beforeUpload(newItems);
+          const result = await beforeUpload(newItems, {
+            prevItems: items,
+            remaining,
+            maxCount,
+            accept,
+          });
           if (result === false) {
             newItems.forEach((it) => {
               if (it.previewUrl) URL.revokeObjectURL(it.previewUrl);
@@ -290,7 +295,7 @@ export const Root = forwardRef(
 
     const onInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
-        selectFiles(e.target.files);
+        void selectFiles(e.target.files);
         e.currentTarget.value = "";
       },
       [selectFiles],
@@ -306,7 +311,7 @@ export const Root = forwardRef(
           acceptsFile(f, accept),
         );
         if (accepted.length === 0) return;
-        selectFiles(accepted);
+        void selectFiles(accepted);
       },
       [disabled, selectFiles, accept],
     );

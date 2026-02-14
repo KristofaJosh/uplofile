@@ -203,7 +203,6 @@ describe("Root Component", () => {
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
 
-      // Simulate file selection
       ref!.onDrop({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
@@ -213,6 +212,11 @@ describe("Root Component", () => {
       } as any);
 
       await waitFor(() => expect(beforeUpload).toHaveBeenCalled());
+      expect(beforeUpload).toHaveBeenCalledTimes(1);
+      const [items, state] = beforeUpload.mock.calls[0];
+      expect(items).toHaveLength(1);
+      expect(state).toHaveProperty("prevItems");
+      expect(state).toHaveProperty("remaining");
       await waitFor(() => expect(mockUpload).toHaveBeenCalled());
 
       expect(ref!.getItems()).toHaveLength(1);
@@ -368,6 +372,95 @@ describe("Root Component", () => {
       const items = ref!.getItems();
       expect(items[0].meta).toEqual({ custom: "data" });
       expect(items[0].id).toBe("predefined-id");
+    });
+
+    it("should pass prevItems, remaining, maxCount, and accept to beforeUpload", async () => {
+      const beforeUpload = vi.fn().mockResolvedValue(true);
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root
+          upload={mockUpload}
+          beforeUpload={beforeUpload}
+          maxCount={10}
+          accept="image/*"
+          ref={(r) => (ref = r)}
+        >
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [file],
+        },
+      } as any);
+
+      await waitFor(() => expect(beforeUpload).toHaveBeenCalled());
+      expect(beforeUpload).toHaveBeenCalledWith(
+        expect.any(Array),
+        expect.objectContaining({
+          prevItems: [],
+          remaining: 10,
+          maxCount: 10,
+          accept: "image/*",
+        }),
+      );
+    });
+
+    it("should pass prevItems with existing items when adding new files", async () => {
+      const beforeUpload = vi.fn().mockImplementation(async (_items, state) => {
+        return true;
+      });
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root
+          upload={mockUpload}
+          beforeUpload={beforeUpload}
+          ref={(r) => (ref = r)}
+        >
+          <div />
+        </Root>,
+      );
+
+      const existingFile = new File(["test"], "existing.jpg", {
+        type: "image/jpeg",
+      });
+      const newFile = new File(["test"], "new.jpg", { type: "image/jpeg" });
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [existingFile],
+        },
+      } as any);
+
+      await waitFor(() => expect(beforeUpload).toHaveBeenCalledTimes(1));
+
+      const firstCallArgs = beforeUpload.mock.calls[0];
+      expect(firstCallArgs[1].prevItems).toHaveLength(0);
+
+      vi.clearAllMocks();
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [newFile],
+        },
+      } as any);
+
+      await waitFor(() => expect(beforeUpload).toHaveBeenCalledTimes(1));
+
+      const secondCallArgs = beforeUpload.mock.calls[0];
+      expect(secondCallArgs[1].prevItems).toHaveLength(1);
+      expect(secondCallArgs[1].prevItems[0].name).toBe("existing.jpg");
     });
   });
 

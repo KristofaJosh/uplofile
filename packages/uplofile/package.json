@@ -41,7 +41,7 @@
     "clean": "rm -rf dist",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
-    "test": "vitest",
+    "test": "vitest run",
     "format": "prettier --write ."
   },
   "dependencies": {

@@ -50,6 +50,31 @@ export type UplofileRootRef<TMeta = any> = {
   onLoadingChange?: (isLoading: boolean) => void;
 };
 
+export type BeforeUploadFn<TMeta = any> = (
+  items: UploadFileItem<TMeta>[],
+  state: {
+    /**
+     * The items that are currently in the state before adding the new items.
+     * This can be useful for validating new items against existing items (e.g. checking for duplicates).
+     */
+    prevItems: UploadFileItem<TMeta>[];
+    /**
+     * Counts all items in the state excluding canceled items.
+     * This is useful for validating maxCount in the case where some items are canceled but not yet removed from the state.
+     */
+    remaining?: number;
+    /**
+     * The maxCount prop passed to the Root component.
+     * This is useful for validating the total number of items after adding the new items.
+     */
+    maxCount?: number;
+    /**
+     * The "accept" prop passed to the Root component, which can be used for validating file types before upload.
+     */
+    accept?: string;
+  },
+) => MaybePromise<BeforeUploadResult<TMeta>>;
+
 export type BeforeUploadResult<TMeta = any> =
   | boolean
   | Array<{
@@ -74,9 +99,7 @@ export type RootProps<TMeta = any> = PropsWithChildren<{
   maxCount?: number;
   disabled?: boolean;
   accept?: string;
-  beforeUpload?: (
-    items: UploadFileItem<TMeta>[],
-  ) => BeforeUploadResult<TMeta> | Promise<BeforeUploadResult<TMeta>>;
+  beforeUpload?: BeforeUploadFn;
   onChange?: (items: UploadFileItem<TMeta>[]) => Promise<void> | void;
   onLoadingChange?: (isLoading: boolean) => void;
   upload: (

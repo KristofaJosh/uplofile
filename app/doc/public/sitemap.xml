@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://uplofile.kristofajosh.dev/</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/installation</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/quick-start</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/components/root</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/components/trigger</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/components/preview</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/components/dropzone</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/components/hidden-input</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/api/props</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/api/actions</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/basic</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/dropzone</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/image-gallery</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/avatar</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/file-list</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/form</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/video</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/validation</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/default-preview</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/sortable-gallery</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/root-imperative</loc></url>
+  <url><loc>https://uplofile.kristofajosh.dev/examples/loading-state</loc></url>
+</urlset>
