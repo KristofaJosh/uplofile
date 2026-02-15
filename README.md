@@ -1,4 +1,5 @@
 # Uplofile
+[![Used in production](https://img.shields.io/badge/used%20in-production-brightgreen)](#who-is-using-uplofile)
 
 Composable file upload components for React.
 
