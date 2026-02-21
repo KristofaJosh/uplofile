@@ -15,6 +15,9 @@ export const HeroSection = () => {
               Composable file upload components for React, accessible, and easy
               to integrate.
             </p>
+            <p className="text-sm text-muted-foreground/90 max-w-lg">
+              Actively maintained and constantly being improved.
+            </p>
             <div className="flex flex-wrap gap-4">
               <Button size="lg" className="gap-2" asChild>
                 <a href="/installation">

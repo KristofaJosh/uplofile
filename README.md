@@ -3,6 +3,8 @@
 
 Composable file upload components for React.
 
+Uplofile is actively maintained and constantly being improved.
+
 Documentation
 - Full usage, API, and examples: [packages/uplofile/README.md](packages/uplofile/README.md)
 - NPM: https://www.npmjs.com/package/uplofile
