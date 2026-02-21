@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Index from "./pages/Index";
 import Installation from "./pages/Installation";
@@ -25,25 +25,96 @@ import ExampleLoadingState from "./pages/examples/LoadingState";
 import NotFound from "./pages/NotFound";
 import { Analytics } from "@vercel/analytics/react";
 
+const SITE_NAME = "Uplofile";
+const SITE_URL = "https://uplofile.kristofajosh.dev";
+const DEFAULT_OG_IMAGE = `${SITE_URL}/web-app-manifest-512x512.png`;
+
+const normalizeCanonicalUrl = (pathname: string) => {
+  if (pathname === "/") {
+    return `${SITE_URL}/`;
+  }
+
+  return `${SITE_URL}${pathname.replace(/\/$/, "")}`;
+};
+
+const pageJsonLd = ({
+  title,
+  description,
+  canonicalUrl,
+}: {
+  title: string;
+  description: string;
+  canonicalUrl: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: title,
+  description,
+  url: canonicalUrl,
+});
+
+const homepageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Uplofile",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "Web",
+  description:
+    "Composable file upload components for React. Accessible, headless primitives that are easy to integrate and style.",
+  url: "https://uplofile.kristofajosh.dev/",
+  programmingLanguage: "TypeScript",
+  offers: {
+    "@type": "Offer",
+    price: 0,
+    priceCurrency: "USD",
+  },
+};
+
 const PageWrapper = ({
   children,
   title,
   description,
+  noIndex = false,
+  structuredData,
 }: {
   children: React.ReactNode;
   title: string;
   description: string;
-}) => (
-  <>
-    <Helmet>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-    </Helmet>
-    {children}
-  </>
-);
+  noIndex?: boolean;
+  structuredData?: Record<string, unknown>;
+}) => {
+  const location = useLocation();
+  const canonicalUrl = normalizeCanonicalUrl(location.pathname);
+  const robots = noIndex ? "noindex, nofollow" : "index, follow";
+  const jsonLd = structuredData ?? pageJsonLd({ title, description, canonicalUrl });
+
+  return (
+    <>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="robots" content={robots} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        <meta property="og:site_name" content={SITE_NAME} />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+      {children}
+    </>
+  );
+};
 
 const App = () => (
   <HelmetProvider>
@@ -55,6 +126,7 @@ const App = () => (
             <PageWrapper
               title="Uplofile - Composable File Upload Components for React"
               description="Composable file upload components for React. Accessible, headless primitives that are easy to integrate and style."
+              structuredData={homepageJsonLd}
             >
               <Index />
             </PageWrapper>
@@ -297,6 +369,7 @@ const App = () => (
             <PageWrapper
               title="Page Not Found - Uplofile"
               description="Page not found."
+              noIndex
             >
               <NotFound />
             </PageWrapper>
