@@ -7,8 +7,6 @@ Uplofile is actively maintained and constantly being improved.
 
 ## Philosophy
 
-File uploads look like a UI problem, but most of their complexity lives elsewhere.
-
 Real-world upload systems quickly involve concerns like network reliability, retries, resumable transfers, storage backends, security rules, and cost trade-offs. These are infrastructure decisions, not component decisions.
 
 Uplofile is built around a simple idea:

@@ -39,9 +39,9 @@ export const PhilosophySection = () => {
             Why Uplofile exists
           </h2>
           <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            File uploads look like a UI problem, but most of their complexity
-            lives in infrastructure. Uplofile is built around a simple idea:
-            uploads are infrastructure concerns disguised as UI problems.
+            Upload complexity mostly lives in infrastructure. Uplofile is built
+            around a simple idea: uploads are infrastructure concerns disguised
+            as UI problems.
           </p>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             Instead of coupling upload mechanics to a specific engine, protocol,
