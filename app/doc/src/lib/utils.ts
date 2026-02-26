@@ -61,6 +61,64 @@ export const mockUpload = async (
   });
 };
 
+const mockResumableUploadCheckpoints = new Map<string, number>();
+
+const fileFingerprint = (file: File) =>
+  `${file.name}:${file.size}:${file.lastModified}`;
+
+export const clearMockResumableCheckpoint = (file: File) => {
+  mockResumableUploadCheckpoints.delete(fileFingerprint(file));
+};
+
+// Mock resumable upload for demos: abort stores progress; retry can continue.
+export const mockResumableUpload = async (
+  file: File,
+  signal: AbortSignal,
+  onProgress?: (pct: number) => void,
+): Promise<UploadResult> => {
+  const key = fileFingerprint(file);
+  let progress = mockResumableUploadCheckpoints.get(key) ?? 0;
+  let timer: number | undefined;
+
+  onProgress?.(Math.round(progress));
+
+  return await new Promise((resolve, reject) => {
+    const step = Math.max(2, Math.round(220000 / Math.max(file.size, 50000)));
+
+    const finishWithAbort = () => {
+      mockResumableUploadCheckpoints.set(key, progress);
+      if (timer !== undefined) clearInterval(timer);
+      reject(new DOMException("Upload paused", "AbortError"));
+    };
+
+    if (signal.aborted) {
+      finishWithAbort();
+      return;
+    }
+
+    const onAbort = () => finishWithAbort();
+    signal.addEventListener("abort", onAbort, { once: true });
+
+    timer = window.setInterval(() => {
+      progress = Math.min(100, progress + step);
+      onProgress?.(Math.round(progress));
+
+      if (progress >= 100) {
+        clearInterval(timer);
+        signal.removeEventListener("abort", onAbort);
+        mockResumableUploadCheckpoints.delete(key);
+
+        const localUrl = URL.createObjectURL(file);
+        resolve({
+          id: key,
+          url: localUrl,
+          previewUrl: localUrl,
+        });
+      }
+    }, 180);
+  });
+};
+
 // Simulated remove handler that sometimes fails to demonstrate error states
 export const mockOnRemove = async (item, signal) => {
   return await new Promise<void>((resolve, reject) => {

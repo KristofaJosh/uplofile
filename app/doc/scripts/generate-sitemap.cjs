@@ -23,6 +23,7 @@ const routes = [
   "/examples/sortable-gallery",
   "/examples/root-imperative",
   "/examples/loading-state",
+  "/examples/pause-resume",
 ];
 
 const hostname = "https://uplofile.kristofajosh.dev";

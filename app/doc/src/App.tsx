@@ -22,6 +22,7 @@ import ExampleDefaultPreview from "./pages/examples/DefaultPreview";
 import ExampleSortableGallery from "./pages/examples/SortableGallery";
 import ExampleRootImperative from "./pages/examples/RootImperative";
 import ExampleLoadingState from "./pages/examples/LoadingState";
+import ExamplePauseResumeResumable from "./pages/examples/PauseResumeResumable";
 import NotFound from "./pages/NotFound";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -360,6 +361,17 @@ const App = () => (
               description="Handling loading and progress states in Uplofile."
             >
               <ExampleLoadingState />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/examples/pause-resume"
+          element={
+            <PageWrapper
+              title="Pause/Resume Example - Uplofile"
+              description="Build pause and resume behavior with custom upload adapters and useUplofile."
+            >
+              <ExamplePauseResumeResumable />
             </PageWrapper>
           }
         />

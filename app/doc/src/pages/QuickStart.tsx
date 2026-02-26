@@ -1,5 +1,6 @@
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import quickStartDemo from "./QuickStart.demo.tsx?raw";
 
 const QuickStart = () => {
   return (
@@ -19,49 +20,7 @@ const QuickStart = () => {
             handling:
           </p>
 
-          <CodeBlock
-            code={`import {
-  UplofileRoot,
-  UplofileDropzone,
-  UplofileTrigger,
-  UplofilePreview,
-} from "@/components/uplofile";
-
-const upload = async (file, signal, onProgress) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  
-  const res = await fetch('/api/upload', {
-    method: 'POST',
-    body: formData,
-    signal,
-  });
-  
-   // const res = await axios.post('/api/upload', formData, {
-   //    onUploadProgress: onProgress
-   // });
-  
-  if (!res.ok) throw new Error('Upload failed');
-  return await res.json();
-};
-  
-function FileUploader() {
-  return (
-    <UplofileRoot upload={upload} removeMode="strict" onRemove={onRemove}>
-      <UplofileDropzone className="border-2 border-dashed rounded-lg p-8">
-        <span>Drop files here or </span>
-        <UplofileTrigger className="underline text-blue-500 cursor-pointer">
-          Select files
-        </UplofileTrigger>
-        <div className="border-t my-6 py-6">
-          <UplofilePreview />
-        </div>
-      </UplofileDropzone>
-    </UplofileRoot>
-  );
-}`}
-            language="tsx"
-          />
+          <CodeBlock code={quickStartDemo} language="tsx" />
         </section>
 
         <section className="space-y-4 mb-12">

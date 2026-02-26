@@ -36,6 +36,21 @@ export const HeroSection = () => {
                 </a>
               </Button>
             </div>
+            <a
+              href="https://www.producthunt.com/products/uplofile?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-uplofile"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Uplofile on Product Hunt"
+              className="inline-block"
+            >
+              <img
+                alt="Uplofile - Composable accessible file upload components for React. | Product Hunt"
+                width="250"
+                height="54"
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1083709&theme=light&t=1772028922471"
+                loading="lazy"
+              />
+            </a>
           </div>
 
           <div className="flex justify-center max-w-2xl lg:justify-end animate-fade-up-delay-1">

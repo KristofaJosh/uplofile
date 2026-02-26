@@ -1,4 +1,4 @@
-import { UplofileRoot } from "uplofile";
+import { UplofileRoot } from "@/components/ui/uplofile";
 
 export default function RootDemo() {
   return (
