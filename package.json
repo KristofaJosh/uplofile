@@ -9,6 +9,11 @@
     "test": "pnpm -r run test",
     "format": "pnpm -r run format"
   },
+  "pnpm": {
+    "overrides": {
+      "rollup": "^4.59.0"
+    }
+  },
   "devDependencies": {
     "prettier": "3.6.0"
   }
