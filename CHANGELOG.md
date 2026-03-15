@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **uplofile**: Scope `Dropzone` drag state per instance instead of sharing across dropzones.
+- **uplofile**: Enforce `accept` filtering consistently for both drag-and-drop and file input selections.
+- **uplofile**: Honor `multiple={false}` during drag-and-drop by limiting selection to a single file.
+- **uplofile**: Revoke active preview object URLs on unmount and abort pending remove requests during cleanup.
+- **uplofile**: Align `setItems` public typing with runtime behavior so updater functions are typed correctly.
 
 ## [2.2.6] - 2026-02-14
 

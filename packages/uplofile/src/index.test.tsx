@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
-import { render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { Root } from "./context";
 import { Trigger } from "./components/trigger";
 import { UplofileRootRef } from "./types";
@@ -462,6 +462,49 @@ describe("Root Component", () => {
       expect(secondCallArgs[1].prevItems).toHaveLength(1);
       expect(secondCallArgs[1].prevItems[0].name).toBe("existing.jpg");
     });
+
+    it("should enforce accept rules for file input selections too", async () => {
+      let ref: UplofileRootRef | null = null;
+      const { container } = render(
+        <Root upload={mockUpload} accept="image/*" ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const input = container.querySelector('input[type="file"]')!;
+      const invalidFile = new File(["test"], "clip.mp4", { type: "video/mp4" });
+
+      fireEvent.change(input, { target: { files: [invalidFile] } });
+
+      await waitFor(() => expect(input).toBeDefined());
+      expect(mockUpload).not.toHaveBeenCalled();
+      expect(ref!.getItems()).toHaveLength(0);
+    });
+
+    it("should only keep one file when multiple is false during drop", async () => {
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={mockUpload} multiple={false} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file1 = new File(["test1"], "test1.jpg", { type: "image/jpeg" });
+      const file2 = new File(["test2"], "test2.jpg", { type: "image/jpeg" });
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [file1, file2],
+        },
+      } as any);
+
+      await waitFor(() => expect(mockUpload).toHaveBeenCalledTimes(1));
+      expect(ref!.getItems()).toHaveLength(1);
+      expect(ref!.getItems()[0].name).toBe("test1.jpg");
+    });
   });
 
   describe("Upload result handling", () => {
@@ -497,6 +540,34 @@ describe("Root Component", () => {
       expect(item.url).toBe(customResult.url);
       expect(item.previewUrl).toBe(customResult.previewUrl);
       expect(item.meta).toEqual(customResult.meta);
+    });
+
+    it("revokes active preview URLs when the root unmounts", async () => {
+      let ref: UplofileRootRef<any> | null = null;
+      const upload = vi.fn(
+        () => new Promise(() => {}) as Promise<{ url: string }>,
+      );
+      const { unmount } = render(
+        <Root upload={upload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [file],
+        },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+
+      unmount();
+
+      expect(global.URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
     });
   });
 });

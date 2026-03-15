@@ -51,6 +51,11 @@ export const Root = forwardRef(
     const inputRef = useRef<HTMLInputElement | null>(null);
     const hasHydratedInitialRef = useRef(false);
     const onLoadingChangeRef = useRef(onLoadingChange);
+    const itemsRef = useRef<UploadFileItem<TMeta>[]>([]);
+
+    useEffect(() => {
+      itemsRef.current = items;
+    }, [items]);
 
     useEffect(() => {
       onLoadingChangeRef.current = onLoadingChange;
@@ -212,16 +217,17 @@ export const Root = forwardRef(
         if (!files) return;
         const selected = Array.isArray(files) ? files : Array.from(files);
         if (selected.length === 0) return;
+        const acceptedFiles = selected.filter((file) => acceptsFile(file, accept));
+        if (acceptedFiles.length === 0) return;
         const remaining = maxCount
           ? Math.max(
               0,
               maxCount - items.filter((i) => i.status !== "canceled").length,
             )
           : undefined;
+        const limit = multiple ? remaining : Math.min(remaining ?? 1, 1);
         const toUse =
-          typeof remaining === "number"
-            ? selected.slice(0, remaining)
-            : selected;
+          typeof limit === "number" ? acceptedFiles.slice(0, limit) : acceptedFiles;
 
         let newItems: UploadFileItem<TMeta>[] = toUse.map((file) => ({
           uid: uid(),
@@ -392,8 +398,11 @@ export const Root = forwardRef(
 
     useEffect(
       () => () => {
-        items.forEach((i) => i.previewUrl && URL.revokeObjectURL(i.previewUrl));
+        itemsRef.current.forEach((i) => {
+          if (i.previewUrl) URL.revokeObjectURL(i.previewUrl);
+        });
         controllers.current.forEach((c) => c.abort());
+        removeControllers.current.forEach((c) => c.abort());
       },
       [],
     );

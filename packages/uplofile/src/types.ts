@@ -121,7 +121,11 @@ export type ItemActions = {
 
 export type ImageUploaderContextValue<TMeta = any> = {
   items: UploadFileItem<TMeta>[];
-  setItems: (items: UploadFileItem<TMeta>[]) => void;
+  setItems: (
+    items:
+      | UploadFileItem<TMeta>[]
+      | ((prev: UploadFileItem<TMeta>[]) => UploadFileItem<TMeta>[]),
+  ) => void;
   isLoading: boolean;
   disabled?: boolean;
   multiple: boolean;
@@ -162,6 +166,10 @@ export type TriggerRenderProps<TMeta = any> = {
 export type PreviewRenderProps<TMeta = any> = {
   items: UploadFileItem<TMeta>[];
   isLoading: boolean;
-  setItems: (items: UploadFileItem<TMeta>[]) => void;
+  setItems: (
+    items:
+      | UploadFileItem<TMeta>[]
+      | ((prev: UploadFileItem<TMeta>[]) => UploadFileItem<TMeta>[]),
+  ) => void;
   actions: ItemActions;
 };
