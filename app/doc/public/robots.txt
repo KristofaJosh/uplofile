@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://uplofile.kristofajosh.dev/sitemap.xml
