@@ -6,6 +6,13 @@ import { isVideoFile } from "../utils";
 
 import type { PreviewRenderProps, UploadFileItem } from "../types";
 
+import { CancelIcon } from "./icons/CancelIcon";
+import { ErrorIcon } from "./icons/ErrorIcon";
+import { FileIcon } from "./icons/FileIcon";
+import { RetryIcon } from "./icons/RetryIcon";
+import { Spinner } from "./icons/Spinner";
+import { TrashIcon } from "./icons/TrashIcon";
+
 type Props<TMeta = any> = {
   render?: (api: PreviewRenderProps<TMeta>) => React.ReactNode;
   className?: string;
@@ -13,21 +20,7 @@ type Props<TMeta = any> = {
 
 const ErrorBadge = () => (
   <div className="uplofile-preview__error-badge" aria-label="Error">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="8" x2="12" y2="12" />
-      <line x1="12" y1="16" x2="12.01" y2="16" />
-    </svg>
+    <ErrorIcon />
   </div>
 );
 
@@ -53,21 +46,7 @@ const ImagePreview = ({ item }: { item: UploadFileItem }) => (
 
 const FilePlaceholder = ({ item }: { item: UploadFileItem }) => (
   <div className="uplofile-preview__no-preview">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-      <circle cx="9" cy="9" r="2" />
-      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-    </svg>
+    <FileIcon />
     <span className="uplofile-preview__file-extension">
       {item.name.split(".").pop()}
     </span>
@@ -93,26 +72,7 @@ const UploadingOverlay = ({ progress }: { progress?: number }) => (
     aria-valuemax={100}
     aria-label="Uploading"
   >
-    <svg
-      className="uplofile-preview__spinner"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="uplofile-preview__spinner-track"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="uplofile-preview__spinner-fill"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
+    <Spinner className="uplofile-preview__spinner" />
     <div className="uplofile-preview__progress">
       <div
         className="uplofile-preview__progress-bar"
@@ -138,21 +98,7 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
         onClick={() => actions.cancel(item.uid)}
         aria-label="Cancel upload"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <line x1="15" y1="9" x2="9" y2="15" />
-          <line x1="9" y1="9" x2="15" y2="15" />
-        </svg>
+        <CancelIcon />
       </button>
     )}
     {(item.status === "error" || item.status === "canceled") && (
@@ -162,20 +108,7 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
         onClick={() => actions.retry(item.uid)}
         aria-label="Retry upload"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-          <path d="M21 3v5h-5" />
-        </svg>
+        <RetryIcon />
       </button>
     )}
     <button
@@ -186,42 +119,9 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
       aria-label={`Remove ${item.name}`}
     >
       {item.status === "removing" ? (
-        <svg
-          className="uplofile-preview__spinner"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="uplofile-preview__spinner-track"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="uplofile-preview__spinner-fill"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          />
-        </svg>
+        <Spinner className="uplofile-preview__spinner" />
       ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M3 6h18" />
-          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-        </svg>
+        <TrashIcon />
       )}
     </button>
   </div>
