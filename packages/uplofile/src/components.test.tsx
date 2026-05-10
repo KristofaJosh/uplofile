@@ -1,14 +1,18 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, fireEvent, screen, waitFor } from "@testing-library/react";
 import { Root } from "./context";
 import { Dropzone } from "./components/dropzone";
 import { Trigger } from "./components/trigger";
 import { Preview } from "./components/preview";
-import { UploadFileItem } from "./types";
+import { UploadFileItem, UplofileRootRef } from "./types";
+
+afterEach(cleanup);
+
+declare var global: typeof globalThis;
 
 // Mock URL methods
 if (typeof window !== "undefined") {
@@ -249,6 +253,87 @@ describe("Components", () => {
         const list = screen.getByTestId("custom-preview");
         expect(list.children).toHaveLength(3);
         expect(list.children[0].textContent).toBe("test1.jpg");
+      });
+    });
+
+    it("should apply aria-busy on uploading and removing items", async () => {
+      let ref: UplofileRootRef | null = null;
+      const slowUpload = vi.fn().mockReturnValue(new Promise(() => {}));
+
+      render(
+        <Root upload={slowUpload} ref={(r) => (ref = r)}>
+          <Preview />
+        </Root>,
+      );
+
+      ref!.setItems([
+        {
+          uid: "u1",
+          name: "active.jpg",
+          status: "uploading" as const,
+          url: "blob:mock-url",
+        },
+        {
+          uid: "u2",
+          name: "removing.jpg",
+          status: "removing" as const,
+          url: "https://example.com/r.jpg",
+        },
+        {
+          uid: "u3",
+          name: "done.jpg",
+          status: "done" as const,
+          url: "https://example.com/d.jpg",
+        },
+      ] as any);
+
+      await waitFor(() => {
+        expect(document.querySelectorAll('[aria-busy="true"]')).toHaveLength(2);
+      });
+    });
+
+    it("should render progressbar role on uploading overlay", async () => {
+      let ref: UplofileRootRef | null = null;
+      let setProgress: ((pct: number) => void) | undefined;
+      const uploadMock = vi
+        .fn()
+        .mockImplementation(
+          (_f: File, _s: AbortSignal, sp?: (pct: number) => void) => {
+            setProgress = sp;
+            return new Promise(() => {});
+          },
+        );
+
+      render(
+        <Root upload={uploadMock} ref={(r) => (ref = r)}>
+          <Preview />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => {
+        expect(ref!.getItems()).toHaveLength(1);
+      });
+
+      expect(typeof setProgress).toBe("function");
+
+      act(() => setProgress!(75));
+
+      await waitFor(() => {
+        const items = ref!.getItems();
+        expect(items[0].progress).toBe(75);
+      });
+
+      await waitFor(() => {
+        const bar = document.querySelector('[role="progressbar"]');
+        expect(bar).toBeDefined();
+        expect(bar!.getAttribute("aria-valuenow")).toBe("75");
       });
     });
   });

@@ -8,9 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
-### Fixed
+### Changed
 
-- **uplofile**: Scope `Dropzone` drag state per instance instead of sharing across dropzones.
+- **uplofile**: Fix stale `items` closures in `selectFiles`, `remove`, and `retry` by using an `itemsRef` always kept in sync via `useLayoutEffect`, so concurrent drops/removes never read old state.
+- **uplofile**: Fix object URL (`blob:`) memory leak — track all created blob URLs in a `Set<string>` ref and revoke them when uploads finish, items are removed, or the root unmounts (previously only the initial mount snapshot was cleaned).
+- **uplofile**: Fix optimistic remove rollback — restore only the removed item instead of replacing the entire state snapshot, preventing overwrites of items added concurrently during deletion.
+- **uplofile**: Memoize provider value (`ctx`) and all stable callbacks (`openFileDialog`, `getDropzoneProps`, `fileInputProps`) so consumers only re-render when their specific dependencies change.
+- **uplofile**: Remove unsafe `(result as any).preview` fallback — use typed `result.previewUrl ?? result.url` instead.
+- **uplofile**: Remove unnecessary `(next as any)(prev)` cast in `emitChange` — TypeScript narrowing works directly.
+- **uplofile**: Extract default `Preview` into 8 focused subcomponents (`ErrorBadge`, `VideoPreview`, `ImagePreview`, `FilePlaceholder`, `MediaContent`, `UploadingOverlay`, `ActionButtons`, `PreviewItem`) for maintainability.
+- **uplofile**: Remove Tailwind utility classes from default `Preview` in favor of `uplofile-*` BEM classes and the `className` prop, aligning with the library's unstyled philosophy.
+- **uplofile**: Add `aria-label`, `role="progressbar"`, and `aria-busy` semantics to `Preview` action buttons and status overlays for improved accessibility.
+- **uplofile**: Compute derived upload summary in `Trigger` via `useMemo` to avoid repeated array scans on every render.
+
+### Added
+
+- **uplofile**: Export `acceptsFile` utility for reuse by consumers.
 
 ## [2.2.6] - 2026-02-14
 

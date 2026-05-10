@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -23,6 +24,14 @@ export const UploaderCtx = createContext<ImageUploaderContextValue | null>(
   null,
 );
 
+/**
+ * Root provider component. Wraps all uploader children and manages file-upload state.
+ *
+ * Handles file selection, drag-and-drop, upload lifecycle (start/progress/done/error/cancel),
+ * blob URL tracking, item removal (optimistic/strict), and imperative ref access.
+ *
+ * @template TMeta - Optional metadata type carried on each file item.
+ */
 export const Root = forwardRef(
   <TMeta = any,>(
     {
@@ -43,14 +52,22 @@ export const Root = forwardRef(
     ref: React.Ref<UplofileRootRef<TMeta>>,
   ) => {
     const [items, setItems] = useState<UploadFileItem<TMeta>[]>([]);
+    const itemsRef = useRef(items);
     const [isLoading, setIsLoading] = useState(
       Array.isArray(initial) ? initial.length > 0 : !!initial,
     );
     const controllers = useRef(new Map<string, AbortController>());
     const removeControllers = useRef(new Map<string, AbortController>());
+    const blobUrlsRef = useRef(new Set<string>());
     const inputRef = useRef<HTMLInputElement | null>(null);
     const hasHydratedInitialRef = useRef(false);
     const onLoadingChangeRef = useRef(onLoadingChange);
+
+    // Keep a ref in sync with items so imperative actions (remove/retry) always
+    // read the latest state, even inside stale closures like useMemo callbacks.
+    useLayoutEffect(() => {
+      itemsRef.current = items;
+    }, [items]);
 
     useEffect(() => {
       onLoadingChangeRef.current = onLoadingChange;
@@ -59,6 +76,18 @@ export const Root = forwardRef(
     useEffect(() => {
       onLoadingChangeRef.current?.(isLoading);
     }, [isLoading]);
+
+    const createBlobUrl = useCallback((file: File) => {
+      const url = URL.createObjectURL(file);
+      blobUrlsRef.current.add(url);
+      return url;
+    }, []);
+
+    const revokeBlobUrl = useCallback((url: string) => {
+      if (blobUrlsRef.current.delete(url)) {
+        URL.revokeObjectURL(url);
+      }
+    }, []);
 
     // Hydrate initial items from the server and keep them marked as done
     useEffect(() => {
@@ -115,14 +144,9 @@ export const Root = forwardRef(
     }, [items]);
 
     const emitChange = useCallback(
-      (
-        next:
-          | UploadFileItem<TMeta>[]
-          | ((prev: UploadFileItem<TMeta>[]) => UploadFileItem<TMeta>[]),
-      ) => {
+      (next: UploadFileItem<TMeta>[] | ((prev: UploadFileItem<TMeta>[]) => UploadFileItem<TMeta>[])) => {
         setItems((prev) => {
-          const nextState =
-            typeof next === "function" ? (next as any)(prev) : next;
+          const nextState = typeof next === "function" ? next(prev) : next;
           if (onChange) Promise.resolve(onChange(nextState)).catch(() => {});
           return nextState;
         });
@@ -164,16 +188,10 @@ export const Root = forwardRef(
           emitChange((items) =>
             items.map((it) => {
               if (it.uid !== item.uid) return it;
-              // Revoke the local objectURL preview to avoid memory leaks
-              if (it.previewUrl && it.previewUrl.startsWith("blob:")) {
-                try {
-                  URL.revokeObjectURL(it.previewUrl);
-                } catch {
-                  /*fail silently*/
-                }
+              if (it.previewUrl?.startsWith("blob:")) {
+                revokeBlobUrl(it.previewUrl);
               }
-              const serverPreview =
-                result.previewUrl ?? (result as any).preview ?? result.url;
+              const serverPreview = result.previewUrl ?? result.url;
               return {
                 ...it,
                 status: "done",
@@ -213,10 +231,7 @@ export const Root = forwardRef(
         const selected = Array.isArray(files) ? files : Array.from(files);
         if (selected.length === 0) return;
         const remaining = maxCount
-          ? Math.max(
-              0,
-              maxCount - items.filter((i) => i.status !== "canceled").length,
-            )
+          ? Math.max(0, maxCount - items.filter((i) => i.status !== "canceled").length)
           : undefined;
         const toUse =
           typeof remaining === "number"
@@ -227,7 +242,7 @@ export const Root = forwardRef(
           uid: uid(),
           name: file.name,
           file,
-          previewUrl: URL.createObjectURL(file),
+          previewUrl: createBlobUrl(file),
           status: "idle",
           progress: 0,
         }));
@@ -241,7 +256,7 @@ export const Root = forwardRef(
           });
           if (result === false) {
             newItems.forEach((it) => {
-              if (it.previewUrl) URL.revokeObjectURL(it.previewUrl);
+              if (it.previewUrl) revokeBlobUrl(it.previewUrl);
             });
             return;
           }
@@ -253,15 +268,14 @@ export const Root = forwardRef(
             for (const item of newItems) {
               const validation = resultMap.get(item.uid);
               if (!validation) {
-                if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+                if (item.previewUrl) revokeBlobUrl(item.previewUrl);
                 continue;
               }
 
               if (validation.valid) {
                 processedItems.push({
                   ...item,
-                  meta:
-                    validation.meta !== undefined ? validation.meta : item.meta,
+                  meta: validation.meta !== undefined ? validation.meta : item.meta,
                   id: validation.id !== undefined ? validation.id : item.id,
                 });
               } else if (validation.reason) {
@@ -269,12 +283,11 @@ export const Root = forwardRef(
                   ...item,
                   status: "error",
                   error: validation.reason,
-                  meta:
-                    validation.meta !== undefined ? validation.meta : item.meta,
+                  meta: validation.meta !== undefined ? validation.meta : item.meta,
                   id: validation.id !== undefined ? validation.id : item.id,
                 });
               } else {
-                if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+                if (item.previewUrl) revokeBlobUrl(item.previewUrl);
               }
             }
             newItems = processedItems;
@@ -290,7 +303,7 @@ export const Root = forwardRef(
           }
         });
       },
-      [beforeUpload, emitChange, items, maxCount, startUpload],
+      [beforeUpload, createBlobUrl, emitChange, items, maxCount, revokeBlobUrl, startUpload],
     );
 
     const onInputChange = useCallback(
@@ -325,14 +338,19 @@ export const Root = forwardRef(
           ctrl?.abort();
         },
         remove: async (uidStr: string) => {
-          const item = items.find((i) => i.uid === uidStr);
+          const item = itemsRef.current.find((i) => i.uid === uidStr);
           if (!item) return;
 
-          // abort any in-flight upload first
           controllers.current.get(uidStr)?.abort();
 
-          // If no server-side removal needed or not uploaded yet, just remove
+          const revokePreview = () => {
+            if (item.previewUrl?.startsWith("blob:")) {
+              revokeBlobUrl(item.previewUrl);
+            }
+          };
+
           if (!onRemove || item.status !== "done") {
+            revokePreview();
             emitChange((list) => list.filter((i) => i.uid !== uidStr));
             return;
           }
@@ -341,19 +359,23 @@ export const Root = forwardRef(
           removeControllers.current.set(uidStr, ctrl);
 
           if (removeMode === "optimistic") {
-            const prev = items;
-            // remove from UI immediately
+            const removed = itemsRef.current.find((i) => i.uid === uidStr);
             emitChange((list) => list.filter((i) => i.uid !== uidStr));
             try {
               await onRemove(item, ctrl.signal);
+              revokePreview();
             } catch {
-              // rollback UI if server delete fails
-              emitChange(prev);
+              emitChange((list) => {
+                if (list.some((i) => i.uid === uidStr)) return list;
+                const restored = removed
+                  ? { ...removed, status: "done" as const }
+                  : { ...item, status: "done" as const };
+                return [...list, restored];
+              });
             } finally {
               removeControllers.current.delete(uidStr);
             }
           } else {
-            // strict: mark as removing, wait for API, then remove
             emitChange((list) =>
               list.map((it) =>
                 it.uid === uidStr ? { ...it, status: "removing" as const } : it,
@@ -361,9 +383,9 @@ export const Root = forwardRef(
             );
             try {
               await onRemove(item, ctrl.signal);
+              revokePreview();
               emitChange((list) => list.filter((i) => i.uid !== uidStr));
             } catch {
-              // revert to done if delete fails
               emitChange((list) =>
                 list.map((it) =>
                   it.uid === uidStr ? { ...it, status: "done" as const } : it,
@@ -375,7 +397,7 @@ export const Root = forwardRef(
           }
         },
         retry: (uidStr: string) => {
-          const item = items.find((i) => i.uid === uidStr);
+          const item = itemsRef.current.find((i) => i.uid === uidStr);
           if (!item) return;
           if (item.file) {
             void startUpload({
@@ -387,48 +409,59 @@ export const Root = forwardRef(
           }
         },
       }),
-      [emitChange, items, onRemove, removeMode, startUpload],
+      [emitChange, onRemove, removeMode, revokeBlobUrl, startUpload],
     );
 
     useEffect(
       () => () => {
-        items.forEach((i) => i.previewUrl && URL.revokeObjectURL(i.previewUrl));
+        blobUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+        blobUrlsRef.current.clear();
         controllers.current.forEach((c) => c.abort());
       },
       [],
     );
 
-    const ctx: ImageUploaderContextValue<TMeta> = {
+    const openFileDialog = useCallback(() => inputRef.current?.click(), []);
+
+    const getDropzoneProps = useCallback(() => ({
+      role: "button",
+      tabIndex: 0,
+      onDrop,
+      onDragOver,
+      onKeyDown: (e: React.KeyboardEvent) => {
+        if (disabled) return;
+        if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
+      },
+      "data-disabled": disabled ? "" : undefined,
+      "data-multiple": multiple ? "" : undefined,
+    }), [disabled, multiple, onDrop, onDragOver]);
+
+    const fileInputProps = useMemo(() => ({
+      ref: inputRef as RefObject<HTMLInputElement>,
+      onChange: onInputChange,
+      accept,
+      multiple,
+      disabled,
+    }), [onInputChange, accept, multiple, disabled]);
+
+    const ctx: ImageUploaderContextValue<TMeta> = useMemo(() => ({
       items,
       isLoading,
       disabled,
       multiple,
       accept,
       actions,
-      openFileDialog: () => inputRef.current?.click(),
-      fileInputProps: {
-        ref: inputRef as RefObject<HTMLInputElement>,
-        onChange: onInputChange,
-        accept,
-        multiple,
-        disabled,
-      },
-      getDropzoneProps: () => ({
-        role: "button",
-        tabIndex: 0,
-        onDrop,
-        onDragOver,
-        onKeyDown: (e) => {
-          if (disabled) return;
-          if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
-        },
-        "data-disabled": disabled ? "" : undefined,
-        "data-multiple": multiple ? "" : undefined,
-      }),
+      openFileDialog,
+      fileInputProps,
+      getDropzoneProps,
       setItems,
       hiddenInputValue,
       name,
-    };
+    }), [
+      items, isLoading, disabled, multiple, accept, actions,
+      openFileDialog, fileInputProps, getDropzoneProps, setItems,
+      hiddenInputValue, name,
+    ]);
 
     // Expose imperative methods via ref
     useImperativeHandle(
