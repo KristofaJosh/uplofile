@@ -10,7 +10,7 @@ export {
 export { Root } from "./context";
 export { Trigger } from "./components/trigger";
 export { useUplofile } from "./hook";
-export { isVideoFile, isImageFile, getExtension } from "./utils";
+export { isVideoFile, isImageFile, getExtension, acceptsFile } from "./utils";
 export type {
   ImageUploaderContextValue,
   ItemActions,
