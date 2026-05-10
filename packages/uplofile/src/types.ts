@@ -1,6 +1,7 @@
 import type {
   ChangeEvent,
   DragEvent,
+  KeyboardEvent,
   PropsWithChildren,
   RefObject,
 } from "react";

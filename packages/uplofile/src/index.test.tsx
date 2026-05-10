@@ -1,12 +1,16 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, cleanup } from "@testing-library/react";
 import { Root } from "./context";
 import { Trigger } from "./components/trigger";
 import { UplofileRootRef } from "./types";
+
+afterEach(cleanup);
+
+declare var global: typeof globalThis;
 
 // Mock URL methods
 if (typeof window !== "undefined") {
@@ -497,6 +501,342 @@ describe("Root Component", () => {
       expect(item.url).toBe(customResult.url);
       expect(item.previewUrl).toBe(customResult.previewUrl);
       expect(item.meta).toEqual(customResult.meta);
+    });
+  });
+
+  describe("Item actions (cancel, retry, remove)", () => {
+    const upload = vi.fn().mockResolvedValue({ url: "https://example.com/file.jpg" });
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it("should cancel an in-progress upload and mark item as canceled", async () => {
+      let ref: UplofileRootRef | null = null;
+      const slowUpload = vi.fn().mockImplementation(
+        (_file: File, signal: AbortSignal) =>
+          new Promise((_resolve, reject) => {
+            signal.addEventListener("abort", () =>
+              reject(new DOMException("Aborted", "AbortError")),
+            );
+          }),
+      );
+
+      render(
+        <Root upload={slowUpload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.cancel(uid);
+
+      await waitFor(() => {
+        const item = ref!.getItems()[0];
+        expect(item.status).toBe("canceled");
+      });
+    });
+
+    it("should retry a failed upload", async () => {
+      let ref: UplofileRootRef | null = null;
+      let attempts = 0;
+
+      const flakyUpload = vi.fn().mockImplementation(() => {
+        attempts++;
+        if (attempts === 1) {
+          return Promise.reject(new Error("Network error"));
+        }
+        return Promise.resolve({ url: "https://example.com/file.jpg" });
+      });
+
+      render(
+        <Root upload={flakyUpload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("error"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.retry(uid);
+
+      await waitFor(() => {
+        const item = ref!.getItems()[0];
+        expect(item.status).toBe("done");
+      });
+
+      expect(flakyUpload).toHaveBeenCalledTimes(2);
+    });
+
+    it("should remove item immediately when no onRemove provided", async () => {
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(0));
+    });
+
+    it("should call onRemove and remove item on success (optimistic)", async () => {
+      const onRemove = vi.fn().mockResolvedValue(undefined);
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} onRemove={onRemove} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => {
+        expect(onRemove).toHaveBeenCalled();
+        expect(ref!.getItems()).toHaveLength(0);
+      });
+    });
+
+    it("should restore item when onRemove throws (optimistic rollback)", async () => {
+      const onRemove = vi.fn().mockRejectedValue(new Error("Server error"));
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} onRemove={onRemove} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => {
+        expect(onRemove).toHaveBeenCalled();
+        const items = ref!.getItems();
+        expect(items).toHaveLength(1);
+        expect(items[0].uid).toBe(uid);
+        expect(items[0].status).toBe("done");
+      });
+    });
+
+    it("should remove item after onRemove succeeds in strict mode", async () => {
+      const onRemove = vi.fn().mockResolvedValue(undefined);
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} onRemove={onRemove} removeMode="strict" ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => {
+        expect(onRemove).toHaveBeenCalled();
+        expect(ref!.getItems()).toHaveLength(0);
+      });
+    });
+
+    it("should keep item with done status when onRemove fails in strict mode", async () => {
+      const onRemove = vi.fn().mockRejectedValue(new Error("Server error"));
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} onRemove={onRemove} removeMode="strict" ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => {
+        expect(onRemove).toHaveBeenCalled();
+        const items = ref!.getItems();
+        expect(items).toHaveLength(1);
+        expect(items[0].uid).toBe(uid);
+        expect(items[0].status).toBe("done");
+      });
+    });
+  });
+
+  describe("Blob URL lifecycle", () => {
+    const upload = vi.fn().mockResolvedValue({ url: "https://example.com/file.jpg" });
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it("should revoke blob URL when upload completes", async () => {
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      expect(global.URL.createObjectURL).toHaveBeenCalledWith(file);
+      expect(global.URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
+    });
+
+    it("should revoke blob URL gracefully when removing after upload (already revoked on success)", async () => {
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const callCount = vi.mocked(global.URL.revokeObjectURL).mock.calls.length;
+      expect(callCount).toBeGreaterThanOrEqual(1);
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(0));
+      // Removing after upload should not throw (double-revoke is a no-op)
+    });
+
+    it("should revoke blob URL when removing before upload completes", async () => {
+      let ref: UplofileRootRef | null = null;
+      const slowUpload = vi.fn();
+      slowUpload.mockReturnValue(new Promise(() => {})); // never resolves
+
+      render(
+        <Root upload={slowUpload} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+
+      vi.mocked(global.URL.revokeObjectURL).mockClear();
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(0));
+      expect(global.URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
+    });
+
+    it("should revoke blob URLs on unmount when items still pending", async () => {
+      const neverResolve = vi.fn().mockReturnValue(new Promise(() => {}));
+      let ref: UplofileRootRef | null = null;
+
+      const { unmount } = render(
+        <Root upload={neverResolve} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
+
+      vi.mocked(global.URL.revokeObjectURL).mockClear();
+
+      unmount();
+
+      expect(global.URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
     });
   });
 });
