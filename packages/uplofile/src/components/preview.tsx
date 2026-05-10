@@ -48,7 +48,7 @@ const FilePlaceholder = ({ item }: { item: UploadFileItem }) => (
   <div className="uplofile-preview__no-preview">
     <FileIcon />
     <span className="uplofile-preview__file-extension">
-      {item.name.split(".").pop()}
+      {item.name.split(".").pop() || ""}
     </span>
   </div>
 );
