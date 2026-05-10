@@ -1,0 +1,96 @@
+# Uplofile
+
+Uplofile is a headless, composable React file upload library. It manages UI state, orchestration, and complex file upload lifecycles (uploading, removing, retrying) but leaves the network logic ("bring your own upload logic") entirely up to the user. 
+
+## Core Philosophy
+- Uploads are UI state problems disguised as network problems.
+- Uplofile doesn't prescribe `fetch`, `axios`, or S3. You provide an `upload` function that returns a Promise.
+- Unstyled by default: Use Tailwind CSS, CSS Modules, or any styling solution by passing standard `className` props.
+
+## Key Components
+
+### 1. `UplofileRoot` (The Provider)
+Manages the entire upload state. Must wrap all other components.
+- **`upload`**: `(file: File, signal: AbortSignal, setProgress: (pct: number) => void) => Promise<{ url: string; id?: string }>` - The core upload logic.
+- **`onRemove`**: `(item: UploadFileItem, signal: AbortSignal) => Promise<void>` - Optional server-side delete logic.
+- **`removeMode`**: `'optimistic'` (default) or `'strict'`.
+- **`beforeUpload`**: Hook to validate or transform files before they start uploading.
+- **`accept`, `multiple`, `maxCount`**: Standard HTML5 file constraints.
+
+### 2. `UplofileDropzone`
+A drag-and-drop area. Render-props allow styling based on drag state:
+```tsx
+<UplofileDropzone>
+  {({ isDragActive }) => (
+    <div className={isDragActive ? "bg-blue-100" : "bg-white"}>Drop here</div>
+  )}
+</UplofileDropzone>
+```
+
+### 3. `UplofileTrigger`
+A button or element that opens the OS file dialog.
+
+### 4. `UplofilePreview`
+Displays the list of files. By default, it renders a list, but can be customized completely using the `render` prop:
+```tsx
+<UplofilePreview
+  render={({ items, actions }) => (
+    <ul>
+      {items.map((item) => (
+        <li key={item.uid}>
+          {item.name} - {item.status} ({item.progress}%)
+          {item.status === 'error' && <button onClick={() => actions.retry(item.uid)}>Retry</button>}
+          <button onClick={() => actions.remove(item.uid)}>Remove</button>
+        </li>
+      ))}
+    </ul>
+  )}
+/>
+```
+
+### 5. Action Helpers
+- `<UplofileCancel uid={uid} />`
+- `<UplofileRetry uid={uid} />`
+- `<UplofileRemove uid={uid} />`
+
+## Status Lifecycle
+A file (`UploadFileItem`) moves through these statuses:
+`idle` -> `uploading` -> `done` (or `error` or `canceled`).
+If deleted, it moves to `removing`.
+
+## Example Usage
+```tsx
+import { UplofileRoot, UplofileDropzone, UplofileTrigger, UplofilePreview } from 'uplofile';
+
+function App() {
+  const handleUpload = async (file, signal, setProgress) => {
+    // Implement your network request here
+    setProgress(100);
+    return { url: URL.createObjectURL(file) };
+  };
+
+  return (
+    <UplofileRoot upload={handleUpload} multiple>
+      <UplofileDropzone>
+        <UplofileTrigger>Select Files</UplofileTrigger>
+        <UplofilePreview />
+      </UplofileDropzone>
+    </UplofileRoot>
+  );
+}
+
+```
+
+## Full Examples & References
+For more complex usage patterns, refer to the official documentation and interactive examples:
+- [Basic Uploader](https://uplofile.kristofajosh.dev/examples/basic)
+- [Dropzone Drag-and-Drop](https://uplofile.kristofajosh.dev/examples/dropzone)
+- [Image Gallery](https://uplofile.kristofajosh.dev/examples/image-gallery)
+- [Avatar / Profile Picture Upload](https://uplofile.kristofajosh.dev/examples/avatar)
+- [Advanced File List with Actions](https://uplofile.kristofajosh.dev/examples/file-list)
+- [HTML Form Integration](https://uplofile.kristofajosh.dev/examples/form)
+- [Video Uploader](https://uplofile.kristofajosh.dev/examples/video)
+- [Before Upload Validation](https://uplofile.kristofajosh.dev/examples/validation)
+- [Sortable Dnd-Kit Gallery](https://uplofile.kristofajosh.dev/examples/sortable-gallery)
+- [Pause / Resume (Resumable Uploads)](https://uplofile.kristofajosh.dev/examples/pause-resume)
+- [Imperative Actions via Ref](https://uplofile.kristofajosh.dev/examples/root-imperative)
