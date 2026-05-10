@@ -1,7 +1,11 @@
+import { UploadFileItem } from "./types";
+
+/**
+ * Generate a unique identifier for file items.
+ * Combines a random string with a timestamp suffix for uniqueness.
+ */
 export const uid = () =>
   Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
-
-import { UploadFileItem } from "./types";
 
 const VIDEO_EXTENSIONS = [
   "mp4",
@@ -31,6 +35,10 @@ const IMAGE_EXTENSIONS = [
   "tiff",
 ];
 
+/**
+ * Extract the file extension from a URL or path string.
+ * Returns the extension in lowercase, or undefined if none found.
+ */
 export const getExtension = (path: string) => {
   try {
     const url = new URL(path, "http://localhost");
@@ -45,6 +53,13 @@ export const getExtension = (path: string) => {
   }
 };
 
+/**
+ * Check whether a file item represents a video.
+ * Uses MIME type when available, otherwise falls back to extension detection.
+ *
+ * @param item - The file item to check.
+ * @param extraExtensions - Additional video extensions to recognise.
+ */
 export const isVideoFile = (
   item: UploadFileItem<any>,
   extraExtensions: string[] = [],
@@ -72,6 +87,13 @@ export const isVideoFile = (
   return false;
 };
 
+/**
+ * Check whether a file item represents an image.
+ * Uses MIME type when available, otherwise falls back to extension detection.
+ *
+ * @param item - The file item to check.
+ * @param extraExtensions - Additional image extensions to recognise.
+ */
 export const isImageFile = (
   item: UploadFileItem<any>,
   extraExtensions: string[] = [],
@@ -99,6 +121,11 @@ export const isImageFile = (
   return false;
 };
 
+/**
+ * Check whether a File object matches the given HTML `accept` attribute value.
+ * Supports MIME types (image/png), wildcards (image/*), and file extensions (.jpg, jpg).
+ * Returns true when accept is empty or malformed (permissive behaviour matching `<input>`).
+ */
 export const acceptsFile = (
   file: File,
   accept: string | undefined,
