@@ -2,7 +2,6 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import React from "react";
 import { render, waitFor, cleanup } from "@testing-library/react";
 import { Root } from "./Root";
 import { Trigger } from "./Trigger";

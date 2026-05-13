@@ -96,6 +96,7 @@ Items can be in one of these states: `idle`, `uploading`, `done`, `error`, `canc
 - Ensure all components are accessible (A11y).
 - Keep the library unstyled; use `className` and `style` props for customization.
 - Strictly follow the types defined in `src/shared/types.ts`.
+- **Remove unused imports:** Before committing, always check for and remove any unused imports across the codebase.
 
 ### Testing
 - Tests are located alongside source files (e.g., `*.test.tsx`).

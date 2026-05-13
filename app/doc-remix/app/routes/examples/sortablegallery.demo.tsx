@@ -27,7 +27,6 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
   rectSortingStrategy,
   useSortable,
 } from "@dnd-kit/sortable";

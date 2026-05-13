@@ -15,6 +15,7 @@ Accessible, unstyled primitives for building your own upload UI — with drag‑
 - **Custom Validation:** Use `beforeUpload` to validate files before they start uploading
 - Hidden input for form submissions
 - Unstyled — bring your own design
+- **React Native support** via `uplofile/native`
 
 ---
 
