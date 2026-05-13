@@ -60,11 +60,6 @@ Releases are fully automated via **semantic-release** triggered on push to `main
    - Publishes to npm (`--provenance`)
    - Creates a GitHub Release
 
-### Prerequisites
-
-- **`NPM_TOKEN`** must be set as a GitHub Actions secret (use an **automation token** from npm — these bypass 2FA)
-- The **`NPM_TOKEN`** secret should be scoped to the `uplofile` package on npm
-
 ### Manual trigger
 
 The workflow can also be triggered manually via the GitHub UI (Actions → Release → Run workflow).
