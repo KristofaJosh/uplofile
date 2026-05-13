@@ -1,10 +1,10 @@
 import { Slot } from "../shared/Slot";
 import React, { ButtonHTMLAttributes } from "react";
 
-import { useUplofile } from "../hook";
-import { isVideoFile } from "../utils";
+import { useUplofile } from "../shared/hook";
+import { isVideoFile } from "../shared/utils";
 
-import type { PreviewRenderProps, UploadFileItem } from "../types";
+import type { PreviewRenderProps, UploadFileItem } from "../shared/types";
 
 import { CancelIcon } from "./icons/CancelIcon";
 import { ErrorIcon } from "./icons/ErrorIcon";

@@ -4,11 +4,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
 import { act, cleanup, render, fireEvent, screen, waitFor } from "@testing-library/react";
-import { Root } from "./context";
-import { Dropzone } from "./components/dropzone";
-import { Trigger } from "./components/trigger";
-import { Preview } from "./components/preview";
-import { UploadFileItem, UplofileRootRef } from "./types";
+import { Root } from "./Root";
+import { Dropzone } from "./Dropzone";
+import { Trigger } from "./Trigger";
+import { Preview } from "./Preview";
+import { UploadFileItem, UplofileRootRef } from "../shared/types";
 
 afterEach(cleanup);
 
@@ -109,8 +109,6 @@ describe("Components", () => {
       expect(trigger.getAttribute("data-part")).toBe("trigger");
 
       fireEvent.click(trigger);
-      // Clicking should trigger openFileDialog which eventually calls input click.
-      // We can't easily test the file picker opening in JSDOM, but we can verify it doesn't throw.
     });
 
     it("opens the hidden input once on click by default", () => {
@@ -226,9 +224,7 @@ describe("Components", () => {
 
       await waitFor(() => {
         expect(screen.getByAltText("test1.jpg")).toBeDefined();
-        // test2.mp4 is video (detected by .mp4 extension)
         expect(document.querySelector("video")).toBeDefined();
-        // test3.png is error
         const errorItem = document.querySelector('[data-state="error"]');
         expect(errorItem).toBeDefined();
       });

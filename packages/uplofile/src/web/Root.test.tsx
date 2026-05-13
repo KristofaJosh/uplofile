@@ -4,9 +4,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
 import { render, waitFor, cleanup } from "@testing-library/react";
-import { Root } from "./context";
-import { Trigger } from "./components/trigger";
-import { UplofileRootRef } from "./types";
+import { Root } from "./Root";
+import { Trigger } from "./Trigger";
+import { UplofileRootRef } from "../shared/types";
 
 afterEach(cleanup);
 
@@ -781,13 +781,12 @@ describe("Root Component", () => {
       ref!.actions.remove(uid);
 
       await waitFor(() => expect(ref!.getItems()).toHaveLength(0));
-      // Removing after upload should not throw (double-revoke is a no-op)
     });
 
     it("should revoke blob URL when removing before upload completes", async () => {
       let ref: UplofileRootRef | null = null;
       const slowUpload = vi.fn();
-      slowUpload.mockReturnValue(new Promise(() => {})); // never resolves
+      slowUpload.mockReturnValue(new Promise(() => {}));
 
       render(
         <Root upload={slowUpload} ref={(r) => (ref = r)}>

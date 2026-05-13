@@ -121,15 +121,12 @@ describe("utils", () => {
     });
 
     it("should handle complex local paths that might fail URL constructor", () => {
-      // In some environments, URL constructor might fail for relative paths without base
-      // The catch block handles this
       expect(getExtension("some/local/file.webp?v=1")).toBe("webp");
     });
   });
 
   describe("acceptsFile", () => {
     const makeFile = (name: string, type: string): File => {
-      // Using Blob to construct a File-like; in browser env this is fine for type
       return new File(["content"], name, { type });
     };
 

@@ -1,0 +1,68 @@
+import React, { PropsWithChildren, useMemo } from "react";
+
+import { useUplofile } from "../shared/hook";
+import type { TriggerRenderProps } from "../shared/types";
+import { Slot } from "../shared/Slot";
+
+export const Trigger = <TMeta = any,>({
+  asChild,
+  children,
+  render,
+  onClick,
+  ...rest
+}: PropsWithChildren<
+  {
+    asChild?: boolean;
+    render?: (api: TriggerRenderProps<TMeta>) => React.ReactNode;
+    children?:
+      | React.ReactNode
+      | ((api: TriggerRenderProps<TMeta>) => React.ReactNode);
+  } & React.HTMLAttributes<HTMLElement>
+>) => {
+  const { openFileDialog, disabled, items, isLoading } = useUplofile<TMeta>();
+  const Comp: any = asChild ? Slot : "button";
+
+  const api = useMemo<TriggerRenderProps<TMeta>>(() => {
+    const uploading = items.filter((i) => i.status === "uploading");
+    const uploadingCount = uploading.length;
+    const doneCount = items.filter((i) => i.status === "done").length;
+    const errorCount = items.filter((i) => i.status === "error").length;
+    const totalProgress = uploadingCount
+      ? Math.round(
+          uploading.reduce(
+            (acc, it) =>
+              acc + (typeof it.progress === "number" ? it.progress : 0),
+            0,
+          ) / uploadingCount,
+        )
+      : undefined;
+
+    return {
+      items,
+      isLoading,
+      isUploading: uploadingCount > 0,
+      uploadingCount,
+      doneCount,
+      errorCount,
+      totalProgress,
+      open: openFileDialog,
+    };
+  }, [items, isLoading, openFileDialog]);
+
+  return (
+    <Comp
+      type={asChild ? undefined : "button"}
+      aria-disabled={disabled}
+      data-part="trigger"
+      {...rest}
+      onClick={(e: any) => {
+        if (disabled) return;
+        (onClick as any)?.(e);
+        if (e.defaultPrevented) return;
+        openFileDialog();
+      }}
+    >
+      {render ? render(api) : children}
+    </Comp>
+  );
+};

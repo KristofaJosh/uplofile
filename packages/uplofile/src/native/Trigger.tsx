@@ -1,26 +1,18 @@
 import React, { PropsWithChildren, useMemo } from "react";
+import { Pressable, PressableProps, Text } from "react-native";
+import { useUplofile } from "../shared/hook";
+import type { TriggerRenderProps } from "../shared/types";
 
-import { useUplofile } from "../hook";
-import type { TriggerRenderProps } from "../types";
-import { Slot } from "../shared/Slot";
+type NativeTriggerProps<TMeta = any> = PropsWithChildren<{
+  render?: (api: TriggerRenderProps<TMeta>) => React.ReactNode;
+}> & PressableProps;
 
-export const Trigger = <TMeta = any,>({
-  asChild,
+export const Trigger = <TMeta = any>({
   children,
   render,
-  onClick,
   ...rest
-}: PropsWithChildren<
-  {
-    asChild?: boolean;
-    render?: (api: TriggerRenderProps<TMeta>) => React.ReactNode;
-    children?:
-      | React.ReactNode
-      | ((api: TriggerRenderProps<TMeta>) => React.ReactNode);
-  } & React.HTMLAttributes<HTMLElement>
->) => {
+}: NativeTriggerProps<TMeta>) => {
   const { openFileDialog, disabled, items, isLoading } = useUplofile<TMeta>();
-  const Comp: any = asChild ? Slot : "button";
 
   const api = useMemo<TriggerRenderProps<TMeta>>(() => {
     const uploading = items.filter((i) => i.status === "uploading");
@@ -50,19 +42,12 @@ export const Trigger = <TMeta = any,>({
   }, [items, isLoading, openFileDialog]);
 
   return (
-    <Comp
-      type={asChild ? undefined : "button"}
-      aria-disabled={disabled}
-      data-part="trigger"
+    <Pressable
+      disabled={disabled}
+      onPress={disabled ? undefined : openFileDialog}
       {...rest}
-      onClick={(e: any) => {
-        if (disabled) return;
-        (onClick as any)?.(e);
-        if (e.defaultPrevented) return;
-        openFileDialog();
-      }}
     >
-      {render ? render(api) : children}
-    </Comp>
+      {render ? render(api) : (children ?? <Text>Select Files</Text>)}
+    </Pressable>
   );
 };
