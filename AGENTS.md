@@ -50,7 +50,10 @@ Releases are fully automated via **semantic-release** triggered on push to `main
    - `BREAKING CHANGE: ...` → **major** version bump
    - `chore: ...`, `docs: ...`, `refactor: ...` → no release
 2. `.github/workflows/publish.yml` runs on every push to `main`
-3. `semantic-release` scans commits since the last tag, determines the next version, and:
+3. The commit-analyzer scans commits since the last tag:
+   - Only `feat`/`fix`/`BREAKING CHANGE` trigger a release
+   - `chore`/`docs`/`refactor`/`test`/`ci` → analyzer returns `null` → **no release**
+4. If a release is triggered, `semantic-release`:
    - Updates `packages/uplofile/package.json` version
    - Updates `CHANGELOG.md` with release notes
    - Commits both files and creates a `v{x.y.z}` tag
