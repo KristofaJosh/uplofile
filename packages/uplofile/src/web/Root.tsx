@@ -39,6 +39,7 @@ export const Root = forwardRef(
 
     const onInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.currentTarget.value = "";
         const files = e.target.files;
         if (!files) return;
         const accepted = Array.from(files).filter((f) =>
@@ -46,7 +47,6 @@ export const Root = forwardRef(
         );
         if (accepted.length === 0) return;
         void state.selectFiles(accepted);
-        e.currentTarget.value = "";
       },
       [state.selectFiles, props.accept],
     );
