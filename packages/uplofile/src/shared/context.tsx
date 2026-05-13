@@ -441,6 +441,8 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
       blobUrlsRef.current.forEach((url) => revokePreviewUrlRef.current(url));
       blobUrlsRef.current.clear();
       controllers.current.forEach((c) => c.abort());
+      removeControllers.current.forEach((c) => c.abort());
+      removeControllers.current.clear();
     },
     [],
   );
