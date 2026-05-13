@@ -53,14 +53,20 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
   // (e.g. URL.revokeObjectURL for web blob: URLs). RN adapter is a no-op.
   const blobUrlsRef = useRef(new Set<string>());
   const hasHydratedInitialRef = useRef(false);
+  const onChangeRef = useRef(onChange);
   const onLoadingChangeRef = useRef(onLoadingChange);
   const getFileNameRef = useRef(getFileName);
   const createPreviewUrlRef = useRef(createPreviewUrl);
   const revokePreviewUrlRef = useRef(revokePreviewUrl);
+  const prevItemsForOnChangeRef = useRef(items);
 
   useLayoutEffect(() => {
     itemsRef.current = items;
   }, [items]);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     onLoadingChangeRef.current = onLoadingChange;
@@ -82,6 +88,13 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
   useEffect(() => {
     onLoadingChangeRef.current?.(isLoading);
   }, [isLoading]);
+
+  // Call onChange when items change (skip initial mount where reference matches)
+  useEffect(() => {
+    if (prevItemsForOnChangeRef.current === items) return;
+    prevItemsForOnChangeRef.current = items;
+    onChangeRef.current?.(items);
+  }, [items]);
 
   // Hydrate initial items from the server and keep them marked as done
   useEffect(() => {
@@ -162,14 +175,9 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
             prev: UploadFileItem<TMeta, TFileSource>[],
           ) => UploadFileItem<TMeta, TFileSource>[]),
     ) => {
-      setItems((prev) => {
-        const nextState =
-          typeof next === "function" ? next(prev) : next;
-        if (onChange) Promise.resolve(onChange(nextState)).catch(() => {});
-        return nextState;
-      });
+      setItems(next as any);
     },
-    [onChange],
+    [],
   );
 
   const startUpload = useCallback(
@@ -248,11 +256,12 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
   const selectFiles = useCallback(
     async (sources: TFileSource[]) => {
       if (sources.length === 0) return;
+      const currentItems = itemsRef.current;
       const remaining = maxCount
         ? Math.max(
             0,
             maxCount -
-              items.filter((i) => i.status !== "canceled").length,
+              currentItems.filter((i) => i.status !== "canceled").length,
           )
         : undefined;
       const toUse =
@@ -273,7 +282,7 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
 
       if (beforeUpload) {
         const result = await beforeUpload(newItems, {
-          prevItems: items,
+          prevItems: currentItems,
           remaining,
           maxCount,
           accept,
@@ -342,7 +351,6 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
     [
       beforeUpload,
       emitChange,
-      items,
       maxCount,
       startUpload,
       accept,
