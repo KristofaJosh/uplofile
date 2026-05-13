@@ -10,6 +10,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Root } from "./Root";
 import { Dropzone } from "./Dropzone";
 import { Trigger } from "./Trigger";
@@ -103,7 +104,7 @@ describe("Components", () => {
   });
 
   describe("Trigger", () => {
-    it("should render as a button by default and handle click", () => {
+    it("should render as a button by default and handle click", async () => {
       render(
         <Root upload={mockUpload}>
           <Trigger data-testid="trigger">Upload</Trigger>
@@ -114,10 +115,10 @@ describe("Components", () => {
       expect(trigger.tagName).toBe("BUTTON");
       expect(trigger.getAttribute("data-part")).toBe("trigger");
 
-      fireEvent.click(trigger);
+      await userEvent.click(trigger);
     });
 
-    it("opens the hidden input once on click by default", () => {
+    it("opens the hidden input once on click by default", async () => {
       const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
       const { getByTestId } = render(
         <Root upload={mockUpload}>
@@ -125,12 +126,12 @@ describe("Components", () => {
         </Root>,
       );
 
-      fireEvent.click(getByTestId("trigger-default"));
+      await userEvent.click(getByTestId("trigger-default"));
       expect(clickSpy).toHaveBeenCalledTimes(1);
       clickSpy.mockRestore();
     });
 
-    it("composes consumer onClick and still opens when not prevented", () => {
+    it("composes consumer onClick and still opens when not prevented", async () => {
       const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
       const handler = vi.fn();
       const { getByTestId } = render(
@@ -141,13 +142,13 @@ describe("Components", () => {
         </Root>,
       );
 
-      fireEvent.click(getByTestId("trigger-compose"));
+      await userEvent.click(getByTestId("trigger-compose"));
       expect(handler).toHaveBeenCalled();
       expect(clickSpy).toHaveBeenCalledTimes(1);
       clickSpy.mockRestore();
     });
 
-    it("allows consumer to prevent default open via onClick", () => {
+    it("allows consumer to prevent default open via onClick", async () => {
       const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
       const { getByTestId } = render(
         <Root upload={mockUpload}>
@@ -162,7 +163,7 @@ describe("Components", () => {
         </Root>,
       );
 
-      fireEvent.click(getByTestId("trigger-prevent"));
+      await userEvent.click(getByTestId("trigger-prevent"));
       expect(clickSpy).not.toHaveBeenCalled();
       clickSpy.mockRestore();
     });
