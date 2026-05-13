@@ -5,9 +5,10 @@ import type { TriggerRenderProps } from "../shared/types";
 
 type NativeTriggerProps<TMeta = any> = PropsWithChildren<{
   render?: (api: TriggerRenderProps<TMeta>) => React.ReactNode;
-}> & PressableProps;
+}> &
+  PressableProps;
 
-export const Trigger = <TMeta = any>({
+export const Trigger = <TMeta = any,>({
   children,
   render,
   ...rest

@@ -19,12 +19,7 @@ export const Dropzone = ({ asChild, ...rest }: DropzoneProps) => {
   }, []);
 
   const dropzoneProps = getDropzoneProps();
-  const {
-    onDrop,
-    onDragOver,
-    onKeyDown,
-    ...restDropzoneProps
-  } = dropzoneProps;
+  const { onDrop, onDragOver, onKeyDown, ...restDropzoneProps } = dropzoneProps;
 
   return (
     <Comp

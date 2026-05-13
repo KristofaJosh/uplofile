@@ -127,7 +127,13 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
   </div>
 );
 
-const PreviewItem = ({ item, actions }: { item: UploadFileItem; actions: PreviewRenderProps["actions"] }) => {
+const PreviewItem = ({
+  item,
+  actions,
+}: {
+  item: UploadFileItem;
+  actions: PreviewRenderProps["actions"];
+}) => {
   const stateLabel =
     item.status === "removing"
       ? "Removing"
@@ -149,7 +155,9 @@ const PreviewItem = ({ item, actions }: { item: UploadFileItem; actions: Preview
     >
       {item.status === "error" && <ErrorBadge />}
       <MediaContent item={item} />
-      {item.status === "uploading" && <UploadingOverlay progress={item.progress} />}
+      {item.status === "uploading" && (
+        <UploadingOverlay progress={item.progress} />
+      )}
       <div
         className="uplofile-preview__overlay"
         data-error={item.status === "error" ? "true" : undefined}

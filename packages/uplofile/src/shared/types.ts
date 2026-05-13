@@ -66,7 +66,10 @@ export type RootProps<TMeta = any, TFileSource = File> = PropsWithChildren<{
   multiple?: boolean;
   initial?: MaybePromise<
     Array<
-      Pick<UploadFileItem<TMeta, TFileSource>, "uid" | "id" | "name" | "url" | "meta">
+      Pick<
+        UploadFileItem<TMeta, TFileSource>,
+        "uid" | "id" | "name" | "url" | "meta"
+      >
     >
   >;
   /**
@@ -100,10 +103,7 @@ export type ItemActions = {
   retry: (uid: string) => void;
 };
 
-export type ImageUploaderContextValue<
-  TMeta = any,
-  TFileSource = File,
-> = {
+export type ImageUploaderContextValue<TMeta = any, TFileSource = File> = {
   items: UploadFileItem<TMeta, TFileSource>[];
   setItems: (
     items:

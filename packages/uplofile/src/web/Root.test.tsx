@@ -505,7 +505,9 @@ describe("Root Component", () => {
   });
 
   describe("Item actions (cancel, retry, remove)", () => {
-    const upload = vi.fn().mockResolvedValue({ url: "https://example.com/file.jpg" });
+    const upload = vi
+      .fn()
+      .mockResolvedValue({ url: "https://example.com/file.jpg" });
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -672,7 +674,12 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} onRemove={onRemove} removeMode="strict" ref={(r) => (ref = r)}>
+        <Root
+          upload={upload}
+          onRemove={onRemove}
+          removeMode="strict"
+          ref={(r) => (ref = r)}
+        >
           <div />
         </Root>,
       );
@@ -700,7 +707,12 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} onRemove={onRemove} removeMode="strict" ref={(r) => (ref = r)}>
+        <Root
+          upload={upload}
+          onRemove={onRemove}
+          removeMode="strict"
+          ref={(r) => (ref = r)}
+        >
           <div />
         </Root>,
       );
@@ -728,7 +740,9 @@ describe("Root Component", () => {
   });
 
   describe("Blob URL lifecycle", () => {
-    const upload = vi.fn().mockResolvedValue({ url: "https://example.com/file.jpg" });
+    const upload = vi
+      .fn()
+      .mockResolvedValue({ url: "https://example.com/file.jpg" });
 
     beforeEach(() => {
       vi.clearAllMocks();

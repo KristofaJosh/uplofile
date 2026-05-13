@@ -3,7 +3,14 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
-import { act, cleanup, render, fireEvent, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  render,
+  fireEvent,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { Root } from "./Root";
 import { Dropzone } from "./Dropzone";
 import { Trigger } from "./Trigger";

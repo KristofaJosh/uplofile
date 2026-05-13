@@ -152,14 +152,11 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
   // Internal wrappers that track preview URLs in blobUrlsRef for cleanup on unmount.
   // Why: the original createBlobUrl/revokeBlobUrl managed this set internally.
   // Now that adapters are external, we wrap them to preserve the lifecycle tracking.
-  const trackPreviewUrl = useCallback(
-    (source: TFileSource) => {
-      const url = createPreviewUrlRef.current(source);
-      if (url) blobUrlsRef.current.add(url);
-      return url;
-    },
-    [],
-  );
+  const trackPreviewUrl = useCallback((source: TFileSource) => {
+    const url = createPreviewUrlRef.current(source);
+    if (url) blobUrlsRef.current.add(url);
+    return url;
+  }, []);
 
   const untrackPreviewUrl = useCallback((url: string) => {
     if (blobUrlsRef.current.delete(url)) {
@@ -205,11 +202,7 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
       );
 
       try {
-        const result = await upload(
-          item.file,
-          controller.signal,
-          setProgress,
-        );
+        const result = await upload(item.file, controller.signal, setProgress);
 
         emitChange((items) =>
           items.map((it) => {
@@ -265,9 +258,7 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
           )
         : undefined;
       const toUse =
-        typeof remaining === "number"
-          ? sources.slice(0, remaining)
-          : sources;
+        typeof remaining === "number" ? sources.slice(0, remaining) : sources;
 
       let newItems: UploadFileItem<TMeta, TFileSource>[] = toUse.map(
         (source) => ({
@@ -289,7 +280,7 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
         });
         if (result === false) {
           newItems.forEach((it) => {
-              if (it.previewUrl) untrackPreviewUrl(it.previewUrl);
+            if (it.previewUrl) untrackPreviewUrl(it.previewUrl);
           });
           return;
         }
@@ -309,13 +300,8 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
               processedItems.push({
                 ...item,
                 meta:
-                  validation.meta !== undefined
-                    ? validation.meta
-                    : item.meta,
-                id:
-                  validation.id !== undefined
-                    ? validation.id
-                    : item.id,
+                  validation.meta !== undefined ? validation.meta : item.meta,
+                id: validation.id !== undefined ? validation.id : item.id,
               });
             } else if (validation.reason) {
               processedItems.push({
@@ -323,13 +309,8 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
                 status: "error",
                 error: validation.reason,
                 meta:
-                  validation.meta !== undefined
-                    ? validation.meta
-                    : item.meta,
-                id:
-                  validation.id !== undefined
-                    ? validation.id
-                    : item.id,
+                  validation.meta !== undefined ? validation.meta : item.meta,
+                id: validation.id !== undefined ? validation.id : item.id,
               });
             } else {
               if (item.previewUrl) untrackPreviewUrl(item.previewUrl);
@@ -406,9 +387,7 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
         } else {
           emitChange((list) =>
             list.map((it) =>
-              it.uid === uidStr
-                ? { ...it, status: "removing" as const }
-                : it,
+              it.uid === uidStr ? { ...it, status: "removing" as const } : it,
             ),
           );
           try {
@@ -418,9 +397,7 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
           } catch {
             emitChange((list) =>
               list.map((it) =>
-                it.uid === uidStr
-                  ? { ...it, status: "done" as const }
-                  : it,
+                it.uid === uidStr ? { ...it, status: "done" as const } : it,
               ),
             );
           } finally {

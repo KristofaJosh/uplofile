@@ -11,9 +11,10 @@ import type { ImageUploaderContextValue } from "./types";
  * building custom upload UI.
  */
 export const useUplofile = <TMeta = any, TFileSource = File>() => {
-  const ctx = useContext(
-    UploaderCtx,
-  ) as ImageUploaderContextValue<TMeta, TFileSource> | null;
+  const ctx = useContext(UploaderCtx) as ImageUploaderContextValue<
+    TMeta,
+    TFileSource
+  > | null;
   if (!ctx)
     throw new Error("useUplofile hook must be used within <Uplofile.Root>");
   return ctx;
