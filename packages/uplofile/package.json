@@ -72,10 +72,15 @@
   },
   "peerDependencies": {
     "react": ">=16.0.0",
-    "react-dom": ">=16.0.0"
+    "react-dom": ">=16.0.0",
+    "react-native": "*",
+    "react-native-document-picker": "*"
   },
   "peerDependenciesMeta": {
     "react-dom": {
+      "optional": true
+    },
+    "react-native": {
       "optional": true
     },
     "react-native-document-picker": {
