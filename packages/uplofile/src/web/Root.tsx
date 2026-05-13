@@ -179,12 +179,16 @@ export const Root = forwardRef(
     );
 
     return (
-      <UploaderCtx.Provider value={ctx}>
-        <div data-part="root">
-          <input type="file" hidden {...fileInputProps} />
-          {props.children}
-        </div>
-      </UploaderCtx.Provider>
+      <StableCtx.Provider value={stableCtx}>
+        <ItemsCtx.Provider value={itemsCtx}>
+          <UploaderCtx.Provider value={ctx}>
+            <div data-part="root">
+              <input type="file" hidden {...fileInputProps} />
+              {props.children}
+            </div>
+          </UploaderCtx.Provider>
+        </ItemsCtx.Provider>
+      </StableCtx.Provider>
     );
   },
 );
