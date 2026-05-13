@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useMemo } from "react";
 
-import { useUplofile } from "../hook";
-import type { TriggerRenderProps } from "../types";
+import { useUplofile } from "../shared/hook";
+import type { TriggerRenderProps } from "../shared/types";
 import { Slot } from "../shared/Slot";
 
 export const Trigger = <TMeta = any,>({

@@ -3,6 +3,8 @@ import { UploadFileItem } from "./types";
 /**
  * Generate a unique identifier for file items.
  * Combines a random string with a timestamp suffix for uniqueness.
+ *
+ * @returns A unique string identifier suitable for use as an item uid.
  */
 export const uid = () =>
   Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
@@ -38,6 +40,9 @@ const IMAGE_EXTENSIONS = [
 /**
  * Extract the file extension from a URL or path string.
  * Returns the extension in lowercase, or undefined if none found.
+ *
+ * @param path - The URL or file path to extract the extension from.
+ * @returns The lowercase extension string, or undefined if no extension exists.
  */
 export const getExtension = (path: string) => {
   try {
@@ -59,6 +64,7 @@ export const getExtension = (path: string) => {
  *
  * @param item - The file item to check.
  * @param extraExtensions - Additional video extensions to recognise.
+ * @returns True if the item is a video file.
  */
 export const isVideoFile = (
   item: UploadFileItem<any>,
@@ -93,6 +99,7 @@ export const isVideoFile = (
  *
  * @param item - The file item to check.
  * @param extraExtensions - Additional image extensions to recognise.
+ * @returns True if the item is an image file.
  */
 export const isImageFile = (
   item: UploadFileItem<any>,
@@ -125,6 +132,10 @@ export const isImageFile = (
  * Check whether a File object matches the given HTML `accept` attribute value.
  * Supports MIME types (image/png), wildcards (image/*), and file extensions (.jpg, jpg).
  * Returns true when accept is empty or malformed (permissive behaviour matching `<input>`).
+ *
+ * @param file - The File object to check.
+ * @param accept - The accept attribute string (comma-separated MIME types / extensions).
+ * @returns True if the file matches any of the accept tokens.
  */
 export const acceptsFile = (
   file: File,
@@ -139,30 +150,24 @@ export const acceptsFile = (
     .map((t) => t.trim().toLowerCase())
     .filter(Boolean);
 
-  // If accept is malformed, be permissive (browser file input also ignores)
   if (tokens.length === 0) return true;
 
-  // Helper: match extension token like .jpg or jpg
   const hasExt = (token: string) => {
     const extToken = token.startsWith(".") ? token.slice(1) : token;
     const fileExt = name.includes(".") ? name.split(".").pop() : undefined;
     return !!fileExt && fileExt === extToken;
   };
 
-  // Check any token matches
   return tokens.some((token) => {
     if (token === "*/*") return true;
 
-    // MIME type with wildcard, e.g., image/*
     if (token.endsWith("/*")) {
-      const prefix = token.slice(0, -1); // keep the slash
+      const prefix = token.slice(0, -1);
       return type.startsWith(prefix);
     }
 
-    // Full MIME type e.g., image/png
     if (token.includes("/")) return type === token;
 
-    // File extensions, with or without a leading dot
     return hasExt(token);
   });
 };

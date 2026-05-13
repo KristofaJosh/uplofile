@@ -21,12 +21,11 @@ Uplofile is a React library providing composable file-upload components. It foll
 This is a monorepo managed with `pnpm`.
 
 - `packages/uplofile`: The core library source code.
-  - `src/components`: UI components (Dropzone, Preview, Trigger, etc.).
-  - `src/context.tsx`: The `Root` component and state management.
-  - `src/hook.ts`: `useUplofile` hook for custom integrations.
-  - `src/types.ts`: TypeScript definitions for the entire library.
-  - `src/utils.ts`: Helper functions (file type checks, etc.).
+  - `src/shared/`: Platform-agnostic core (types, state machine, utils, hook)
+  - `src/web/`: Web-specific UI (Root, Dropzone, Trigger, Preview, icons)
+  - `src/native/`: React Native-specific UI (Root, Trigger, Preview)
 - `app/doc-remix`: The documentation website (Remix + React Router v7 + Tailwind SSR).
+- `app/doc-native`: React Native playground (Expo) for testing `uplofile/native` during development.
 
 ## Tech Stack
 
@@ -66,6 +65,8 @@ The workflow can also be triggered manually via the GitHub UI (Actions → Relea
 
 ## Core Components & Concepts
 
+The library exposes two entry points: `uplofile` (web, default) and `uplofile/native` (React Native).
+
 ### `UplofileRoot` (context.tsx)
 The provider component that manages the upload state.
 - **Props:** `upload` (required), `onRemove`, `multiple`, `maxCount`, `accept`, `beforeUpload`, `removeMode`.
@@ -94,7 +95,8 @@ Items can be in one of these states: `idle`, `uploading`, `done`, `error`, `canc
 - Use functional components and hooks.
 - Ensure all components are accessible (A11y).
 - Keep the library unstyled; use `className` and `style` props for customization.
-- Strictly follow the types defined in `src/types.ts`.
+- Strictly follow the types defined in `src/shared/types.ts`.
+- **Remove unused imports:** Before committing, always check for and remove any unused imports across the codebase.
 
 ### Testing
 - Tests are located alongside source files (e.g., `*.test.tsx`).
@@ -105,22 +107,23 @@ Items can be in one of these states: `idle`, `uploading`, `done`, `error`, `canc
 - E2E tests run in CI on every PR (see `ci.yml`). The config auto-starts the dev server.
 
 ### Adding New Features
-1. Update `types.ts` if any new props or state are needed.
-2. Implement logic in `context.tsx` or `hook.ts`.
-3. Create/update components in `src/components`.
-4. Add tests for the new functionality.
+1. Update `src/shared/types.ts` if any new props or state are needed.
+2. Implement cross-platform logic in `src/shared/context.tsx` (or web-only in `src/web/Root.tsx`).
+3. Create/update components in `src/web/` or `src/native/`.
+4. Add tests for the new functionality (co-located with components).
 5. Update documentation in `app/doc-remix` (Ensure SSR-friendly rendering using ClientOnly boundaries if needed).
 6. **CRITICAL:** Update `app/doc-remix/public/llms.txt` if the core logic, usage examples, or API changes, to ensure AI bots have up-to-date context.
 
 ## Common Tasks for Agents
 
-- **Bug Fixes:** Check `src/context.tsx` for state logic issues or `src/components` for UI bugs.
-- **Refactoring:** Ensure props are passed correctly through the context.
+- **Bug Fixes:** Check `src/shared/context.tsx` for state logic issues or `src/web/` for UI bugs.
+- **Refactoring:** Ensure props are passed correctly through the context shared across web and native.
 - **Documentation:** Updates should be made in `app/doc-remix/app` or in the package README. Also, ensure `app/doc-remix/public/llms.txt` accurately reflects any new APIs or architectural philosophies.
-- **New Components:** Follow the pattern of `Trigger` or `Dropzone`, ensuring they use the `useUplofile` hook.
+- **New Components (Web):** Follow the pattern of `Trigger` or `Dropzone` in `src/web/`, ensuring they use the `useUplofile` hook.
+- **New Components (Native):** Follow the pattern of `Trigger` or `Preview` in `src/native/`, ensuring they use the `useUplofile` hook.
 
 ## Troubleshooting
 
-- **State Issues:** The library uses a complex state object for items. Verify how `setItems` is called in `context.tsx`.
+- **State Issues:** The library uses a complex state object for items. Verify how `setItems` is called in `src/shared/context.tsx`.
 - **Upload Cancellation:** Ensure the `AbortSignal` is correctly passed and handled in the `upload` function.
 - **Preview Rendering:** `UplofilePreview` is a composite component; check how it renders children if they are provided.

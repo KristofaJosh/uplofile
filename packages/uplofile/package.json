@@ -25,20 +25,28 @@
     "form"
   ],
   "type": "module",
-  "main": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/web.mjs",
+  "types": "./dist/web.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
+      "types": "./dist/web.d.ts",
+      "default": "./dist/web.mjs"
+    },
+    "./native": {
+      "types": "./dist/native.d.ts",
+      "react-native": "./dist/native.mjs",
+      "default": "./dist/native.mjs"
     }
+  },
+  "react-native": {
+    "./native": "./dist/native.mjs"
   },
   "files": [
     "dist"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "bunchee src/index.ts --dts --external react,react-dom --format esm && node scripts/postbuild.cjs",
+    "build": "bunchee --dts --external react,react-dom,react-native,react-native-document-picker --format esm",
     "clean": "rm -rf dist",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
@@ -64,6 +72,19 @@
   },
   "peerDependencies": {
     "react": ">=16.0.0",
-    "react-dom": ">=16.0.0"
+    "react-dom": ">=16.0.0",
+    "react-native": "*",
+    "react-native-document-picker": "*"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "react-native-document-picker": {
+      "optional": true
+    }
   }
 }

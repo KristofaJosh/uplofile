@@ -4,7 +4,7 @@ import {
   UplofilePreview,
   type UploadFileItem,
 } from "@/components/ui/uplofile";
-import { FileIcon, CheckCircle2, Loader2, X, AlertCircle } from "lucide-react";
+import { FileIcon, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { mockUpload } from "@/lib/utils.ts";
 import { type BeforeUploadFn } from "uplofile";
 

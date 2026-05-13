@@ -48,6 +48,14 @@ Displays the list of files. By default, it renders a list, but can be customized
 />
 ```
 
+### React Native (`uplofile/native`)
+Import from `uplofile/native` for React Native. Uses `react-native-document-picker` under the hood.
+- `Root` — wraps RN root view, integrates document picker
+- `Trigger` — Pressable that opens the OS file picker
+- `Preview` — renders thumbnails using RN `<Image>` and action buttons
+
+Files are typed as `DocumentPickerResponse` (from `react-native-document-picker`) instead of `File`.
+
 ### 5. Action Helpers
 - `<UplofileCancel uid={uid} />`
 - `<UplofileRetry uid={uid} />`
