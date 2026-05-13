@@ -6,13 +6,20 @@ import React, {
 } from "react";
 import { View } from "react-native";
 import { pick } from "react-native-document-picker";
-import { UploaderCtx, useUplofileState } from "../shared/context";
+import {
+  ItemsCtx,
+  StableCtx,
+  UploaderCtx,
+  useUplofileState,
+} from "../shared/context";
 import type {
   ImageUploaderContextValue,
   ItemActions,
   RootProps,
   UploadFileItem,
   UplofileRootRef,
+  UploaderItemsContextValue,
+  UploaderStableContextValue,
 } from "../shared/types";
 
 export type { DocumentPickerResponse } from "react-native-document-picker";
@@ -53,11 +60,10 @@ export const Root = forwardRef(
     const onDrop = undefined;
     const onDragOver = undefined;
 
-    const ctx = useMemo<ImageUploaderContextValue<TMeta, any>>(
+    // Stable context — memoised separately so consumers that only read
+    // actions/props don't re‑render on every progress tick.
+    const stableCtx = useMemo<UploaderStableContextValue<TMeta, any>>(
       () => ({
-        items: state.items as UploadFileItem<TMeta, any>[],
-        setItems: state.setItems as any,
-        isLoading: state.isLoading,
         disabled: props.disabled,
         multiple: props.multiple ?? true,
         accept: props.accept ?? "image/*",
@@ -65,21 +71,38 @@ export const Root = forwardRef(
         openFileDialog,
         fileInputProps: {} as Record<string, any>,
         getDropzoneProps: () => ({}),
-        hiddenInputValue: state.hiddenInputValue,
+        setItems: state.setItems as any,
         name: props.name ?? "image",
       }),
       [
-        state.items,
-        state.setItems,
-        state.isLoading,
-        state.hiddenInputValue,
         props.disabled,
         props.multiple,
         props.accept,
         props.name,
         openFileDialog,
         state.actions,
+        state.setItems,
       ],
+    );
+
+    // Items context — changes on every progress tick, kept separate so
+    // consumers subscribed only to StableCtx don't re-render.
+    const itemsCtx = useMemo<UploaderItemsContextValue<TMeta, any>>(
+      () => ({
+        items: state.items as UploadFileItem<TMeta, any>[],
+        isLoading: state.isLoading,
+        hiddenInputValue: state.hiddenInputValue,
+      }),
+      [state.items, state.isLoading, state.hiddenInputValue],
+    );
+
+    // Merged context
+    const ctx = useMemo<ImageUploaderContextValue<TMeta, any>>(
+      () => ({
+        ...stableCtx,
+        ...itemsCtx,
+      }),
+      [stableCtx, itemsCtx],
     );
 
     useImperativeHandle(
@@ -101,9 +124,13 @@ export const Root = forwardRef(
     );
 
     return (
-      <UploaderCtx.Provider value={ctx}>
-        <View>{props.children}</View>
-      </UploaderCtx.Provider>
+      <StableCtx.Provider value={stableCtx}>
+        <ItemsCtx.Provider value={itemsCtx}>
+          <UploaderCtx.Provider value={ctx}>
+            <View>{props.children}</View>
+          </UploaderCtx.Provider>
+        </ItemsCtx.Provider>
+      </StableCtx.Provider>
     );
   },
 );

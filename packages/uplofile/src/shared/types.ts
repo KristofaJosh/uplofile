@@ -103,6 +103,39 @@ export type ItemActions = {
   retry: (uid: string) => void;
 };
 
+/**
+ * Infrequently-changing context values (actions, callbacks, props).
+ * Separated from `UploaderItemsContextValue` so consumers like Dropzone
+ * that only read stable props don't re-render on every progress tick.
+ */
+export type UploaderStableContextValue<TMeta = any, TFileSource = File> = {
+  setItems: (
+    items:
+      | UploadFileItem<TMeta, TFileSource>[]
+      | ((
+          prev: UploadFileItem<TMeta, TFileSource>[],
+        ) => UploadFileItem<TMeta, TFileSource>[]),
+  ) => void;
+  disabled?: boolean;
+  multiple: boolean;
+  accept: string;
+  actions: ItemActions;
+  openFileDialog: () => void;
+  fileInputProps: Record<string, any>;
+  getDropzoneProps: () => Record<string, any>;
+  name: string;
+};
+
+/**
+ * Frequently-changing context values (items, isLoading).
+ * Separated so consumers that only read stable props can skip re-renders.
+ */
+export type UploaderItemsContextValue<TMeta = any, TFileSource = File> = {
+  items: UploadFileItem<TMeta, TFileSource>[];
+  isLoading: boolean;
+  hiddenInputValue: string;
+};
+
 export type ImageUploaderContextValue<TMeta = any, TFileSource = File> = {
   items: UploadFileItem<TMeta, TFileSource>[];
   setItems: (

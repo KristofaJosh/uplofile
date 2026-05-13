@@ -13,12 +13,26 @@ import type {
   ItemActions,
   RootProps,
   UploadFileItem,
+  UploaderItemsContextValue,
+  UploaderStableContextValue,
 } from "./types";
 import { uid } from "./utils";
 
 export const UploaderCtx = createContext<ImageUploaderContextValue | null>(
   null,
 );
+
+/**
+ * Holds infrequently-changing values (actions, callbacks, props).
+ * Consumers subscribed to this context skip re-renders on progress ticks.
+ */
+export const StableCtx = createContext<UploaderStableContextValue | null>(null);
+
+/**
+ * Holds frequently-changing values (items, isLoading).
+ * Separated from StableCtx so progress-driven re-renders are isolated.
+ */
+export const ItemsCtx = createContext<UploaderItemsContextValue | null>(null);
 
 export function useUplofileState<TMeta = any, TFileSource = File>({
   upload,
