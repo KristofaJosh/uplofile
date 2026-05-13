@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import { View } from "react-native";
-import { pick } from "react-native-document-picker";
+import { pick } from "@react-native-documents/picker";
 import {
   ItemsCtx,
   StableCtx,
@@ -21,8 +21,9 @@ import type {
   UploaderItemsContextValue,
   UploaderStableContextValue,
 } from "../shared/types";
+import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
 
-export type { DocumentPickerResponse } from "react-native-document-picker";
+export type { DocumentPickerResponse } from "@react-native-documents/picker";
 
 export const Root = forwardRef(
   <TMeta = any,>(
@@ -37,25 +38,31 @@ export const Root = forwardRef(
     });
 
     const acceptTypes = useMemo(() => {
-      if (!props.accept) return undefined;
-      return props.accept
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
+      return getNativePickerAcceptTypes(props.accept);
     }, [props.accept]);
 
     const openFileDialog = useCallback(async () => {
       try {
         const results = await pick({
           type: acceptTypes,
+          allowMultiSelection: props.multiple ?? true,
         });
-        if (results && results.length > 0) {
-          void state.selectFiles(results);
+        const accepted = results.filter((result) =>
+          acceptsFile(
+            {
+              name: result.name ?? "",
+              type: result.type ?? "",
+            },
+            props.accept,
+          ),
+        );
+        if (accepted.length > 0) {
+          void state.selectFiles(accepted);
         }
       } catch {
         // User cancelled the picker — no-op
       }
-    }, [acceptTypes, state.selectFiles]);
+    }, [acceptTypes, props.accept, props.multiple, state.selectFiles]);
 
     const onDrop = undefined;
     const onDragOver = undefined;

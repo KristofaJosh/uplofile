@@ -1,21 +1,21 @@
-import { Layers3, ServerCog, ShieldCheck } from "lucide-react";
+import { IoLayersOutline, IoSettingsOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
 
 const principles = [
   {
     title: "React-first scope",
-    icon: <Layers3 className="h-5 w-5" aria-hidden="true" />,
+    icon: <IoLayersOutline className="h-5 w-5" aria-hidden="true" />,
     description:
       "Uplofile focuses on UI state management, lifecycle orchestration, composable primitives, and predictable component behavior.",
   },
   {
     title: "Infrastructure stays in your app",
-    icon: <ServerCog className="h-5 w-5" aria-hidden="true" />,
+    icon: <IoSettingsOutline className="h-5 w-5" aria-hidden="true" />,
     description:
       "Transport strategy, backend choice, retries, and resumable protocol logic are infrastructure decisions, not component decisions.",
   },
   {
     title: "Accessible by default",
-    icon: <ShieldCheck className="h-5 w-5" aria-hidden="true" />,
+    icon: <IoShieldCheckmarkOutline className="h-5 w-5" aria-hidden="true" />,
     description:
       "Build keyboard and screen-reader friendly upload experiences without sacrificing composition or design-system control.",
   },

@@ -13,7 +13,7 @@ export default function RootImperativeDemo() {
 
   // Use ref methods from parent
   const handleParentDrop = (e: DragEvent) => {
-    uplofileRef.current?.onDrop(e);
+    uplofileRef.current?.onDrop?.(e);
   };
 
   const handleCustomUpdate = () => {

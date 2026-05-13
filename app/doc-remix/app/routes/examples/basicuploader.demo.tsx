@@ -4,13 +4,13 @@ import {
   UplofilePreview,
   type UploadFileItem,
 } from "@/components/ui/uplofile";
-import { FileIcon, CheckCircle2, Loader2, X } from "lucide-react";
+import { IoDocumentOutline, IoCheckmarkCircleOutline, IoReloadOutline, IoCloseOutline } from "react-icons/io5";
 import { mockUpload } from "@/lib/utils.ts";
 
 export default function BasicUploaderDemo() {
   return (
     <UplofileRoot upload={mockUpload}>
-      <UplofileTrigger>
+      <UplofileTrigger asChild>
         <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 shadow">
           Select Files
         </button>
@@ -44,7 +44,7 @@ function BasicFileItem({ item }: { item: UploadFileItem }) {
     <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-card-foreground shadow-sm animate-in fade-in slide-in-from-top-1">
       <div className="flex items-center gap-3 overflow-hidden">
         <div className="p-2 rounded-md bg-primary/10 text-primary">
-          <FileIcon className="h-4 w-4" />
+          <IoDocumentOutline className="h-4 w-4" />
         </div>
         <div className="grid gap-0.5 overflow-hidden">
           <span className="text-sm font-medium truncate max-w-[200px] sm:max-w-[400px]">
@@ -62,12 +62,12 @@ function BasicFileItem({ item }: { item: UploadFileItem }) {
       </div>
       <div className="flex items-center gap-2 ml-4">
         {item.status === "uploading" && (
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          <IoReloadOutline className="h-4 w-4 animate-spin text-muted-foreground" />
         )}
         {item.status === "done" && (
-          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <IoCheckmarkCircleOutline className="h-4 w-4 text-emerald-500" />
         )}
-        {item.status === "error" && <X className="h-4 w-4 text-destructive" />}
+        {item.status === "error" && <IoCloseOutline className="h-4 w-4 text-destructive" />}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { IoCheckmarkOutline, IoCopyOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { Highlight, themes } from "prism-react-renderer";
 
@@ -45,9 +45,9 @@ export const CodeBlock = ({ code, language = "tsx" }: CodeBlockProps) => {
         onClick={handleCopy}
       >
         {copied ? (
-          <Check className="h-4 w-4 text-green-500" />
+          <IoCheckmarkOutline className="h-4 w-4 text-green-500" />
         ) : (
-          <Copy className="h-4 w-4" />
+          <IoCopyOutline className="h-4 w-4" />
         )}
       </Button>
     </div>

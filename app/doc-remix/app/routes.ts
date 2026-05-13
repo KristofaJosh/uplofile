@@ -30,5 +30,6 @@ export default [
   route("examples/root-imperative", "routes/examples/rootimperative.tsx"),
   route("examples/loading-state", "routes/examples/loadingstate.tsx"),
   route("examples/pause-resume", "routes/examples/pauseresumeresumable.tsx"),
+  route("examples/batch-upload", "routes/examples/batchupload.tsx"),
   route("sitemap.xml", "routes/sitemap[.]xml.tsx"),
 ] satisfies RouteConfig;

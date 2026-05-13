@@ -2,24 +2,27 @@
   "name": "doc-native",
   "private": true,
   "version": "0.1.0",
-  "main": "App.tsx",
+  "main": "index.ts",
   "scripts": {
-    "dev": "expo start",
-    "start": "expo start",
-    "ios": "expo start --ios",
-    "android": "expo start --android"
+    "dev": "expo start --dev-client",
+    "start": "expo start --dev-client",
+    "ios": "expo run:ios",
+    "android": "expo run:android"
   },
   "dependencies": {
-    "expo": "~52.0.0",
-    "expo-document-picker": "~12.0.0",
-    "expo-status-bar": "~2.0.0",
-    "react": "^19.0.0",
-    "react-native": "~0.76.0",
-    "react-native-document-picker": "^9.3.1",
+    "@react-native-documents/picker": "^10.1.7",
+    "expo": "~56.0.0-beta",
+    "expo-dev-client": "~56.0.0-beta",
+    "expo-document-picker": "~56.0.0-beta",
+    "expo-status-bar": "~56.0.0-beta",
+    "react": "19.2.3",
+    "react-native": "~0.85.3",
+    "react-native-safe-area-context": "^5.7.0",
     "uplofile": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "~18.3.0",
-    "typescript": "^5.3.0"
+    "@types/react": "~19.2.14",
+    "babel-preset-expo": "~56.0.0-beta",
+    "typescript": "^6.0.3"
   }
 }

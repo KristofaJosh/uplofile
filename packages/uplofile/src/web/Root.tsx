@@ -39,12 +39,11 @@ export const Root = forwardRef(
 
     const onInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.currentTarget.files;
+        const selected = files ? Array.from(files) : [];
         e.currentTarget.value = "";
-        const files = e.target.files;
-        if (!files) return;
-        const accepted = Array.from(files).filter((f) =>
-          acceptsFile(f, props.accept),
-        );
+        if (selected.length === 0) return;
+        const accepted = selected.filter((f) => acceptsFile(f, props.accept));
         if (accepted.length === 0) return;
         void state.selectFiles(accepted);
       },

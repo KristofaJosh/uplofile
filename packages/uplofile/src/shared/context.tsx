@@ -363,6 +363,7 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
       remove: async (uidStr: string) => {
         const item = itemsRef.current.find((i) => i.uid === uidStr);
         if (!item) return;
+        if (item.status === "removing") return;
 
         controllers.current.get(uidStr)?.abort();
 
@@ -441,6 +442,8 @@ export function useUplofileState<TMeta = any, TFileSource = File>({
       blobUrlsRef.current.forEach((url) => revokePreviewUrlRef.current(url));
       blobUrlsRef.current.clear();
       controllers.current.forEach((c) => c.abort());
+      removeControllers.current.forEach((c) => c.abort());
+      removeControllers.current.clear();
     },
     [],
   );

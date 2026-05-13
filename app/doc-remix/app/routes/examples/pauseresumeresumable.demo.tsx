@@ -11,16 +11,16 @@ import {
   mockResumableUpload,
 } from "@/lib/utils.ts";
 import {
-  Upload,
-  Pause,
-  Play,
-  RotateCcw,
-  X,
-  Trash2,
-  Loader2,
-  CheckCircle2,
-  AlertTriangle,
-} from "lucide-react";
+  IoCloudUploadOutline,
+  IoPauseOutline,
+  IoPlayOutline,
+  IoRefreshOutline,
+  IoCloseOutline,
+  IoTrashOutline,
+  IoReloadOutline,
+  IoCheckmarkCircleOutline,
+  IoWarningOutline,
+} from "react-icons/io5";
 
 const clearCheckpointForItem = (item: UploadFileItem) => {
   if (!item.file) return;
@@ -32,9 +32,9 @@ export default function PauseResumeResumableDemo() {
     <UplofileRoot upload={mockResumableUpload} multiple accept="*/*">
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <UplofileTrigger>
+          <UplofileTrigger asChild>
             <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-95">
-              <Upload className="h-4 w-4" />
+              <IoCloudUploadOutline className="h-4 w-4" />
               Add Files
             </button>
           </UplofileTrigger>
@@ -87,7 +87,7 @@ function PauseResumeToolbar() {
           }}
           className="inline-flex items-center gap-1 rounded-md border px-2 py-1 font-medium hover:bg-muted"
         >
-          <Pause className="h-3 w-3" />
+          <IoPauseOutline className="h-3 w-3" />
           Pause all ({uploading})
         </button>
       )}
@@ -101,7 +101,7 @@ function PauseResumeToolbar() {
           }}
           className="inline-flex items-center gap-1 rounded-md border px-2 py-1 font-medium hover:bg-muted"
         >
-          <Play className="h-3 w-3" />
+          <IoPlayOutline className="h-3 w-3" />
           Resume all ({paused})
         </button>
       )}
@@ -132,7 +132,7 @@ function FileRow({ item }: { item: UploadFileItem }) {
         uid={item.uid}
         className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-destructive"
       >
-        <Trash2 className="h-4 w-4" />
+        <IoTrashOutline className="h-4 w-4" />
       </UplofileRemove>
     </div>
   );
@@ -148,7 +148,7 @@ function ActionButtons({ item }: { item: UploadFileItem }) {
           onClick={() => actions.cancel(item.uid)}
           className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
         >
-          <Pause className="h-3 w-3" />
+          <IoPauseOutline className="h-3 w-3" />
           Pause
         </button>
         <button
@@ -159,7 +159,7 @@ function ActionButtons({ item }: { item: UploadFileItem }) {
           }}
           className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
         >
-          <X className="h-3 w-3" />
+          <IoCloseOutline className="h-3 w-3" />
           Cancel
         </button>
       </div>
@@ -173,7 +173,7 @@ function ActionButtons({ item }: { item: UploadFileItem }) {
           onClick={() => actions.retry(item.uid)}
           className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
         >
-          <Play className="h-3 w-3" />
+          <IoPlayOutline className="h-3 w-3" />
           Resume
         </button>
         <button
@@ -183,7 +183,7 @@ function ActionButtons({ item }: { item: UploadFileItem }) {
           }}
           className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
         >
-          <RotateCcw className="h-3 w-3" />
+          <IoRefreshOutline className="h-3 w-3" />
           Retry
         </button>
       </div>
@@ -199,7 +199,7 @@ function ActionButtons({ item }: { item: UploadFileItem }) {
         }}
         className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
       >
-        <RotateCcw className="h-3 w-3" />
+        <IoRefreshOutline className="h-3 w-3" />
         Retry
       </button>
     );
@@ -212,7 +212,7 @@ function StatusBadge({ item }: { item: UploadFileItem }) {
   if (item.status === "uploading") {
     return (
       <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-        <Loader2 className="h-3 w-3 animate-spin" />
+        <IoReloadOutline className="h-3 w-3 animate-spin" />
         {item.progress ?? 0}%
       </span>
     );
@@ -221,7 +221,7 @@ function StatusBadge({ item }: { item: UploadFileItem }) {
   if (item.status === "done") {
     return (
       <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
-        <CheckCircle2 className="h-3 w-3" />
+        <IoCheckmarkCircleOutline className="h-3 w-3" />
         done
       </span>
     );
@@ -230,7 +230,7 @@ function StatusBadge({ item }: { item: UploadFileItem }) {
   if (item.status === "error") {
     return (
       <span className="inline-flex items-center gap-1 text-xs text-destructive">
-        <AlertTriangle className="h-3 w-3" />
+        <IoWarningOutline className="h-3 w-3" />
         error
       </span>
     );

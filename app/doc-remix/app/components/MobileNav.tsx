@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { sidebarItems } from "./DocsSidebar";
-import { X } from "lucide-react";
+import { IoCloseOutline } from "react-icons/io5";
 import { Button } from "./ui/button";
 import { useEffect } from "react";
 
@@ -39,7 +39,7 @@ export const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
         <div className="flex items-center justify-between mb-8">
           <span className="text-lg font-bold">Menu</span>
           <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-6 w-6" />
+            <IoCloseOutline className="h-6 w-6" />
           </Button>
         </div>
 

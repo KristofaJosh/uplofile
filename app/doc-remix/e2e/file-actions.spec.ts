@@ -20,10 +20,9 @@ test.describe("File Actions", () => {
     const root = page.locator('[data-part="root"]');
     await expect(root.getByText("test.txt")).toBeVisible({ timeout: 10000 });
 
-    const doneIcon = root.locator("svg.text-emerald-500");
-    await expect(doneIcon).toBeVisible({ timeout: 30000 });
+    await expect(root.getByText("done")).toBeVisible({ timeout: 30000 });
 
-    const removeButton = page.locator("button:has(svg.lucide-x)");
+    const removeButton = root.locator('[data-part="remove"]');
     await removeButton.click();
 
     await expect(root.getByText("No files added yet.")).toBeVisible({

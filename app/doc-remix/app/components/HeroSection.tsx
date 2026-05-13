@@ -1,4 +1,4 @@
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { IoArrowForwardOutline, IoOpenOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import AppIcon from "@/assets/icon.svg?react";
 
@@ -22,7 +22,7 @@ export const HeroSection = () => {
               <Button size="lg" className="gap-2" asChild>
                 <a href="/installation">
                   Get started
-                  <ArrowRight className="h-4 w-4" />
+                  <IoArrowForwardOutline className="h-4 w-4" />
                 </a>
               </Button>
               <Button variant="outline" size="lg" className="gap-2" asChild>
@@ -32,25 +32,10 @@ export const HeroSection = () => {
                   rel="noopener noreferrer"
                 >
                   View on GitHub
-                  <ExternalLink className="h-4 w-4" />
+                  <IoOpenOutline className="h-4 w-4" />
                 </a>
               </Button>
             </div>
-            <a
-              href="https://www.producthunt.com/products/uplofile?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-uplofile"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Uplofile on Product Hunt"
-              className="inline-block"
-            >
-              <img
-                alt="Uplofile - Composable accessible file upload components for React. | Product Hunt"
-                width="250"
-                height="54"
-                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1083709&theme=light&t=1772028922471"
-                loading="lazy"
-              />
-            </a>
           </div>
 
           <div className="flex justify-center max-w-2xl lg:justify-end animate-fade-up-delay-1">

@@ -7,23 +7,23 @@ import {
   type UploadFileItem,
 } from "@/components/ui/uplofile";
 import {
-  FileIcon,
-  FileImage,
-  FileText,
-  FileArchive,
-  X,
-  Plus,
-  CheckCircle2,
-  AlertCircle,
-} from "lucide-react";
+  IoDocumentOutline,
+  IoImageOutline,
+  IoDocumentTextOutline,
+  IoArchiveOutline,
+  IoCloseOutline,
+  IoAddOutline,
+  IoCheckmarkCircleOutline,
+  IoAlertCircleOutline,
+} from "react-icons/io5";
 import { mockUpload, formatBytes } from "@/lib/utils.ts";
 
 export default function FileListWithActionsDemo() {
   return (
     <UplofileRoot upload={mockUpload} multiple>
-      <UplofileTrigger>
+      <UplofileTrigger asChild>
         <button className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all shadow-sm font-medium text-sm active:scale-95">
-          <Plus className="h-4 w-4" />
+          <IoAddOutline className="h-4 w-4" />
           Add Files
         </button>
       </UplofileTrigger>
@@ -33,7 +33,7 @@ export default function FileListWithActionsDemo() {
           <div className="mt-6 divide-y divide-border border rounded-xl bg-card shadow-sm overflow-hidden">
             {items.length === 0 && (
               <div className="p-12 text-center">
-                <FileIcon className="h-10 w-10 text-muted-foreground/20 mx-auto mb-4" />
+                <IoDocumentOutline className="h-10 w-10 text-muted-foreground/20 mx-auto mb-4" />
                 <p className="text-sm text-muted-foreground">
                   No files added yet.
                 </p>
@@ -81,10 +81,10 @@ function FileItem({ item }: { item: UploadFileItem }) {
           ) : (
             <div className="flex items-center gap-1.5">
               {item.status === "done" && (
-                <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                <IoCheckmarkCircleOutline className="h-3 w-3 text-emerald-500" />
               )}
               {item.status === "error" && (
-                <AlertCircle className="h-3 w-3 text-destructive" />
+                <IoAlertCircleOutline className="h-3 w-3 text-destructive" />
               )}
               <span
                 className={clsx(
@@ -104,7 +104,7 @@ function FileItem({ item }: { item: UploadFileItem }) {
         uid={item.uid}
         className="p-2 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
       >
-        <X className="h-4 w-4" />
+        <IoCloseOutline className="h-4 w-4" />
       </UplofileRemove>
     </div>
   );
@@ -113,10 +113,10 @@ function FileItem({ item }: { item: UploadFileItem }) {
 function getFileIcon(name: string) {
   const ext = name.split(".").pop()?.toLowerCase();
   if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext || ""))
-    return <FileImage className="h-5 w-5" />;
+    return <IoImageOutline className="h-5 w-5" />;
   if (ext === "pdf" || ["doc", "docx"].includes(ext || ""))
-    return <FileText className="h-5 w-5" />;
+    return <IoDocumentTextOutline className="h-5 w-5" />;
   if (["zip", "rar", "7z"].includes(ext || ""))
-    return <FileArchive className="h-5 w-5" />;
-  return <FileIcon className="h-5 w-5" />;
+    return <IoArchiveOutline className="h-5 w-5" />;
+  return <IoDocumentOutline className="h-5 w-5" />;
 }

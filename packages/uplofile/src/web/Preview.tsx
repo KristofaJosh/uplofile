@@ -224,6 +224,7 @@ export const Cancel = ({
 
   return (
     <Comp
+      data-part="cancel"
       {...rest}
       onClick={(e: Event) => {
         e.stopPropagation();
@@ -239,6 +240,7 @@ export const Retry = ({ uid, asChild, ...rest }: ButtonProps) => {
   const Comp: any = asChild ? Slot : "button";
   return (
     <Comp
+      data-part="retry"
       {...rest}
       onClick={(e: Event) => {
         e.stopPropagation();
@@ -254,6 +256,7 @@ export const Remove = ({ uid, asChild, ...rest }: ButtonProps) => {
   const Comp: any = asChild ? Slot : "button";
   return (
     <Comp
+      data-part="remove"
       {...rest}
       onClick={(e: Event) => {
         e.stopPropagation();

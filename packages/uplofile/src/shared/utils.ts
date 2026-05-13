@@ -128,45 +128,93 @@ export const isImageFile = (
   return false;
 };
 
-/**
- * Check whether a File object matches the given HTML `accept` attribute value.
- * Supports MIME types (image/png), wildcards (image/*), and file extensions (.jpg, jpg).
- * Returns true when accept is empty or malformed (permissive behaviour matching `<input>`).
- *
- * @param file - The File object to check.
- * @param accept - The accept attribute string (comma-separated MIME types / extensions).
- * @returns True if the file matches any of the accept tokens.
- */
-export const acceptsFile = (
-  file: File,
+export const getValidAcceptTokens = (
   accept: string | undefined,
-): boolean => {
-  if (!accept || accept.trim() === "") return true;
-  const type = (file.type || "").toLowerCase();
-  const name = (file.name || "").toLowerCase();
+): string[] | undefined => {
+  if (!accept || accept.trim() === "") return undefined;
 
   const tokens = accept
     .split(",")
     .map((t) => t.trim().toLowerCase())
     .filter(Boolean);
 
-  if (tokens.length === 0) return true;
+  if (tokens.length === 0) return undefined;
 
-  const hasExt = (token: string) => {
-    const extToken = token.startsWith(".") ? token.slice(1) : token;
-    const fileExt = name.includes(".") ? name.split(".").pop() : undefined;
-    return !!fileExt && fileExt === extToken;
-  };
+  // Regex safety: anchored single-character-class check for MIME type/subtype tokens.
+  // This avoids wildcard parsing with nested groups or backtracking-heavy patterns.
+  const isMimePart = (part: string) => /^[a-z0-9!#$&^_.+-]+$/i.test(part);
 
-  return tokens.some((token) => {
+  const validTokens = tokens.filter((token) => {
     if (token === "*/*") return true;
 
     if (token.endsWith("/*")) {
-      const prefix = token.slice(0, -1);
-      return type.startsWith(prefix);
+      return isMimePart(token.slice(0, -2));
     }
 
-    if (token.includes("/")) return type === token;
+    if (token.includes("/")) {
+      const [mimeType, mimeSubtype, ...rest] = token.split("/");
+      return (
+        !!mimeType &&
+        !!mimeSubtype &&
+        rest.length === 0 &&
+        isMimePart(mimeType) &&
+        isMimePart(mimeSubtype)
+      );
+    }
+
+    return token.startsWith(".") && token.length > 1;
+  });
+
+  return validTokens.length > 0 ? validTokens : undefined;
+};
+
+export const getNativePickerAcceptTypes = (
+  accept: string | undefined,
+): string[] | undefined => {
+  const tokens = getValidAcceptTokens(accept);
+  if (!tokens) return undefined;
+
+  return tokens.some((token) => token.startsWith("."))
+    ? undefined
+    : tokens;
+};
+
+/**
+ * Check whether a File object matches the given HTML `accept` attribute value.
+ * Supports MIME types (image/png), wildcards (image/*), and file extensions (.jpg).
+ * Ignores malformed tokens and returns true when no valid tokens remain
+ * (permissive behaviour matching `<input>`).
+ *
+ * @param file - The File object to check.
+ * @param accept - The accept attribute string (comma-separated MIME types / extensions).
+ * @returns True if the file matches any of the accept tokens.
+ */
+export const acceptsFile = (
+  file: Pick<File, "name" | "type">,
+  accept: string | undefined,
+): boolean => {
+  const tokens = getValidAcceptTokens(accept);
+  if (!tokens) return true;
+
+  const type = (file.type || "").toLowerCase();
+  const name = (file.name || "").toLowerCase();
+
+  const hasExt = (token: string) => {
+    return token.length > 1 && name.endsWith(token);
+  };
+
+  return tokens.some((token) => {
+    if (token === "*/*") {
+      return true;
+    }
+
+    if (token.endsWith("/*")) {
+      return type.startsWith(token.slice(0, -1));
+    }
+
+    if (token.includes("/")) {
+      return type === token;
+    }
 
     return hasExt(token);
   });

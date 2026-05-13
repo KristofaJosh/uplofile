@@ -1,8 +1,56 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-code-bg: hsl(var(--code-bg));
+  --color-code-text: hsl(var(--code-text));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-up: fade-up 0.6s ease-out forwards;
+}
 
 @layer base {
   :root {
@@ -121,7 +169,262 @@
   }
 }
 
+@layer components {
+  .uplofile-preview {
+    width: 100%;
+  }
+
+  .uplofile-preview__wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .uplofile-preview__item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--border));
+    background:
+      linear-gradient(135deg, hsl(var(--muted) / 0.62), transparent),
+      hsl(var(--card));
+    box-shadow: 0 1px 2px hsl(222 47% 11% / 0.08);
+    isolation: isolate;
+  }
+
+  .uplofile-preview__item[data-state="uploading"] {
+    border-color: hsl(var(--primary) / 0.34);
+  }
+
+  .uplofile-preview__image,
+  .uplofile-preview__video,
+  .uplofile-preview__no-preview {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .uplofile-preview__image,
+  .uplofile-preview__video {
+    object-fit: cover;
+  }
+
+  .uplofile-preview__no-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .uplofile-preview__no-preview svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .uplofile-preview__file-extension {
+    max-width: calc(100% - 2rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 999px;
+    background: hsl(var(--background) / 0.86);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1rem;
+    text-transform: uppercase;
+  }
+
+  .uplofile-preview__uploading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: hsl(222 47% 5% / 0.28);
+    backdrop-filter: blur(1px);
+  }
+
+  .uplofile-preview__uploading-overlay > .uplofile-preview__spinner {
+    display: none;
+  }
+
+  .uplofile-preview__progress {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    height: 0.375rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: hsl(var(--background) / 0.78);
+  }
+
+  .uplofile-preview__progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      hsl(var(--primary)),
+      hsl(168 76% 42%)
+    );
+    transition: width 220ms ease;
+  }
+
+  .uplofile-preview__spinner {
+    position: relative;
+    z-index: 1;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: hsl(var(--primary));
+    animation: uplofile-spin 800ms linear infinite;
+  }
+
+  .uplofile-preview__spinner-track {
+    opacity: 0.18;
+  }
+
+  .uplofile-preview__spinner-fill {
+    opacity: 0.95;
+  }
+
+  .uplofile-preview__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      hsl(222 47% 5% / 0.46),
+      transparent 42%,
+      hsl(222 47% 5% / 0.52)
+    );
+    opacity: 0;
+    transition: opacity 160ms ease;
+  }
+
+  .uplofile-preview__item:hover .uplofile-preview__overlay,
+  .uplofile-preview__item:focus-within .uplofile-preview__overlay,
+  .uplofile-preview__overlay[data-error="true"] {
+    opacity: 1;
+  }
+
+  .uplofile-preview__actions {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.375rem;
+    pointer-events: auto;
+  }
+
+  .uplofile-preview__button {
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid hsl(var(--border) / 0.38);
+    background: hsl(var(--background) / 0.92);
+    color: hsl(var(--foreground));
+    box-shadow: 0 0.375rem 1rem hsl(222 47% 11% / 0.18);
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .uplofile-preview__button:hover {
+    transform: translateY(-1px);
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+  }
+
+  .uplofile-preview__button:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  .uplofile-preview__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.72;
+  }
+
+  .uplofile-preview__button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .uplofile-preview__button--remove:hover {
+    background: hsl(var(--destructive));
+    color: hsl(var(--destructive-foreground));
+  }
+
+  .uplofile-preview__error-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 3;
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: hsl(var(--destructive));
+    color: hsl(var(--destructive-foreground));
+    box-shadow: 0 0.375rem 1rem hsl(222 47% 11% / 0.18);
+  }
+
+  .uplofile-preview__error-badge svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .uplofile-preview__error-message {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    pointer-events: auto;
+    border-radius: 0.5rem;
+    background: hsl(var(--destructive) / 0.94);
+    color: hsl(var(--destructive-foreground));
+    padding: 0.5rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .uplofile-preview__spinner {
+      animation: none;
+    }
+
+    .uplofile-preview__button,
+    .uplofile-preview__overlay,
+    .uplofile-preview__progress-bar {
+      transition: none;
+    }
+  }
+}
+
 @layer utilities {
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 2rem;
+  }
+
+  @media (min-width: 1400px) {
+    .container {
+      max-width: 1400px;
+    }
+  }
+
   .code-inline {
     @apply px-1.5 py-0.5 rounded text-sm text-gray-600 bg-gray-300 font-mono;
   }
@@ -151,6 +454,41 @@
 }
 
 @keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes uplofile-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes fade-up {
   from {
     opacity: 0;
     transform: translateY(20px);

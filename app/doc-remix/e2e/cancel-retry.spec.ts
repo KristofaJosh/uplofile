@@ -1,16 +1,18 @@
 import { test, expect, type Page } from "@playwright/test";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const testFile = path.resolve(__dirname, "fixtures", "test.txt");
+import { Buffer } from "node:buffer";
 
 test.describe("Cancel & Retry", () => {
+  const videoFile = {
+    name: "test.txt",
+    mimeType: "video/mp4" as const,
+    buffer: Buffer.from("fake video content"),
+  };
+
   async function triggerUpload(page: Page) {
     const fileChooserPromise = page.waitForEvent("filechooser");
     await page.locator('[data-part="dropzone"]').click();
     const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles(testFile);
+    await fileChooser.setFiles([videoFile]);
   }
 
   test("cancels an in-progress upload", async ({ page }) => {
@@ -22,7 +24,7 @@ test.describe("Cancel & Retry", () => {
     const root = page.locator('[data-part="root"]');
     await expect(root.getByText("test.txt")).toBeVisible({ timeout: 10000 });
 
-    const cancelButton = root.locator('button[title="Cancel upload"]');
+    const cancelButton = root.locator('[data-part="cancel"]');
     await expect(cancelButton).toBeVisible({ timeout: 5000 });
 
     await cancelButton.click();
@@ -35,22 +37,21 @@ test.describe("Cancel & Retry", () => {
     await page.goto("/examples/video");
     await page.locator('[data-part="root"]').waitFor();
 
+    // Force mockUpload to fail (failChance is 0.4, so any value < 0.4 triggers failure)
+    await page.evaluate(() => { Math.random = () => 0; });
+
     await triggerUpload(page);
 
     const root = page.locator('[data-part="root"]');
     await expect(root.getByText("test.txt")).toBeVisible({ timeout: 10000 });
 
-    const retryButton = root.locator('button:has(svg.lucide-rotate-ccw)');
-    const doneIcon = root.locator('svg.lucide-check-circle2');
+    const retryButton = root.locator('[data-part="retry"]');
+    await expect(retryButton).toBeVisible({ timeout: 30000 });
 
-    const outcome = await Promise.race([
-      retryButton.waitFor({ state: "visible", timeout: 30000 }).then(() => "retry" as const),
-      doneIcon.waitFor({ state: "visible", timeout: 30000 }).then(() => "done" as const),
-    ]);
-
-    expect(outcome).toBe("retry");
+    // Click retry — Math.random still returns 0, but the uploading phase
+    // (~4.5s before the forced failure) is long enough to catch cancel
     await retryButton.click();
-    await expect(root.locator('button[title="Cancel upload"]')).toBeVisible({
+    await expect(root.locator('[data-part="cancel"]')).toBeVisible({
       timeout: 5000,
     });
   });
