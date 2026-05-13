@@ -5,3 +5,5 @@ node_modules/
 .DS_Store
 **/.next/
 **/_pagefind/
+playwright-report/
+test-results/
