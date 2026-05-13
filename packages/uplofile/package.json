@@ -6,7 +6,7 @@
   "author": "Chris Josh <KristofaJosh>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KristofaJosh/uplofile.git"
+    "url": "https://github.com/KristofaJosh/uplofile.git"
   },
   "homepage": "https://uplofile.kristofajosh.dev",
   "keywords": [
