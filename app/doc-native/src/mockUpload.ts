@@ -10,6 +10,8 @@ export function mockUpload(
 
     const onAbort = () => {
       cancelled = true;
+      clearInterval(interval);
+      signal.removeEventListener("abort", onAbort);
       reject(new DOMException("Aborted", "AbortError"));
     };
 
