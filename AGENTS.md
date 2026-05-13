@@ -36,6 +36,38 @@ This is a monorepo managed with `pnpm`.
 - **Styling:** Tailwind CSS (mostly in docs, library components are unstyled)
 - **Bundler:** Bunchee (for the library), Vite (for the docs via Remix)
 - **Testing:** Vitest
+- **Release Automation:** semantic-release (via `.github/workflows/publish.yml`)
+
+## Release Process
+
+Releases are fully automated via **semantic-release** triggered on push to `main`.
+
+### How it works
+
+1. Push commits to `main` following **Conventional Commits** format:
+   - `feat: ...` → **minor** version bump
+   - `fix: ...` → **patch** version bump
+   - `BREAKING CHANGE: ...` → **major** version bump
+   - `chore: ...`, `docs: ...`, `refactor: ...` → no release
+2. `.github/workflows/publish.yml` runs on every push to `main`
+3. The commit-analyzer scans commits since the last tag:
+   - Only `feat`/`fix`/`BREAKING CHANGE` trigger a release
+   - `chore`/`docs`/`refactor`/`test`/`ci` → analyzer returns `null` → **no release**
+4. If a release is triggered, `semantic-release`:
+   - Updates `packages/uplofile/package.json` version
+   - Updates `CHANGELOG.md` with release notes
+   - Commits both files and creates a `v{x.y.z}` tag
+   - Publishes to npm (`--provenance`)
+   - Creates a GitHub Release
+
+### Prerequisites
+
+- **`NPM_TOKEN`** must be set as a GitHub Actions secret (use an **automation token** from npm — these bypass 2FA)
+- The **`NPM_TOKEN`** secret should be scoped to the `uplofile` package on npm
+
+### Manual trigger
+
+The workflow can also be triggered manually via the GitHub UI (Actions → Release → Run workflow).
 
 ## Core Components & Concepts
 
