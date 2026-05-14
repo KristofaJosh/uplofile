@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const testFile = path.resolve(__dirname, "fixtures", "test.txt");
 
 test.describe("Cancel & Retry", () => {
-  async function triggerUpload(page: ReturnType<typeof test.page>) {
+  async function triggerUpload(page: Page) {
     const fileChooserPromise = page.waitForEvent("filechooser");
     await page.locator('[data-part="dropzone"]').click();
     const fileChooser = await fileChooserPromise;

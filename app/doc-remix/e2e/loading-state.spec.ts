@@ -1,7 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 test.describe("Loading State", () => {
-  const declarativeRoot = (page: ReturnType<typeof test.page>) =>
+  const declarativeRoot = (page: Page) =>
     page
       .locator("section")
       .filter({ hasText: "Declarative gating" })

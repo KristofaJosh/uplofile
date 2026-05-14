@@ -29,16 +29,18 @@ test.describe("Multiple Uploads", () => {
   test("uploads files sequentially", async ({ page }) => {
     const root = page.locator('[data-part="root"]');
 
-    const fileChooser1 = page.waitForEvent("filechooser");
+    const fileChooserPromise1 = page.waitForEvent("filechooser");
     await page.locator('[data-part="trigger"]').click();
-    (await fileChooser1).setFiles([testFile]);
+    const fileChooser1 = await fileChooserPromise1;
+    await fileChooser1.setFiles([testFile]);
     await expect(root.locator("svg.text-emerald-500")).toBeVisible({
       timeout: 30000,
     });
 
-    const fileChooser2 = page.waitForEvent("filechooser");
+    const fileChooserPromise2 = page.waitForEvent("filechooser");
     await page.locator('[data-part="trigger"]').click();
-    (await fileChooser2).setFiles([testFile]);
+    const fileChooser2 = await fileChooserPromise2;
+    await fileChooser2.setFiles([testFile]);
     await expect(root.locator("svg.text-emerald-500")).toHaveCount(2, {
       timeout: 30000,
     });
