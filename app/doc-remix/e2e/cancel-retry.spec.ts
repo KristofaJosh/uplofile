@@ -43,17 +43,15 @@ test.describe("Cancel & Retry", () => {
     const retryButton = root.locator('button:has(svg.lucide-rotate-ccw)');
     const doneIcon = root.locator('svg.lucide-check-circle2');
 
-    await expect(async () => {
-      await expect(
-        doneIcon.or(retryButton).first(),
-      ).toBeVisible({ timeout: 1000 });
-    }).toPass({ timeout: 30000 });
+    const outcome = await Promise.race([
+      retryButton.waitFor({ state: "visible", timeout: 30000 }).then(() => "retry" as const),
+      doneIcon.waitFor({ state: "visible", timeout: 30000 }).then(() => "done" as const),
+    ]);
 
-    if (await retryButton.isVisible()) {
-      await retryButton.click();
-      await expect(root.locator('button[title="Cancel upload"]')).toBeVisible({
-        timeout: 5000,
-      });
-    }
+    expect(outcome).toBe("retry");
+    await retryButton.click();
+    await expect(root.locator('button[title="Cancel upload"]')).toBeVisible({
+      timeout: 5000,
+    });
   });
 });
