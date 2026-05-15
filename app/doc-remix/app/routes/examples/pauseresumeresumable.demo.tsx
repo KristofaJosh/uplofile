@@ -32,7 +32,7 @@ export default function PauseResumeResumableDemo() {
     <UplofileRoot upload={mockResumableUpload} multiple accept="*/*">
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <UplofileTrigger>
+          <UplofileTrigger asChild>
             <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-95">
               <Upload className="h-4 w-4" />
               Add Files

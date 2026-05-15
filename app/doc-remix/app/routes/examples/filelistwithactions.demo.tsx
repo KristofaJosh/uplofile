@@ -21,7 +21,7 @@ import { mockUpload, formatBytes } from "@/lib/utils.ts";
 export default function FileListWithActionsDemo() {
   return (
     <UplofileRoot upload={mockUpload} multiple>
-      <UplofileTrigger>
+      <UplofileTrigger asChild>
         <button className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all shadow-sm font-medium text-sm active:scale-95">
           <Plus className="h-4 w-4" />
           Add Files
