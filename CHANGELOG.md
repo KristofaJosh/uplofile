@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/KristofaJosh/uplofile/compare/v2.3.2...v3.0.0) (2026-05-15)
+
+
+### Features
+
+* add React Native support via uplofile/native entry point ([#17](https://github.com/KristofaJosh/uplofile/issues/17)) ([6f4da35](https://github.com/KristofaJosh/uplofile/commit/6f4da35cf27fa9688db1a75970663a08ca768657))
+
+
+### BREAKING CHANGES
+
+* cleanup and improvements
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
