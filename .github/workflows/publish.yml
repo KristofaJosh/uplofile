@@ -15,10 +15,18 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - name: Generate Token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
@@ -34,13 +42,6 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-
-      - name: Generate Token
-        uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Release
         run: npx semantic-release
