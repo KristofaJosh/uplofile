@@ -9,15 +9,15 @@ import {
   type UploadFileItem,
 } from "@/components/ui/uplofile";
 import {
-  Video,
-  X,
-  RotateCcw,
-  Ban,
-  Upload,
-  CheckCircle2,
-  AlertCircle,
-  Play,
-} from "lucide-react";
+  IoVideocamOutline,
+  IoCloseOutline,
+  IoRefreshOutline,
+  IoBanOutline,
+  IoCloudUploadOutline,
+  IoCheckmarkCircleOutline,
+  IoAlertCircleOutline,
+  IoPlayOutline,
+} from "react-icons/io5";
 import { formatBytes, mockUpload } from "@/lib/utils.ts";
 
 export default function VideoUploaderDemo() {
@@ -45,10 +45,10 @@ export default function VideoUploaderDemo() {
                   <div className="relative">
                     <div className="absolute -inset-1 rounded-full bg-primary/20 blur opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="relative p-4 rounded-2xl bg-background border shadow-sm text-primary group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300">
-                      <Video className="h-8 w-8" />
+                      <IoVideocamOutline className="h-8 w-8" />
                     </div>
                     <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-primary text-primary-foreground shadow-sm scale-0 group-hover:scale-100 transition-transform delay-100">
-                      <Upload className="h-3 w-3" />
+                      <IoCloudUploadOutline className="h-3 w-3" />
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -96,7 +96,7 @@ function VideoItem({ item }: { item: UploadFileItem }) {
           />
         ) : (
           <div className="flex flex-col items-center gap-2 text-muted-foreground/30">
-            <Video className="h-10 w-10" />
+            <IoVideocamOutline className="h-10 w-10" />
             <span className="text-[10px] font-bold uppercase tracking-widest">
               No Preview
             </span>
@@ -144,14 +144,14 @@ function VideoItem({ item }: { item: UploadFileItem }) {
         {item.status === "done" && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-all duration-300">
             <div className="p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white transform scale-90 group-hover:scale-100 transition-transform">
-              <Play className="h-6 w-6 fill-current" />
+              <IoPlayOutline className="h-6 w-6 fill-current" />
             </div>
           </div>
         )}
 
         {item.status === "error" && (
           <div className="absolute inset-0 bg-destructive/10 backdrop-blur-[1px] flex items-center justify-center">
-            <AlertCircle className="h-8 w-8 text-destructive/50" />
+            <IoAlertCircleOutline className="h-8 w-8 text-destructive/50" />
           </div>
         )}
       </div>
@@ -176,7 +176,7 @@ function VideoItem({ item }: { item: UploadFileItem }) {
               uid={item.uid}
               className="p-2 -mr-2 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all active:scale-90"
             >
-              <X className="h-4 w-4" />
+              <IoCloseOutline className="h-4 w-4" />
             </UplofileRemove>
           </div>
         </div>
@@ -197,7 +197,7 @@ function VideoItem({ item }: { item: UploadFileItem }) {
                   className="p-1.5 rounded-lg bg-muted hover:bg-destructive/10 hover:text-destructive transition-colors text-muted-foreground"
                   title="Cancel upload"
                 >
-                  <Ban className="h-3.5 w-3.5" />
+                  <IoBanOutline className="h-3.5 w-3.5" />
                 </button>
               </UplofileCancel>
             </div>
@@ -213,7 +213,7 @@ function VideoItem({ item }: { item: UploadFileItem }) {
               </div>
               <UplofileRetry uid={item.uid} asChild>
                 <button className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider bg-destructive text-destructive-foreground rounded-xl hover:bg-destructive/90 transition-all shadow-sm active:scale-95">
-                  <RotateCcw className="h-3 w-3" />
+                  <IoRefreshOutline className="h-3 w-3" />
                   Retry
                 </button>
               </UplofileRetry>
@@ -223,7 +223,7 @@ function VideoItem({ item }: { item: UploadFileItem }) {
           {item.status === "done" && (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
-                <CheckCircle2 className="h-3.5 w-3.5" />
+                <IoCheckmarkCircleOutline className="h-3.5 w-3.5" />
                 <span className="text-[10px] font-bold uppercase tracking-wider">
                   Ready to publish
                 </span>

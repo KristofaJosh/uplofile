@@ -1,4 +1,4 @@
-import { Github, Package, Menu } from "lucide-react";
+import { IoLogoGithub, IoCubeOutline, IoMenuOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import AppIcon from "@/assets/icon.svg?react";
 import { useState } from "react";
@@ -37,7 +37,7 @@ export const Header = () => {
               className="lg:hidden"
               onClick={() => setIsMenuOpen(true)}
             >
-              <Menu className="h-6 w-6" />
+              <IoMenuOutline className="h-6 w-6" />
             </Button>
             <a href="/" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center">
@@ -56,7 +56,7 @@ export const Header = () => {
                   rel="noopener noreferrer"
                   aria-label="GitHub"
                 >
-                  <Github className="h-5 w-5" />
+                  <IoLogoGithub className="h-5 w-5" />
                 </a>
               </Button>
               <Button variant="ghost" size="icon" asChild>
@@ -66,7 +66,7 @@ export const Header = () => {
                   rel="noopener noreferrer"
                   aria-label="npm"
                 >
-                  <Package className="h-5 w-5" />
+                  <IoCubeOutline className="h-5 w-5" />
                 </a>
               </Button>
             </div>

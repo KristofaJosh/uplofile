@@ -1,4 +1,4 @@
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { IoArrowForwardOutline, IoOpenOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import AppIcon from "@/assets/icon.svg?react";
 
@@ -22,7 +22,7 @@ export const HeroSection = () => {
               <Button size="lg" className="gap-2" asChild>
                 <a href="/installation">
                   Get started
-                  <ArrowRight className="h-4 w-4" />
+                  <IoArrowForwardOutline className="h-4 w-4" />
                 </a>
               </Button>
               <Button variant="outline" size="lg" className="gap-2" asChild>
@@ -32,7 +32,7 @@ export const HeroSection = () => {
                   rel="noopener noreferrer"
                 >
                   View on GitHub
-                  <ExternalLink className="h-4 w-4" />
+                  <IoOpenOutline className="h-4 w-4" />
                 </a>
               </Button>
             </div>

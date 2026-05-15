@@ -5,7 +5,7 @@ import {
   UplofileTrigger,
 } from "@/components/ui/uplofile";
 import { mockUpload } from "@/lib/utils.ts";
-import { Send, Loader2 } from "lucide-react";
+import { IoSendOutline, IoReloadOutline } from "react-icons/io5";
 
 export default function LoadingStateFormDemo() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,7 +34,7 @@ export default function LoadingStateFormDemo() {
             >
               {isLoading ? (
                 <span className="inline-flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Preparing…
+                  <IoReloadOutline className="h-4 w-4 animate-spin" /> Preparing…
                 </span>
               ) : (
                 "Add attachments"
@@ -68,7 +68,7 @@ export default function LoadingStateFormDemo() {
                 disabled={isLoading}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-lg text-sm font-bold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 h-11 px-8 shadow-lg"
               >
-                <Send className="h-4 w-4" />
+                <IoSendOutline className="h-4 w-4" />
                 {isLoading ? "Please wait…" : "Submit"}
               </button>
             )}
