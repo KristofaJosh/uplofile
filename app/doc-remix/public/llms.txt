@@ -15,7 +15,7 @@ Manages the entire upload state. Must wrap all other components.
 - **`onRemove`**: `(item: UploadFileItem, signal: AbortSignal) => Promise<void>` - Optional server-side delete logic.
 - **`removeMode`**: `'optimistic'` (default) or `'strict'`.
 - **`beforeUpload`**: Hook to validate or transform files before they start uploading.
-- **`accept`, `multiple`, `maxCount`**: Standard HTML5 file constraints.
+- **`accept`, `multiple`, `maxCount`**: Standard HTML5 file constraints. Extension filters must be dot-prefixed, such as `.pdf` or `.tar.gz`. Invalid `accept` tokens are ignored, matching browser-permissive behavior.
 
 ### 2. `UplofileDropzone`
 A drag-and-drop area. Render-props allow styling based on drag state:
@@ -47,6 +47,14 @@ Displays the list of files. By default, it renders a list, but can be customized
   )}
 />
 ```
+
+### React Native (`uplofile/native`)
+Import from `uplofile/native` for React Native. Uses `@react-native-documents/picker` under the hood.
+- `Root` — wraps RN root view, integrates document picker
+- `Trigger` — Pressable that opens the OS file picker
+- `Preview` — renders thumbnails using RN `<Image>` and action buttons
+
+Files are typed as `DocumentPickerResponse` (from `@react-native-documents/picker`) instead of `File`.
 
 ### 5. Action Helpers
 - `<UplofileCancel uid={uid} />`
@@ -93,4 +101,5 @@ For more complex usage patterns, refer to the official documentation and interac
 - [Before Upload Validation](https://uplofile.kristofajosh.dev/examples/validation)
 - [Sortable Dnd-Kit Gallery](https://uplofile.kristofajosh.dev/examples/sortable-gallery)
 - [Pause / Resume (Resumable Uploads)](https://uplofile.kristofajosh.dev/examples/pause-resume)
+- [Batch Upload — Collect Files, Then Upload as One](https://uplofile.kristofajosh.dev/examples/batch-upload)
 - [Imperative Actions via Ref](https://uplofile.kristofajosh.dev/examples/root-imperative)

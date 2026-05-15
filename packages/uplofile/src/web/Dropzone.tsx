@@ -1,7 +1,7 @@
 import { Slot } from "../shared/Slot";
 import { HTMLAttributes, useCallback, useRef, useState } from "react";
 
-import { useUplofile } from "../hook";
+import { useUplofile } from "../shared/hook";
 
 export type DropzoneProps = {
   asChild?: boolean;
@@ -19,12 +19,7 @@ export const Dropzone = ({ asChild, ...rest }: DropzoneProps) => {
   }, []);
 
   const dropzoneProps = getDropzoneProps();
-  const {
-    onDrop,
-    onDragOver,
-    onKeyDown,
-    ...restDropzoneProps
-  } = dropzoneProps;
+  const { onDrop, onDragOver, onKeyDown, ...restDropzoneProps } = dropzoneProps;
 
   return (
     <Comp

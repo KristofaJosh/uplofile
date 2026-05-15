@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking
+
+- **uplofile**: `acceptsFile` now follows standard HTML `accept` extension syntax more closely. Extension tokens must be dot-prefixed (for example, `.pdf`, `.mp4`, `.tar.gz`); no-dot extension tokens such as `pdf` or `mp4` are treated as invalid and ignored. If all `accept` tokens are invalid, files are allowed to match browser-permissive behavior.
+
+### Added
+
+- **uplofile**: New `uplofile/native` entry point for React Native. Import from `uplofile/native` to get `Root`, `Trigger`, and `Preview` components that use `@react-native-documents/picker` instead of DOM file input. (#new-feature)
+- **uplofile**: Extract platform-agnostic `useUplofileState` hook from the web `Root` component. This hook powers both web and RN entry points with zero code duplication.
+- **uplofile**: Add `getFileName`, `createPreviewUrl`, and `revokePreviewUrl` adapter parameters to `useUplofileState` for platform-agnostic file source handling.
+
+### Changed
+
+- **uplofile**: Restructure `src/` into `shared/`, `web/`, and `native/` directories. Web component imports remain unchanged via the default `uplofile` entry point.
+- **uplofile**: `UploadFileItem.file` and `RootProps.upload` now accept a generic `TFileSource` parameter (defaults to `File` for backward compatibility).
+- **uplofile**: `ImageUploaderContextValue.fileInputProps` and `getDropzoneProps` are now marked optional/deprecated — they are web-only and not present in the RN context.
+
 ## [2.3.2] - 2026-05-13
 
 ### Changed

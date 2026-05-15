@@ -16,7 +16,7 @@ export default function RootImperativeDemo() {
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
-    uplofileRef.current?.onDragOver(e);
+    uplofileRef.current?.onDragOver?.(e);
   };
 
   const handleDragLeave = () => {
@@ -26,7 +26,7 @@ export default function RootImperativeDemo() {
   const handleDrop = (e: DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    uplofileRef.current?.onDrop(e);
+    uplofileRef.current?.onDrop?.(e);
   };
 
   const handleManualUpload = () => {

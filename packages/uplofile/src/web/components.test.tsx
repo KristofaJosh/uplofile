@@ -2,13 +2,20 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import React from "react";
-import { act, cleanup, render, fireEvent, screen, waitFor } from "@testing-library/react";
-import { Root } from "./context";
-import { Dropzone } from "./components/dropzone";
-import { Trigger } from "./components/trigger";
-import { Preview } from "./components/preview";
-import { UploadFileItem, UplofileRootRef } from "./types";
+import {
+  act,
+  cleanup,
+  render,
+  fireEvent,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Root } from "./Root";
+import { Dropzone } from "./Dropzone";
+import { Trigger } from "./Trigger";
+import { Preview } from "./Preview";
+import { UploadFileItem, UplofileRootRef } from "../shared/types";
 
 afterEach(cleanup);
 
@@ -97,7 +104,7 @@ describe("Components", () => {
   });
 
   describe("Trigger", () => {
-    it("should render as a button by default and handle click", () => {
+    it("should render as a button by default and handle click", async () => {
       render(
         <Root upload={mockUpload}>
           <Trigger data-testid="trigger">Upload</Trigger>
@@ -108,12 +115,10 @@ describe("Components", () => {
       expect(trigger.tagName).toBe("BUTTON");
       expect(trigger.getAttribute("data-part")).toBe("trigger");
 
-      fireEvent.click(trigger);
-      // Clicking should trigger openFileDialog which eventually calls input click.
-      // We can't easily test the file picker opening in JSDOM, but we can verify it doesn't throw.
+      await userEvent.click(trigger);
     });
 
-    it("opens the hidden input once on click by default", () => {
+    it("opens the hidden input once on click by default", async () => {
       const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
       const { getByTestId } = render(
         <Root upload={mockUpload}>
@@ -121,12 +126,47 @@ describe("Components", () => {
         </Root>,
       );
 
-      fireEvent.click(getByTestId("trigger-default"));
+      await userEvent.click(getByTestId("trigger-default"));
       expect(clickSpy).toHaveBeenCalledTimes(1);
       clickSpy.mockRestore();
     });
 
-    it("composes consumer onClick and still opens when not prevented", () => {
+    it("reads selected files before resetting the file input", async () => {
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      let cleared = false;
+      const { container } = render(
+        <Root upload={mockUpload}>
+          <Trigger>Upload</Trigger>
+        </Root>,
+      );
+      const input = container.querySelector(
+        'input[type="file"]',
+      ) as HTMLInputElement;
+
+      Object.defineProperty(input, "files", {
+        configurable: true,
+        get: () => (cleared ? [] : [file]) as unknown as FileList,
+      });
+      Object.defineProperty(input, "value", {
+        configurable: true,
+        get: () => "",
+        set: (value: string) => {
+          if (value === "") cleared = true;
+        },
+      });
+
+      fireEvent.change(input);
+
+      await waitFor(() =>
+        expect(mockUpload).toHaveBeenCalledWith(
+          file,
+          expect.any(AbortSignal),
+          expect.any(Function),
+        ),
+      );
+    });
+
+    it("composes consumer onClick and still opens when not prevented", async () => {
       const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
       const handler = vi.fn();
       const { getByTestId } = render(
@@ -137,13 +177,13 @@ describe("Components", () => {
         </Root>,
       );
 
-      fireEvent.click(getByTestId("trigger-compose"));
+      await userEvent.click(getByTestId("trigger-compose"));
       expect(handler).toHaveBeenCalled();
       expect(clickSpy).toHaveBeenCalledTimes(1);
       clickSpy.mockRestore();
     });
 
-    it("allows consumer to prevent default open via onClick", () => {
+    it("allows consumer to prevent default open via onClick", async () => {
       const clickSpy = vi.spyOn(HTMLInputElement.prototype, "click");
       const { getByTestId } = render(
         <Root upload={mockUpload}>
@@ -158,7 +198,7 @@ describe("Components", () => {
         </Root>,
       );
 
-      fireEvent.click(getByTestId("trigger-prevent"));
+      await userEvent.click(getByTestId("trigger-prevent"));
       expect(clickSpy).not.toHaveBeenCalled();
       clickSpy.mockRestore();
     });
@@ -226,9 +266,7 @@ describe("Components", () => {
 
       await waitFor(() => {
         expect(screen.getByAltText("test1.jpg")).toBeDefined();
-        // test2.mp4 is video (detected by .mp4 extension)
         expect(document.querySelector("video")).toBeDefined();
-        // test3.png is error
         const errorItem = document.querySelector('[data-state="error"]');
         expect(errorItem).toBeDefined();
       });

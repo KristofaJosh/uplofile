@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Uplofile Native",
+    "slug": "doc-native",
+    "version": "0.1.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "plugins": [
+      "expo-document-picker"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.chrisjosh.doc-native"
+    }
+  }
+}

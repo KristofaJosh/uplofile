@@ -25,20 +25,28 @@
     "form"
   ],
   "type": "module",
-  "main": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/web.mjs",
+  "types": "./dist/web.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
+      "types": "./dist/web.d.ts",
+      "default": "./dist/web.mjs"
+    },
+    "./native": {
+      "types": "./dist/native.d.ts",
+      "react-native": "./dist/native.mjs",
+      "default": "./dist/native.mjs"
     }
+  },
+  "react-native": {
+    "./native": "./dist/native.mjs"
   },
   "files": [
     "dist"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "bunchee src/index.ts --dts --external react,react-dom --format esm && node scripts/postbuild.cjs",
+    "build": "bunchee --dts --external react,react-dom,react-native,@react-native-documents/picker --format esm",
     "clean": "rm -rf dist",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
@@ -46,24 +54,38 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@radix-ui/react-slot": "1.2.3"
+    "@radix-ui/react-slot": "1.2.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "16.3.1",
-    "@types/react": "18.3.5",
-    "@types/react-dom": "18.3.0",
-    "bunchee": "6.6.0",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "bunchee": "6.10.0",
     "jsdom": "^29.1.1",
-    "prettier": "3.6.0",
+    "prettier": "3.8.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwindcss": "4.0.0",
-    "typescript": "5.5.4",
-    "vitest": "4.1.0"
+    "tailwindcss": "4.3.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.6"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
-    "react-dom": ">=16.0.0"
+    "react-dom": ">=16.0.0",
+    "react-native": "*",
+    "@react-native-documents/picker": "*"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "@react-native-documents/picker": {
+      "optional": true
+    }
   }
 }

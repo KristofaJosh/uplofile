@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Pencil, Accessibility, Palette, BookOpen } from "lucide-react";
+import { IoPencilOutline, IoAccessibilityOutline, IoColorPaletteOutline, IoBookOutline } from "react-icons/io5";
 import { FeatureCard } from "./FeatureCard";
 import BasicUploaderDemo from "@/routes/examples/basicuploader.demo";
 import DropzoneUploaderDemo from "@/routes/examples/dropzoneuploader.demo";
@@ -90,7 +90,7 @@ export const FeaturesSection = () => {
 
         <div className="grid gap-6 md:grid-cols-2">
           <FeatureCard
-            icon={<Pencil className="h-5 w-5" />}
+            icon={<IoPencilOutline className="h-5 w-5" />}
             title="Composable"
             delay={0}
           >
@@ -105,7 +105,7 @@ export const FeaturesSection = () => {
           </FeatureCard>
 
           <FeatureCard
-            icon={<Accessibility className="h-5 w-5" />}
+            icon={<IoAccessibilityOutline className="h-5 w-5" />}
             title="Accessible"
             delay={100}
           >
@@ -115,7 +115,7 @@ export const FeaturesSection = () => {
           </FeatureCard>
 
           <FeatureCard
-            icon={<Palette className="h-5 w-5" />}
+            icon={<IoColorPaletteOutline className="h-5 w-5" />}
             title="Stylable"
             delay={200}
           >
@@ -127,7 +127,7 @@ export const FeaturesSection = () => {
           </FeatureCard>
 
           <FeatureCard
-            icon={<BookOpen className="h-5 w-5" />}
+            icon={<IoBookOutline className="h-5 w-5" />}
             title="Read the docs"
             delay={300}
           >

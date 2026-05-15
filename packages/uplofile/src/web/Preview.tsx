@@ -1,10 +1,10 @@
 import { Slot } from "../shared/Slot";
 import React, { ButtonHTMLAttributes } from "react";
 
-import { useUplofile } from "../hook";
-import { isVideoFile } from "../utils";
+import { useUplofile } from "../shared/hook";
+import { isVideoFile } from "../shared/utils";
 
-import type { PreviewRenderProps, UploadFileItem } from "../types";
+import type { PreviewRenderProps, UploadFileItem } from "../shared/types";
 
 import { CancelIcon } from "./icons/CancelIcon";
 import { ErrorIcon } from "./icons/ErrorIcon";
@@ -127,7 +127,13 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
   </div>
 );
 
-const PreviewItem = ({ item, actions }: { item: UploadFileItem; actions: PreviewRenderProps["actions"] }) => {
+const PreviewItem = ({
+  item,
+  actions,
+}: {
+  item: UploadFileItem;
+  actions: PreviewRenderProps["actions"];
+}) => {
   const stateLabel =
     item.status === "removing"
       ? "Removing"
@@ -149,7 +155,9 @@ const PreviewItem = ({ item, actions }: { item: UploadFileItem; actions: Preview
     >
       {item.status === "error" && <ErrorBadge />}
       <MediaContent item={item} />
-      {item.status === "uploading" && <UploadingOverlay progress={item.progress} />}
+      {item.status === "uploading" && (
+        <UploadingOverlay progress={item.progress} />
+      )}
       <div
         className="uplofile-preview__overlay"
         data-error={item.status === "error" ? "true" : undefined}
@@ -216,6 +224,7 @@ export const Cancel = ({
 
   return (
     <Comp
+      data-part="cancel"
       {...rest}
       onClick={(e: Event) => {
         e.stopPropagation();
@@ -231,6 +240,7 @@ export const Retry = ({ uid, asChild, ...rest }: ButtonProps) => {
   const Comp: any = asChild ? Slot : "button";
   return (
     <Comp
+      data-part="retry"
       {...rest}
       onClick={(e: Event) => {
         e.stopPropagation();
@@ -246,6 +256,7 @@ export const Remove = ({ uid, asChild, ...rest }: ButtonProps) => {
   const Comp: any = asChild ? Slot : "button";
   return (
     <Comp
+      data-part="remove"
       {...rest}
       onClick={(e: Event) => {
         e.stopPropagation();

@@ -42,6 +42,7 @@ export const sidebarItems = [
       { title: "Imperative Root", href: "/examples/root-imperative" },
       { title: "Loading State", href: "/examples/loading-state" },
       { title: "Pause / Resume", href: "/examples/pause-resume" },
+      { title: "Batch Upload", href: "/examples/batch-upload" },
     ],
   },
 ];

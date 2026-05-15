@@ -7,13 +7,13 @@ import {
   type UploadFileItem,
 } from "@/components/ui/uplofile";
 import {
-  FileUp,
-  Send,
-  CheckCircle2,
-  Loader2,
-  Paperclip,
-  AlertCircle,
-} from "lucide-react";
+  IoCloudUploadOutline,
+  IoSendOutline,
+  IoCheckmarkCircleOutline,
+  IoReloadOutline,
+  IoAttachOutline,
+  IoAlertCircleOutline,
+} from "react-icons/io5";
 import { mockUpload } from "@/lib/utils.ts";
 
 export default function FormIntegrationDemo() {
@@ -41,7 +41,7 @@ export default function FormIntegrationDemo() {
 
       <div className="grid gap-2">
         <label className="text-sm font-bold text-gray-700 uppercase tracking-tight flex items-center gap-2">
-          <Paperclip className="h-3 w-3" />
+          <IoAttachOutline className="h-3 w-3" />
           Attachments
         </label>
         <UplofileRoot upload={mockUpload} multiple name="attachments">
@@ -51,7 +51,7 @@ export default function FormIntegrationDemo() {
             <UplofileTrigger>
               <div className="flex flex-col items-center gap-3 cursor-pointer">
                 <div className="p-3 rounded-full bg-primary/10 text-primary group-hover:scale-110 transition-transform">
-                  <FileUp className="h-6 w-6" />
+                  <IoCloudUploadOutline className="h-6 w-6" />
                 </div>
                 <div className="grid gap-0.5">
                   <span className="text-sm font-semibold text-gray-900">
@@ -82,7 +82,7 @@ export default function FormIntegrationDemo() {
           type="submit"
           className="w-full inline-flex items-center justify-center gap-2 rounded-lg text-sm font-bold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 h-11 px-8 shadow-lg active:scale-[0.98]"
         >
-          <Send className="h-4 w-4" />
+          <IoSendOutline className="h-4 w-4" />
           Submit Application
         </button>
       </div>
@@ -98,9 +98,9 @@ function FormFileItem({ item }: { item: UploadFileItem }) {
           className={`p-1.5 rounded-md ${item.status === "error" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}
         >
           {item.status === "error" ? (
-            <AlertCircle className="h-3 w-3" />
+            <IoAlertCircleOutline className="h-3 w-3" />
           ) : (
-            <Paperclip className="h-3 w-3" />
+<IoAttachOutline className="h-3 w-3" />
           )}
         </div>
         <span
@@ -115,11 +115,11 @@ function FormFileItem({ item }: { item: UploadFileItem }) {
             <span className="text-[10px] font-bold text-muted-foreground">
               {item.progress}%
             </span>
-            <Loader2 className="h-3 w-3 animate-spin text-primary" />
+            <IoReloadOutline className="h-3 w-3 animate-spin text-primary" />
           </>
         )}
         {item.status === "done" && (
-          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <IoCheckmarkCircleOutline className="h-4 w-4 text-emerald-500" />
         )}
         {item.status === "error" && (
           <span className="text-[10px] font-bold text-destructive uppercase">
