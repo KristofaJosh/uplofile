@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **uplofile**: New `uplofile/native` entry point for React Native. Import from `uplofile/native` to get `Root`, `Trigger`, and `Preview` components that use `react-native-document-picker` instead of DOM file input. (#new-feature)
+- **uplofile**: New `uplofile/native` entry point for React Native. Import from `uplofile/native` to get `Root`, `Trigger`, and `Preview` components that use `@react-native-documents/picker` instead of DOM file input. (#new-feature)
 - **uplofile**: Extract platform-agnostic `useUplofileState` hook from the web `Root` component. This hook powers both web and RN entry points with zero code duplication.
 - **uplofile**: Add `getFileName`, `createPreviewUrl`, and `revokePreviewUrl` adapter parameters to `useUplofileState` for platform-agnostic file source handling.
 

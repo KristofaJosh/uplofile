@@ -46,7 +46,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "bunchee --dts --external react,react-dom,react-native,react-native-document-picker --format esm",
+    "build": "bunchee --dts --external react,react-dom,react-native,@react-native-documents/picker --format esm",
     "clean": "rm -rf dist",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
@@ -75,7 +75,7 @@
     "react": ">=16.0.0",
     "react-dom": ">=16.0.0",
     "react-native": "*",
-    "react-native-document-picker": "*"
+    "@react-native-documents/picker": "*"
   },
   "peerDependenciesMeta": {
     "react-dom": {
@@ -84,7 +84,7 @@
     "react-native": {
       "optional": true
     },
-    "react-native-document-picker": {
+    "@react-native-documents/picker": {
       "optional": true
     }
   }

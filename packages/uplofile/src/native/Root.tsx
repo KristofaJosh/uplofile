@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import { View } from "react-native";
-import { pick } from "react-native-document-picker";
+import { pick } from "@react-native-documents/picker";
 import {
   ItemsCtx,
   StableCtx,
@@ -22,7 +22,7 @@ import type {
   UploaderStableContextValue,
 } from "../shared/types";
 
-export type { DocumentPickerResponse } from "react-native-document-picker";
+export type { DocumentPickerResponse } from "@react-native-documents/picker";
 
 export const Root = forwardRef(
   <TMeta = any,>(
@@ -48,6 +48,7 @@ export const Root = forwardRef(
       try {
         const results = await pick({
           type: acceptTypes,
+          allowMultiSelection: props.multiple ?? true,
         });
         if (results && results.length > 0) {
           void state.selectFiles(results);

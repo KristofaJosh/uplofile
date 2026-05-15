@@ -15,7 +15,7 @@
     "expo-status-bar": "~55.0.6",
     "react": "^19.2.6",
     "react-native": "~0.85.3",
-    "react-native-document-picker": "^9.3.1",
+    "@react-native-documents/picker": "^10.1.7",
     "uplofile": "workspace:*"
   },
   "devDependencies": {
