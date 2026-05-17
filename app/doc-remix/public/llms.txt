@@ -56,6 +56,22 @@ Import from `uplofile/native` for React Native. Uses `@react-native-documents/pi
 
 Files are typed as `DocumentPickerResponse` (from `@react-native-documents/picker`) instead of `File`.
 
+```tsx
+import { Root, Trigger, Preview } from 'uplofile/native';
+
+function App() {
+  return (
+    <Root upload={handleUpload}>
+      <Trigger>Select Files</Trigger>
+      <Preview />
+    </Root>
+  );
+}
+```
+
+Peer dependencies: `react-native`, `@react-native-documents/picker`.
+No Dropzone or HiddenInput component — they are web-only.
+
 ### 5. Action Helpers
 - `<UplofileCancel uid={uid} />`
 - `<UplofileRetry uid={uid} />`

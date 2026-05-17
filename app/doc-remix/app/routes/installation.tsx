@@ -1,6 +1,8 @@
 import type { MetaFunction } from "react-router";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import { PlatformTabs } from "@/components/PlatformTabs";
+import { usePlatformStore } from "@/stores/platformStore";
 import uplofileConfigString from "@/components/ui/uplofile?raw";
 
 export const meta: MetaFunction = () => {
@@ -15,6 +17,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Installation() {
+  const { platform } = usePlatformStore();
+
   return (
     <DocsLayout>
       <article className="prose prose-slate dark:prose-invert max-w-none">
@@ -23,52 +27,56 @@ export default function Installation() {
           Get started with Uplofile in your React project.
         </p>
 
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Install the package
-          </h2>
-          <p className="text-muted-foreground">
-            Install Uplofile using your preferred package manager:
-          </p>
+        <PlatformTabs className="mb-8" />
 
-          <div className="space-y-3">
-            <div>
-              <p className="text-sm font-medium mb-2">npm</p>
-              <CodeBlock code="npm install uplofile" />
-            </div>
-            <div>
-              <p className="text-sm font-medium mb-2">yarn</p>
-              <CodeBlock code="yarn add uplofile" />
-            </div>
-            <div>
-              <p className="text-sm font-medium mb-2">pnpm</p>
-              <CodeBlock code="pnpm add uplofile" />
-            </div>
-          </div>
-        </section>
+        {platform === "web" ? (
+          <>
+            <section className="space-y-4 mb-12">
+              <h2 className="text-xl font-semibold border-b border-border pb-2">
+                Install the package
+              </h2>
+              <p className="text-muted-foreground">
+                Install Uplofile using your preferred package manager:
+              </p>
 
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Create Component File
-          </h2>
-          <p className="text-muted-foreground">
-            Create a file <code className="code-inline">uplofile.tsx</code> in
-            your <code className="code-inline">src/components</code> directory:
-          </p>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-medium mb-2">npm</p>
+                  <CodeBlock code="npm install uplofile" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">yarn</p>
+                  <CodeBlock code="yarn add uplofile" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">pnpm</p>
+                  <CodeBlock code="pnpm add uplofile" />
+                </div>
+              </div>
+            </section>
 
-          <CodeBlock code={uplofileConfigString} language="tsx" />
-        </section>
+            <section className="space-y-4 mb-12">
+              <h2 className="text-xl font-semibold border-b border-border pb-2">
+                Create Component File
+              </h2>
+              <p className="text-muted-foreground">
+                Create a file <code className="code-inline">uplofile.tsx</code> in
+                your <code className="code-inline">src/components</code> directory:
+              </p>
 
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Basic Usage
-          </h2>
-          <p className="text-muted-foreground">
-            Import and use the components in your app:
-          </p>
+              <CodeBlock code={uplofileConfigString} language="tsx" />
+            </section>
 
-          <CodeBlock
-            code={`import {
+            <section className="space-y-4 mb-12">
+              <h2 className="text-xl font-semibold border-b border-border pb-2">
+                Basic Usage
+              </h2>
+              <p className="text-muted-foreground">
+                Import and use the components in your app:
+              </p>
+
+              <CodeBlock
+                code={`import {
   UplofileRoot,
   UplofileDropzone,
   UplofileTrigger,
@@ -85,9 +93,63 @@ function FileUpload() {
     </UplofileRoot>
   );
 }`}
-            language="tsx"
-          />
-        </section>
+                language="tsx"
+              />
+            </section>
+          </>
+        ) : (
+          <>
+            <section className="space-y-4 mb-12">
+              <h2 className="text-xl font-semibold border-b border-border pb-2">
+                Install the package
+              </h2>
+              <p className="text-muted-foreground">
+                Install Uplofile and its React Native peer dependency:
+              </p>
+
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-medium mb-2">npm</p>
+                  <CodeBlock code="npm install uplofile react-native @react-native-documents/picker" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">yarn</p>
+                  <CodeBlock code="yarn add uplofile react-native @react-native-documents/picker" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">pnpm</p>
+                  <CodeBlock code="pnpm add uplofile react-native @react-native-documents/picker" />
+                </div>
+              </div>
+            </section>
+
+            <section className="space-y-4 mb-12">
+              <h2 className="text-xl font-semibold border-b border-border pb-2">
+                Basic Usage
+              </h2>
+              <p className="text-muted-foreground">
+                Import from <code className="code-inline">uplofile/native</code> and wrap your
+                app with the <code className="code-inline">Root</code> component:
+              </p>
+
+              <CodeBlock
+                code={`import { Root, Trigger, Preview } from "uplofile/native";
+
+function FileUpload() {
+  return (
+    <Root upload={myUploadFunction}>
+      <Trigger>Select Files</Trigger>
+      <Preview />
+    </Root>
+  );
+}`}
+                language="tsx"
+              />
+            </section>
+
+
+          </>
+        )}
 
         <section className="space-y-4">
           <h2 className="text-xl font-semibold border-b border-border pb-2">
