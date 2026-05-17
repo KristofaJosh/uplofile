@@ -35,7 +35,8 @@
     "tailwindcss-animate": "1.0.7",
     "uplofile": "workspace:*",
     "vite-plugin-svgr": "5.2.0",
-    "vite-tsconfig-paths": "^6.1.1"
+    "vite-tsconfig-paths": "^6.1.1",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
