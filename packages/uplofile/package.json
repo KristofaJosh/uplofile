@@ -38,9 +38,6 @@
       "default": "./dist/native.mjs"
     }
   },
-  "react-native": {
-    "./native": "./dist/native.mjs"
-  },
   "files": [
     "dist"
   ],
