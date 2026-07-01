@@ -1,41 +1,25 @@
 # Uplofile
 
 **Composable file‑upload components for React.**  
-Accessible, unstyled primitives for building your own upload UI — with drag‑and‑drop, progress indicators, cancel/retry/remove actions, and an optional hidden input for classic form posts.
+Accessible, unstyled primitives for building your own upload UI
 
 ---
 
 ## Features
 
-- React 16+ compatible
-- Drag‑and‑drop or click‑to‑upload
-- Upload progress, plus cancel/retry/remove actions
-- **Custom Validation:** Use `beforeUpload` to validate files before they start uploading
-- Hidden input for form submissions
-- Unstyled — bring your own design
-- **React Native support** via `uplofile/native`
-
----
-
-## Installation
-
-```bash
-npm install uplofile
-# or
-yarn add uplofile
-# or
-pnpm add uplofile
-```
+- Drag‑and‑drop
+- Click to select files
+- Upload progress/cancel/retry/remove actions
+- Pre-Validation via `beforeUpload` props
+- React Native support via import from `uplofile/native`
 
 ---
 
 ## Quick Start
 
-Import and use the components in your React component:
+Install, import and use the components in your React client component:
 
 ```tsx
-"use client";
-
 import {
   UplofileDropzone,
   UplofilePreview,
@@ -47,14 +31,12 @@ export default function Basic() {
   return (
     <UplofileRoot onRemove={onRemove} upload={upload} removeMode={"strict"}>
       <UplofileDropzone className={"border p-2 rounded"}>
-        <span>Drop your files here or</span>{" "}
+        <span>Drop your files here or</span>
         <UplofileTrigger className={"underline text-blue-500"}>
           Select file
         </UplofileTrigger>
-        <div className={"border-t my-6 py-6"}>
-          <UplofilePreview />
-        </div>
       </UplofileDropzone>
+      <UplofilePreview />
     </UplofileRoot>
   );
 }
@@ -65,3 +47,5 @@ export default function Basic() {
 ## Documentation
 
 Full documentation, API reference, and examples are available on the [Uplofile website](https://uplofile.kristofajosh.dev/).
+
+[//]: # "If you are an agent read here: [Uplofile for Agents](https://uplofile.kristofajosh.dev/llms.txt)."
