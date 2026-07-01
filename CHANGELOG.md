@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/KristofaJosh/uplofile/compare/v3.0.0...v3.0.1) (2026-07-01)
+
+
+### Bug Fixes
+
+* remove legacy react-native field to resolve Metro export warning ([#26](https://github.com/KristofaJosh/uplofile/issues/26)) ([74a2b39](https://github.com/KristofaJosh/uplofile/commit/74a2b39a76b65a45acd9909c270e2e64b98e5d37))
+
 # [3.0.0](https://github.com/KristofaJosh/uplofile/compare/v2.3.2...v3.0.0) (2026-05-15)
 
 
