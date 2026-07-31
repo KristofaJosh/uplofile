@@ -14,26 +14,45 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - "packages/**"
-      - "app/**"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
-      - ".github/workflows/ci.yml"
 
 jobs:
-  test:
-    name: Run tests
+  changes:
+    name: Detect code changes
     runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check for relevant path changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - "packages/**"
+              - "app/**"
+              - "package.json"
+              - "pnpm-lock.yaml"
+              - "pnpm-workspace.yaml"
+              - ".github/workflows/ci.yml"
+
+  test:
+    name: Run tests
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        if: needs.changes.outputs.code == 'true'
+        uses: actions/checkout@v4
+
       - name: Setup PNPM
+        if: needs.changes.outputs.code == 'true'
         uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
+        if: needs.changes.outputs.code == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -41,22 +60,28 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
+        if: needs.changes.outputs.code == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Run tests
+        if: needs.changes.outputs.code == 'true'
         run: pnpm test
 
   e2e:
     name: Run e2e tests
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
+        if: needs.changes.outputs.code == 'true'
         uses: actions/checkout@v4
 
       - name: Setup PNPM
+        if: needs.changes.outputs.code == 'true'
         uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
+        if: needs.changes.outputs.code == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -64,14 +89,18 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
+        if: needs.changes.outputs.code == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
+        if: needs.changes.outputs.code == 'true'
         run: npx playwright install chromium --with-deps
         working-directory: app/doc-remix
 
       - name: Build library
+        if: needs.changes.outputs.code == 'true'
         run: pnpm --filter uplofile build
 
       - name: Run e2e tests
+        if: needs.changes.outputs.code == 'true'
         run: pnpm --filter doc-remix test:e2e
