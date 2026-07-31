@@ -1,16 +1,25 @@
 ## Summary
 
-<!-- Explain what this PR does and why. Link the relevant issue if applicable. -->
+<!-- In one or two sentences: affected user/workflow, problem, and outcome. -->
 
-## Changes
+## What / Why
 
-<!-- List the key changes introduced. -->
+<!-- Keep to about five one-line bullets. Pair each material change with its reason. Group small related cleanup into one "While here" bullet. -->
 
 -
 
-## Checklist
+## Screenshots
 
-- [ ] Tests pass (`pnpm test`)
-- [ ] Changes are covered by tests
-- [ ] Types are correct
-- [ ] Documentation updated (if applicable)
+<!-- Keep only for visual changes with real screenshots; otherwise remove this section. -->
+
+## Notes
+
+<!-- Keep only reviewer decisions, meaningful blast radius, compatibility, migration, rollout, or pending evidence; otherwise remove this section. -->
+
+## Expectation
+
+<!-- Describe observable behavior by relevant scenario. Report exact checks run and their status; state what was not run. -->
+
+-
+
+<!-- Add "Closes #<number>" only when merging closes a confirmed issue; otherwise add "Related to #<number>" when applicable. -->
