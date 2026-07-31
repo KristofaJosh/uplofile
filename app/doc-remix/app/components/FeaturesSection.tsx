@@ -95,7 +95,7 @@ export const FeaturesSection = () => {
             delay={0}
           >
             <p>
-              Headless primitives — <code className="code-inline">Root</code>,{" "}
+              Unstyled primitives — <code className="code-inline">Root</code>,{" "}
               <code className="code-inline">Trigger</code>,{" "}
               <code className="code-inline">Preview</code>,{" "}
               <code className="code-inline">Dropzone</code>,{" "}

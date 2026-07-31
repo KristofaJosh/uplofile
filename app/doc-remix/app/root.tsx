@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => {
     {
       name: "description",
       content:
-        "Headless, composable React file upload library. Bring your own upload logic, style it however you want.",
+        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
     },
 
     // Open Graph / Facebook
@@ -32,7 +32,7 @@ export const meta: MetaFunction = () => {
     {
       property: "og:description",
       content:
-        "Headless, composable React file upload library. Bring your own upload logic, style it however you want.",
+        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
     },
     {
       property: "og:image",
@@ -49,7 +49,7 @@ export const meta: MetaFunction = () => {
     {
       property: "twitter:description",
       content:
-        "Headless, composable React file upload library. Bring your own upload logic, style it however you want.",
+        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
     },
     {
       property: "twitter:image",

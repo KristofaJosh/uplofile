@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
     {
       name: "description",
       content:
-        "Composable file upload components for React. Accessible, headless primitives that are easy to integrate and style.",
+        "Composable file upload components for React. Accessible, unstyled primitives that are easy to integrate and style.",
     },
     {
       property: "og:title",
@@ -20,7 +20,7 @@ export const meta: MetaFunction = () => {
     {
       property: "og:description",
       content:
-        "Composable file upload components for React. Accessible, headless primitives that are easy to integrate and style.",
+        "Composable file upload components for React. Accessible, unstyled primitives that are easy to integrate and style.",
     },
     { property: "og:url", content: "https://uplofile.kristofajosh.dev/" },
     {
@@ -50,7 +50,7 @@ const homepageJsonLd = {
   applicationCategory: "DeveloperApplication",
   operatingSystem: "Web",
   description:
-    "Composable file upload components for React. Accessible, headless primitives that are easy to integrate and style.",
+    "Composable file upload components for React. Accessible, unstyled primitives that are easy to integrate and style.",
   url: "https://uplofile.kristofajosh.dev/",
   programmingLanguage: "TypeScript",
   offers: {
