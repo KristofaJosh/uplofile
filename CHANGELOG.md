@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/KristofaJosh/uplofile/compare/v3.1.0...v3.1.1) (2026-07-31)
+
+
+### Bug Fixes
+
+* publish README updates automatically via docs(readme) release rule ([8968442](https://github.com/KristofaJosh/uplofile/commit/896844299010cc18e4a752a7fd4dfc2c17b1fc67)), closes [#39](https://github.com/KristofaJosh/uplofile/issues/39)
+
 # [3.1.0](https://github.com/KristofaJosh/uplofile/compare/v3.0.1...v3.1.0) (2026-07-31)
 
 
