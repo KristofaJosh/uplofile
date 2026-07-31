@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/KristofaJosh/uplofile/compare/v3.0.1...v3.1.0) (2026-07-31)
+
+
+### Features
+
+* **skills:** add GitHub issue drafting skill ([#33](https://github.com/KristofaJosh/uplofile/issues/33)) ([edfb5ef](https://github.com/KristofaJosh/uplofile/commit/edfb5ef4432026339a213a0219da621f44a43b34))
+
 ## [3.0.1](https://github.com/KristofaJosh/uplofile/compare/v3.0.0...v3.0.1) (2026-07-01)
 
 
