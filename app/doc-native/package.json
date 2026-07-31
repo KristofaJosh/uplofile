@@ -13,7 +13,6 @@
     "@react-native-documents/picker": "^10.1.7",
     "expo": "~56.0.0-beta",
     "expo-dev-client": "~56.0.0-beta",
-    "expo-document-picker": "~56.0.0-beta",
     "expo-status-bar": "~56.0.0-beta",
     "react": "19.2.3",
     "react-native": "~0.85.3",
