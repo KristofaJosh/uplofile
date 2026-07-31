@@ -217,6 +217,106 @@ describe("Components", () => {
       expect(screen.getByTestId("uploading-count").textContent).toBe("0");
     });
 
+    it("updates uploadingCount/doneCount/errorCount/totalProgress/isUploading as concurrent uploads progress, succeed, and fail", async () => {
+      const progressCallbacks: Array<(pct: number) => void> = [];
+      const resolvers: Array<{
+        resolve: (result: { url: string }) => void;
+        reject: (error: Error) => void;
+      }> = [];
+      const uploadMock = vi
+        .fn()
+        .mockImplementation(
+          (
+            _file: File,
+            _signal: AbortSignal,
+            setProgress?: (pct: number) => void,
+          ) => {
+            progressCallbacks.push(setProgress!);
+            return new Promise((resolve, reject) => {
+              resolvers.push({ resolve, reject });
+            });
+          },
+        );
+
+      let ref: UplofileRootRef | null = null;
+      let latestApi: {
+        uploadingCount: number;
+        doneCount: number;
+        errorCount: number;
+        totalProgress?: number;
+        isUploading: boolean;
+      } | null = null;
+
+      render(
+        <Root upload={uploadMock} ref={(r) => (ref = r)}>
+          <Trigger
+            render={(api) => {
+              latestApi = api;
+              return null;
+            }}
+          />
+        </Root>,
+      );
+
+      const files = [
+        new File(["a"], "a.jpg", { type: "image/jpeg" }),
+        new File(["b"], "b.jpg", { type: "image/jpeg" }),
+        new File(["c"], "c.jpg", { type: "image/jpeg" }),
+      ];
+
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files },
+      } as any);
+
+      await waitFor(() => expect(progressCallbacks).toHaveLength(3));
+      expect(latestApi).toMatchObject({
+        uploadingCount: 3,
+        doneCount: 0,
+        errorCount: 0,
+        isUploading: true,
+        totalProgress: 0,
+      });
+
+      act(() => {
+        progressCallbacks[0](40);
+        progressCallbacks[1](80);
+      });
+      await waitFor(() => expect(latestApi!.totalProgress).toBe(40));
+      expect(latestApi!.uploadingCount).toBe(3);
+
+      resolvers[0].resolve({ url: "https://example.com/a.jpg" });
+      await waitFor(() => expect(latestApi!.doneCount).toBe(1));
+      expect(latestApi).toMatchObject({
+        uploadingCount: 2,
+        doneCount: 1,
+        errorCount: 0,
+        isUploading: true,
+        totalProgress: 40, // (80 + 0) / 2, rounded
+      });
+
+      resolvers[1].reject(new Error("boom"));
+      await waitFor(() => expect(latestApi!.errorCount).toBe(1));
+      expect(latestApi).toMatchObject({
+        uploadingCount: 1,
+        doneCount: 1,
+        errorCount: 1,
+        isUploading: true,
+        totalProgress: 0, // remaining uploading item never got a progress tick
+      });
+
+      resolvers[2].resolve({ url: "https://example.com/c.jpg" });
+      await waitFor(() => expect(latestApi!.doneCount).toBe(2));
+      expect(latestApi).toMatchObject({
+        uploadingCount: 0,
+        doneCount: 2,
+        errorCount: 1,
+        isUploading: false,
+        totalProgress: undefined,
+      });
+    });
+
     it("should be disabled when disabled prop is passed to Root", () => {
       render(
         <Root upload={mockUpload} disabled>
