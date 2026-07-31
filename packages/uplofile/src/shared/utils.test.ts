@@ -52,6 +52,22 @@ describe("utils", () => {
       expect(isVideoFile(item)).toBe(false);
       expect(isVideoFile(item, ["custom"])).toBe(true);
     });
+
+    it("should fall back to the filename extension when a native picker response has a null MIME type", () => {
+      const item: any = {
+        name: "movie.mov",
+        file: { uri: "file:///movie.mov", type: null },
+      };
+      expect(isVideoFile(item)).toBe(true);
+    });
+
+    it("should fall back to the filename extension when the file has an empty MIME type", () => {
+      const item: any = {
+        name: "movie.mov",
+        file: { uri: "file:///movie.mov", type: "" },
+      };
+      expect(isVideoFile(item)).toBe(true);
+    });
   });
 
   describe("isImageFile", () => {
@@ -89,6 +105,22 @@ describe("utils", () => {
       };
       expect(isImageFile(item)).toBe(false);
       expect(isImageFile(item, ["special"])).toBe(true);
+    });
+
+    it("should fall back to the filename extension when a native picker response has a null MIME type", () => {
+      const item: any = {
+        name: "photo.jpg",
+        file: { uri: "file:///photo.jpg", type: null },
+      };
+      expect(isImageFile(item)).toBe(true);
+    });
+
+    it("should fall back to the filename extension when the file has an empty MIME type", () => {
+      const item: any = {
+        name: "photo.jpg",
+        file: { uri: "file:///photo.jpg", type: "" },
+      };
+      expect(isImageFile(item)).toBe(true);
     });
   });
 

@@ -1,7 +1,7 @@
 import { Slot } from "../shared/Slot";
 import React, { ButtonHTMLAttributes } from "react";
 
-import { useUplofile } from "../shared/hook";
+import { useUplofile } from "./hook";
 import { isVideoFile } from "../shared/utils";
 
 import type { PreviewRenderProps, UploadFileItem } from "../shared/types";
@@ -13,8 +13,10 @@ import { RetryIcon } from "./icons/RetryIcon";
 import { Spinner } from "./icons/Spinner";
 import { TrashIcon } from "./icons/TrashIcon";
 
+type WebUploadFileItem<TMeta = any> = UploadFileItem<TMeta, File>;
+
 type Props<TMeta = any> = {
-  render?: (api: PreviewRenderProps<TMeta>) => React.ReactNode;
+  render?: (api: PreviewRenderProps<TMeta, File>) => React.ReactNode;
   className?: string;
 };
 
@@ -24,7 +26,7 @@ const ErrorBadge = () => (
   </div>
 );
 
-const VideoPreview = ({ item }: { item: UploadFileItem }) => (
+const VideoPreview = ({ item }: { item: WebUploadFileItem }) => (
   <video
     src={item.url || item.previewUrl}
     className="uplofile-preview__video"
@@ -36,7 +38,7 @@ const VideoPreview = ({ item }: { item: UploadFileItem }) => (
   />
 );
 
-const ImagePreview = ({ item }: { item: UploadFileItem }) => (
+const ImagePreview = ({ item }: { item: WebUploadFileItem }) => (
   <img
     src={item.url || item.previewUrl}
     alt={item.name}
@@ -44,7 +46,7 @@ const ImagePreview = ({ item }: { item: UploadFileItem }) => (
   />
 );
 
-const FilePlaceholder = ({ item }: { item: UploadFileItem }) => (
+const FilePlaceholder = ({ item }: { item: WebUploadFileItem }) => (
   <div className="uplofile-preview__no-preview">
     <FileIcon />
     <span className="uplofile-preview__file-extension">
@@ -53,7 +55,7 @@ const FilePlaceholder = ({ item }: { item: UploadFileItem }) => (
   </div>
 );
 
-const MediaContent = ({ item }: { item: UploadFileItem }) => {
+const MediaContent = ({ item }: { item: WebUploadFileItem }) => {
   if (isVideoFile(item)) {
     return <VideoPreview item={item} />;
   }
@@ -85,7 +87,7 @@ const UploadingOverlay = ({ progress }: { progress?: number }) => (
 );
 
 type ActionButtonsProps = {
-  item: UploadFileItem;
+  item: WebUploadFileItem;
   actions: PreviewRenderProps["actions"];
 };
 
@@ -131,7 +133,7 @@ const PreviewItem = ({
   item,
   actions,
 }: {
-  item: UploadFileItem;
+  item: WebUploadFileItem;
   actions: PreviewRenderProps["actions"];
 }) => {
   const stateLabel =

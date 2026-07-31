@@ -5,19 +5,12 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import {
-  ItemsCtx,
-  StableCtx,
-  UploaderCtx,
-  useUplofileState,
-} from "../shared/context";
+import { UploaderCtx, useUplofileState } from "../shared/context";
 import type {
   ImageUploaderContextValue,
   RootProps,
   UploadFileItem,
   UplofileRootRef,
-  UploaderItemsContextValue,
-  UploaderStableContextValue,
 } from "../shared/types";
 import { acceptsFile } from "../shared/utils";
 
@@ -101,10 +94,11 @@ export const Root = forwardRef(
       [onInputChange, props.accept, props.multiple, props.disabled],
     );
 
-    // Stable context — memoised separately so consumers like Dropzone
-    // that only read actions/props don't re‑render on every progress tick.
-    const stableCtx = useMemo<UploaderStableContextValue<TMeta, File>>(
+    const ctx = useMemo<ImageUploaderContextValue<TMeta, File>>(
       () => ({
+        items: state.items as UploadFileItem<TMeta, File>[],
+        setItems: state.setItems,
+        isLoading: state.isLoading,
         disabled: props.disabled,
         multiple: props.multiple ?? true,
         accept: props.accept ?? "image/*",
@@ -112,40 +106,23 @@ export const Root = forwardRef(
         openFileDialog,
         fileInputProps,
         getDropzoneProps,
-        setItems: state.setItems as any,
+        hiddenInputValue: state.hiddenInputValue,
         name: props.name ?? "image",
       }),
       [
+        state.items,
+        state.setItems,
+        state.isLoading,
         props.disabled,
         props.multiple,
         props.accept,
         props.name,
         state.actions,
-        state.setItems,
+        state.hiddenInputValue,
         openFileDialog,
         fileInputProps,
         getDropzoneProps,
       ],
-    );
-
-    // Items context — changes on every progress tick, kept separate so
-    // consumers subscribed only to StableCtx don't re-render.
-    const itemsCtx = useMemo<UploaderItemsContextValue<TMeta, File>>(
-      () => ({
-        items: state.items as UploadFileItem<TMeta, File>[],
-        isLoading: state.isLoading,
-        hiddenInputValue: state.hiddenInputValue,
-      }),
-      [state.items, state.isLoading, state.hiddenInputValue],
-    );
-
-    // Merged context
-    const ctx = useMemo<ImageUploaderContextValue<TMeta, File>>(
-      () => ({
-        ...stableCtx,
-        ...itemsCtx,
-      }),
-      [stableCtx, itemsCtx],
     );
 
     useImperativeHandle(
@@ -178,16 +155,12 @@ export const Root = forwardRef(
     );
 
     return (
-      <StableCtx.Provider value={stableCtx}>
-        <ItemsCtx.Provider value={itemsCtx}>
-          <UploaderCtx.Provider value={ctx}>
-            <div data-part="root">
-              <input type="file" hidden {...fileInputProps} />
-              {props.children}
-            </div>
-          </UploaderCtx.Provider>
-        </ItemsCtx.Provider>
-      </StableCtx.Provider>
+      <UploaderCtx.Provider value={ctx}>
+        <div data-part="root">
+          <input type="file" hidden {...fileInputProps} />
+          {props.children}
+        </div>
+      </UploaderCtx.Provider>
     );
   },
 );

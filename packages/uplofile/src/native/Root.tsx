@@ -5,35 +5,28 @@ import React, {
   useMemo,
 } from "react";
 import { View } from "react-native";
-import { pick } from "@react-native-documents/picker";
-import {
-  ItemsCtx,
-  StableCtx,
-  UploaderCtx,
-  useUplofileState,
-} from "../shared/context";
+import { pick, type DocumentPickerResponse } from "@react-native-documents/picker";
+import { UploaderCtx, useUplofileState } from "../shared/context";
 import type {
   ImageUploaderContextValue,
   ItemActions,
   RootProps,
   UploadFileItem,
-  UplofileRootRef,
-  UploaderItemsContextValue,
-  UploaderStableContextValue,
 } from "../shared/types";
+import type { UplofileRootRef } from "./types";
 import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
 
 export type { DocumentPickerResponse } from "@react-native-documents/picker";
 
 export const Root = forwardRef(
   <TMeta = any,>(
-    props: RootProps<TMeta, any>,
-    ref: React.Ref<UplofileRootRef<TMeta, any>>,
+    props: RootProps<TMeta, DocumentPickerResponse>,
+    ref: React.Ref<UplofileRootRef<TMeta, DocumentPickerResponse>>,
   ) => {
-    const state = useUplofileState<TMeta, any>({
+    const state = useUplofileState<TMeta, DocumentPickerResponse>({
       ...props,
-      getFileName: (source: any) => source?.name ?? "unknown",
-      createPreviewUrl: (source: any) => source?.uri ?? undefined,
+      getFileName: (source) => source?.name ?? "unknown",
+      createPreviewUrl: (source) => source?.uri ?? undefined,
       revokePreviewUrl: () => {},
     });
 
@@ -64,13 +57,11 @@ export const Root = forwardRef(
       }
     }, [acceptTypes, props.accept, props.multiple, state.selectFiles]);
 
-    const onDrop = undefined;
-    const onDragOver = undefined;
-
-    // Stable context — memoised separately so consumers that only read
-    // actions/props don't re‑render on every progress tick.
-    const stableCtx = useMemo<UploaderStableContextValue<TMeta, any>>(
+    const ctx = useMemo<ImageUploaderContextValue<TMeta, DocumentPickerResponse>>(
       () => ({
+        items: state.items as UploadFileItem<TMeta, DocumentPickerResponse>[],
+        setItems: state.setItems,
+        isLoading: state.isLoading,
         disabled: props.disabled,
         multiple: props.multiple ?? true,
         accept: props.accept ?? "image/*",
@@ -78,38 +69,21 @@ export const Root = forwardRef(
         openFileDialog,
         fileInputProps: {} as Record<string, any>,
         getDropzoneProps: () => ({}),
-        setItems: state.setItems as any,
+        hiddenInputValue: state.hiddenInputValue,
         name: props.name ?? "image",
       }),
       [
+        state.items,
+        state.setItems,
+        state.isLoading,
         props.disabled,
         props.multiple,
         props.accept,
         props.name,
-        openFileDialog,
         state.actions,
-        state.setItems,
+        state.hiddenInputValue,
+        openFileDialog,
       ],
-    );
-
-    // Items context — changes on every progress tick, kept separate so
-    // consumers subscribed only to StableCtx don't re-render.
-    const itemsCtx = useMemo<UploaderItemsContextValue<TMeta, any>>(
-      () => ({
-        items: state.items as UploadFileItem<TMeta, any>[],
-        isLoading: state.isLoading,
-        hiddenInputValue: state.hiddenInputValue,
-      }),
-      [state.items, state.isLoading, state.hiddenInputValue],
-    );
-
-    // Merged context
-    const ctx = useMemo<ImageUploaderContextValue<TMeta, any>>(
-      () => ({
-        ...stableCtx,
-        ...itemsCtx,
-      }),
-      [stableCtx, itemsCtx],
     );
 
     useImperativeHandle(
@@ -131,13 +105,9 @@ export const Root = forwardRef(
     );
 
     return (
-      <StableCtx.Provider value={stableCtx}>
-        <ItemsCtx.Provider value={itemsCtx}>
-          <UploaderCtx.Provider value={ctx}>
-            <View>{props.children}</View>
-          </UploaderCtx.Provider>
-        </ItemsCtx.Provider>
-      </StableCtx.Provider>
+      <UploaderCtx.Provider value={ctx}>
+        <View>{props.children}</View>
+      </UploaderCtx.Provider>
     );
   },
 );

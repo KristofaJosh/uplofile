@@ -10,7 +10,7 @@ export type UploadStatus =
   | "canceled"
   | "removing";
 
-export type UploadFileItem<TMeta = any, TFileSource = File> = {
+export type UploadFileItem<TMeta = any, TFileSource = unknown> = {
   uid: string;
   id?: string;
   name: string;
@@ -30,7 +30,7 @@ export type UploadResult<TMeta = any> = {
   previewUrl?: string;
 };
 
-export type BeforeUploadFn<TMeta = any, TFileSource = File> = (
+export type BeforeUploadFn<TMeta = any, TFileSource = unknown> = (
   items: UploadFileItem<TMeta, TFileSource>[],
   state: {
     /**
@@ -62,7 +62,7 @@ export type BeforeUploadResult<TMeta = any> =
       reason?: string;
     }>;
 
-export type RootProps<TMeta = any, TFileSource = File> = PropsWithChildren<{
+export type RootProps<TMeta = any, TFileSource = unknown> = PropsWithChildren<{
   multiple?: boolean;
   initial?: MaybePromise<
     Array<
@@ -103,40 +103,7 @@ export type ItemActions = {
   retry: (uid: string) => void;
 };
 
-/**
- * Infrequently-changing context values (actions, callbacks, props).
- * Separated from `UploaderItemsContextValue` so consumers like Dropzone
- * that only read stable props don't re-render on every progress tick.
- */
-export type UploaderStableContextValue<TMeta = any, TFileSource = File> = {
-  setItems: (
-    items:
-      | UploadFileItem<TMeta, TFileSource>[]
-      | ((
-          prev: UploadFileItem<TMeta, TFileSource>[],
-        ) => UploadFileItem<TMeta, TFileSource>[]),
-  ) => void;
-  disabled?: boolean;
-  multiple: boolean;
-  accept: string;
-  actions: ItemActions;
-  openFileDialog: () => void;
-  fileInputProps: Record<string, any>;
-  getDropzoneProps: () => Record<string, any>;
-  name: string;
-};
-
-/**
- * Frequently-changing context values (items, isLoading).
- * Separated so consumers that only read stable props can skip re-renders.
- */
-export type UploaderItemsContextValue<TMeta = any, TFileSource = File> = {
-  items: UploadFileItem<TMeta, TFileSource>[];
-  isLoading: boolean;
-  hiddenInputValue: string;
-};
-
-export type ImageUploaderContextValue<TMeta = any, TFileSource = File> = {
+export type ImageUploaderContextValue<TMeta = any, TFileSource = unknown> = {
   items: UploadFileItem<TMeta, TFileSource>[];
   setItems: (
     items:
@@ -157,7 +124,7 @@ export type ImageUploaderContextValue<TMeta = any, TFileSource = File> = {
   name: string;
 };
 
-export type TriggerRenderProps<TMeta = any, TFileSource = File> = {
+export type TriggerRenderProps<TMeta = any, TFileSource = unknown> = {
   items: UploadFileItem<TMeta, TFileSource>[];
   isLoading: boolean;
   isUploading: boolean;
@@ -168,7 +135,7 @@ export type TriggerRenderProps<TMeta = any, TFileSource = File> = {
   open: () => void;
 };
 
-export type UplofileRootRef<TMeta = any, TFileSource = File> = {
+export type UplofileRootRef<TMeta = any, TFileSource = unknown> = {
   setItems: (
     items:
       | UploadFileItem<TMeta, TFileSource>[]
@@ -185,7 +152,7 @@ export type UplofileRootRef<TMeta = any, TFileSource = File> = {
   onLoadingChange?: (isLoading: boolean) => void;
 };
 
-export type PreviewRenderProps<TMeta = any, TFileSource = File> = {
+export type PreviewRenderProps<TMeta = any, TFileSource = unknown> = {
   items: UploadFileItem<TMeta, TFileSource>[];
   isLoading: boolean;
   setItems: (

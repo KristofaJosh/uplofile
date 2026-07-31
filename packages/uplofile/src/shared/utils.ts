@@ -67,10 +67,10 @@ export const getExtension = (path: string) => {
  * @returns True if the item is a video file.
  */
 export const isVideoFile = (
-  item: UploadFileItem<any>,
+  item: UploadFileItem<any, { type?: string | null }>,
   extraExtensions: string[] = [],
 ): boolean => {
-  if (item.file) {
+  if (item.file?.type) {
     return item.file.type.startsWith("video/");
   }
 
@@ -102,10 +102,10 @@ export const isVideoFile = (
  * @returns True if the item is an image file.
  */
 export const isImageFile = (
-  item: UploadFileItem<any>,
+  item: UploadFileItem<any, { type?: string | null }>,
   extraExtensions: string[] = [],
 ): boolean => {
-  if (item.file) {
+  if (item.file?.type) {
     return item.file.type.startsWith("image/");
   }
 
@@ -180,17 +180,17 @@ export const getNativePickerAcceptTypes = (
 };
 
 /**
- * Check whether a File object matches the given HTML `accept` attribute value.
+ * Check whether a file-like object matches the given HTML `accept` attribute value.
  * Supports MIME types (image/png), wildcards (image/*), and file extensions (.jpg).
  * Ignores malformed tokens and returns true when no valid tokens remain
  * (permissive behaviour matching `<input>`).
  *
- * @param file - The File object to check.
+ * @param file - The file-like object to check (name and MIME type).
  * @param accept - The accept attribute string (comma-separated MIME types / extensions).
  * @returns True if the file matches any of the accept tokens.
  */
 export const acceptsFile = (
-  file: Pick<File, "name" | "type">,
+  file: { name: string; type: string },
   accept: string | undefined,
 ): boolean => {
   const tokens = getValidAcceptTokens(accept);

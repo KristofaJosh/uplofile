@@ -8,33 +8,18 @@ import {
   useState,
 } from "react";
 
-import type {
-  ImageUploaderContextValue,
-  ItemActions,
-  RootProps,
-  UploadFileItem,
-  UploaderItemsContextValue,
-  UploaderStableContextValue,
-} from "./types";
+import type { ImageUploaderContextValue, ItemActions, RootProps, UploadFileItem } from "./types";
 import { uid } from "./utils";
 
-export const UploaderCtx = createContext<ImageUploaderContextValue | null>(
-  null,
-);
+// TFileSource is intentionally `any` here: the context must hold whichever
+// concrete file-source type a given platform's Root provides. `useUplofile`
+// re-asserts the caller's requested generics when reading.
+export const UploaderCtx = createContext<ImageUploaderContextValue<
+  any,
+  any
+> | null>(null);
 
-/**
- * Holds infrequently-changing values (actions, callbacks, props).
- * Consumers subscribed to this context skip re-renders on progress ticks.
- */
-export const StableCtx = createContext<UploaderStableContextValue | null>(null);
-
-/**
- * Holds frequently-changing values (items, isLoading).
- * Separated from StableCtx so progress-driven re-renders are isolated.
- */
-export const ItemsCtx = createContext<UploaderItemsContextValue | null>(null);
-
-export function useUplofileState<TMeta = any, TFileSource = File>({
+export function useUplofileState<TMeta = any, TFileSource = unknown>({
   upload,
   onRemove,
   removeMode = "optimistic",
