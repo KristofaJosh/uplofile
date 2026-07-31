@@ -57,9 +57,6 @@ export const Root = forwardRef(
       }
     }, [acceptTypes, props.accept, props.multiple, state.selectFiles]);
 
-    const onDrop = undefined;
-    const onDragOver = undefined;
-
     const ctx = useMemo<ImageUploaderContextValue<TMeta, DocumentPickerResponse>>(
       () => ({
         items: state.items as UploadFileItem<TMeta, DocumentPickerResponse>[],

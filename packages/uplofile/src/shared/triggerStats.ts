@@ -7,18 +7,28 @@ export function computeTriggerStats<TMeta = any, TFileSource = unknown>(
   isLoading: boolean,
   open: () => void,
 ): TriggerRenderProps<TMeta, TFileSource> {
-  const uploading = items.filter((item) => item.status === "uploading");
-  const uploadingCount = uploading.length;
-  const doneCount = items.filter((item) => item.status === "done").length;
-  const errorCount = items.filter((item) => item.status === "error").length;
+  let uploadingCount = 0;
+  let doneCount = 0;
+  let errorCount = 0;
+  let progressSum = 0;
+
+  for (const item of items) {
+    switch (item.status) {
+      case "uploading":
+        uploadingCount++;
+        progressSum += typeof item.progress === "number" ? item.progress : 0;
+        break;
+      case "done":
+        doneCount++;
+        break;
+      case "error":
+        errorCount++;
+        break;
+    }
+  }
+
   const totalProgress = uploadingCount
-    ? Math.round(
-        uploading.reduce(
-          (acc, item) =>
-            acc + (typeof item.progress === "number" ? item.progress : 0),
-          0,
-        ) / uploadingCount,
-      )
+    ? Math.round(progressSum / uploadingCount)
     : undefined;
 
   return {
