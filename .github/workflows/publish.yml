@@ -2,6 +2,13 @@ name: Release
 on:
   push:
     branches: [main]
+    paths:
+      - "packages/**"
+      - "app/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/publish.yml"
   workflow_dispatch: {}
 
 permissions:

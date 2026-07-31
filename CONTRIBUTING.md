@@ -65,6 +65,14 @@ pnpm run test
 - **TypeScript:** The project is written in TypeScript. Ensure your contributions have proper type definitions.
 - **Tests:** Add or update tests for any new features or bug fixes.
 
+## Commit Message Conventions
+
+This project uses [semantic-release](https://semantic-release.gitbook.io/) to cut npm releases automatically from commits on `main`. The `feat:` and `fix:` prefixes are not just labels — semantic-release reads them to decide whether to publish a new version, regardless of which files the commit actually touched.
+
+- Use `feat:` or `fix:` only for changes to the shipped package (`packages/uplofile`, `app/**`).
+- Use `chore:`, `docs:`, `ci:`, `refactor:`, or `test:` for anything that isn't shipped code — including changes under `.agents/**` (Claude/agent skill definitions) or `.claude/**`, and documentation-only edits. These types don't trigger a release.
+- A `feat:`-prefixed PR that only edits an internal skill doc will still bump the package's minor version and publish to npm — the release workflow triggers on any push to `main` that touches release-relevant paths, and semantic-release doesn't check content, only the commit type.
+
 ## Pull Request Process
 
 1.  Create a new branch for your feature or bug fix: `git checkout -b feat/your-feature-name` or `git checkout -b fix/your-bug-fix`.
