@@ -15,7 +15,7 @@ import { Root } from "./Root";
 import { Dropzone } from "./Dropzone";
 import { Trigger } from "./Trigger";
 import { Preview } from "./Preview";
-import { UploadFileItem, UplofileRootRef } from "../shared/types";
+import { UploadFileItem, UplofileRootRef } from "./types";
 
 afterEach(cleanup);
 

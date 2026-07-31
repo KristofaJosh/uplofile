@@ -1,10 +1,13 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useUplofile } from "../shared/hook";
+import type { DocumentPickerResponse } from "@react-native-documents/picker";
+import { useUplofile } from "./hook";
 import type { PreviewRenderProps, UploadFileItem } from "../shared/types";
 
 type Props<TMeta = any> = {
-  render?: (api: PreviewRenderProps<TMeta>) => React.ReactNode;
+  render?: (
+    api: PreviewRenderProps<TMeta, DocumentPickerResponse>,
+  ) => React.ReactNode;
 };
 
 export const Preview = <TMeta = any,>({ render }: Props<TMeta>) => {

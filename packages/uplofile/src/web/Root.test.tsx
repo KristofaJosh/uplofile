@@ -5,7 +5,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, waitFor, cleanup } from "@testing-library/react";
 import { Root } from "./Root";
 import { Trigger } from "./Trigger";
-import { UplofileRootRef } from "../shared/types";
+import { UplofileRootRef } from "./types";
 
 afterEach(cleanup);
 
