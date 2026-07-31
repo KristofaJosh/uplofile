@@ -9,12 +9,11 @@ Welcome to the Uplofile project. This guide provides essential context and instr
 
 ## Project Overview
 
-Uplofile is a React library providing composable file-upload components. It follows a "bring your own upload logic" philosophy, focusing on UI state management and orchestration rather than specific transport protocols or backends.
+Uplofile is a React library providing composable file-upload components. See the [root README](README.md) for the full philosophy and positioning.
 
-### Key Philosophy
-- **Uploads are infrastructure concerns disguised as UI problems.**
-- The library stays backend-agnostic and protocol-agnostic.
-- Focus is on React's strengths: UI state, lifecycle, and composability.
+## Agent Skills
+
+Reusable, agent-agnostic workflows (e.g. drafting PRs, filing issues) live in `.agents/skills/`. Check there before improvising a workflow the repo already has a skill for.
 
 ## Project Structure
 
@@ -65,29 +64,7 @@ The workflow can also be triggered manually via the GitHub UI (Actions → Relea
 
 ## Core Components & Concepts
 
-The library exposes two entry points: `uplofile` (web, default) and `uplofile/native` (React Native).
-
-### `UplofileRoot` (context.tsx)
-The provider component that manages the upload state.
-- **Props:** `upload` (required), `onRemove`, `multiple`, `maxCount`, `accept`, `beforeUpload`, `removeMode`.
-- **`upload` function:** Should return a `Promise<UploadResult>`. It receives `file`, `signal` (for cancellation), and `setProgress`.
-
-### `UplofileDropzone`
-Handles drag-and-drop interactions.
-
-### `UplofileTrigger`
-The element that opens the file selection dialog.
-
-### `UplofilePreview`
-Displays the list of files being uploaded, their status, and progress.
-
-### `Item Actions`
-- `Cancel`: Aborts an ongoing upload.
-- `Remove`: Removes a file (and optionally calls `onRemove`).
-- `Retry`: Re-attempts a failed upload.
-
-### `UploadStatus`
-Items can be in one of these states: `idle`, `uploading`, `done`, `error`, `canceled`, `removing`.
+Two entry points: `uplofile` (web, default) and `uplofile/native` (React Native). Full component and prop reference lives in the [root README](README.md#core-components--concepts) — keep it in sync with `src/shared/types.ts` when APIs change.
 
 ## Development Guidelines
 
