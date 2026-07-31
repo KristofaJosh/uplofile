@@ -41,6 +41,32 @@ Whether your uploads use presigned URLs, multipart strategies, resumable protoco
 Uplofile provides the UI and lifecycle building blocks.  
 Your app defines what “uploading” means.
 
+## Core Components & Concepts
+
+Two entry points: `uplofile` (web, default) and `uplofile/native` (React Native).
+
+### `UplofileRoot`
+The provider component that manages upload state.
+- **Props:** `upload` (required), `onRemove`, `multiple`, `maxCount`, `accept`, `beforeUpload`, `removeMode`.
+- **`upload` function:** Should return a `Promise<UploadResult>`. It receives `file`, `signal` (for cancellation), and `setProgress`.
+
+### `UplofileDropzone`
+Handles drag-and-drop interactions.
+
+### `UplofileTrigger`
+The element that opens the file selection dialog.
+
+### `UplofilePreview`
+Displays the list of files being uploaded, their status, and progress.
+
+### Item actions
+- `Cancel`: Aborts an ongoing upload.
+- `Remove`: Removes a file (and optionally calls `onRemove`).
+- `Retry`: Re-attempts a failed upload.
+
+### `UploadStatus`
+Items can be in one of these states: `idle`, `uploading`, `done`, `error`, `canceled`, `removing`.
+
 Documentation
 - Full usage, API, and examples: [packages/uplofile/README.md](packages/uplofile/README.md)
 - NPM: https://www.npmjs.com/package/uplofile
