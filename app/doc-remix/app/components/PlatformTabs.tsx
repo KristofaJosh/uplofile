@@ -1,9 +1,9 @@
-import { usePlatformStore } from "@/stores/platformStore";
-
 type Platform = "web" | "react-native";
 
 interface PlatformTabsProps {
   className?: string;
+  platform: Platform;
+  onPlatformChange: (platform: Platform) => void;
 }
 
 const platformLabels: Record<Platform, string> = {
@@ -16,15 +16,17 @@ const platformIcons: Record<Platform, string> = {
   "react-native": "📱",
 };
 
-export const PlatformTabs = ({ className = "" }: PlatformTabsProps) => {
-  const { platform, setPlatform } = usePlatformStore();
-
+export const PlatformTabs = ({
+  className = "",
+  platform,
+  onPlatformChange,
+}: PlatformTabsProps) => {
   return (
     <div className={`flex border border-border rounded-lg p-1 ${className}`}>
       {(Object.keys(platformLabels) as Platform[]).map((p) => (
         <button
           key={p}
-          onClick={() => setPlatform(p)}
+          onClick={() => onPlatformChange(p)}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
             platform === p
               ? "bg-background text-foreground"

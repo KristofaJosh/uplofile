@@ -1,9 +1,11 @@
+import { useState } from "react";
 import type { MetaFunction } from "react-router";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import { PlatformTabs } from "@/components/PlatformTabs";
-import { usePlatformStore } from "@/stores/platformStore";
 import uplofileConfigString from "@/components/ui/uplofile?raw";
+
+type Platform = "web" | "react-native";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,7 +19,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Installation() {
-  const { platform } = usePlatformStore();
+  const [platform, setPlatform] = useState<Platform>("web");
 
   return (
     <DocsLayout>
@@ -27,7 +29,11 @@ export default function Installation() {
           Get started with Uplofile in your React project.
         </p>
 
-        <PlatformTabs className="mb-8" />
+        <PlatformTabs
+          className="mb-8"
+          platform={platform}
+          onPlatformChange={setPlatform}
+        />
 
         {platform === "web" ? (
           <>
