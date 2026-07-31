@@ -45,8 +45,8 @@
   "scripts": {
     "build": "bunchee --dts --external react,react-dom,react-native,@react-native-documents/picker --format esm",
     "clean": "rm -rf dist",
-    "prepare": "pnpm run build",
-    "prepublishOnly": "pnpm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "vitest run",
     "format": "prettier --write ."
   },
