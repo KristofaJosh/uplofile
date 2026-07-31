@@ -43,7 +43,12 @@ export type PreviewRenderProps<
   TFileSource = DocumentPickerResponse,
 > = SharedPreviewRenderProps<TMeta, TFileSource>;
 
+/**
+ * Native's imperative ref never sets `onDrop`/`onDragOver` — those exist
+ * only on the web Root — so they're omitted here rather than exposing the
+ * DOM-only `DragEvent` type on a platform that doesn't have one.
+ */
 export type UplofileRootRef<
   TMeta = any,
   TFileSource = DocumentPickerResponse,
-> = SharedUplofileRootRef<TMeta, TFileSource>;
+> = Omit<SharedUplofileRootRef<TMeta, TFileSource>, "onDrop" | "onDragOver">;

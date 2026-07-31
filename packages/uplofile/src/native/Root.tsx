@@ -12,8 +12,8 @@ import type {
   ItemActions,
   RootProps,
   UploadFileItem,
-  UplofileRootRef,
 } from "../shared/types";
+import type { UplofileRootRef } from "./types";
 import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
 
 export type { DocumentPickerResponse } from "@react-native-documents/picker";

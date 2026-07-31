@@ -70,8 +70,8 @@ export const isVideoFile = (
   item: UploadFileItem<any, { type?: string | null }>,
   extraExtensions: string[] = [],
 ): boolean => {
-  if (item.file) {
-    return (item.file.type ?? "").startsWith("video/");
+  if (item.file?.type) {
+    return item.file.type.startsWith("video/");
   }
 
   const allExtensions = [...VIDEO_EXTENSIONS, ...extraExtensions];
@@ -105,8 +105,8 @@ export const isImageFile = (
   item: UploadFileItem<any, { type?: string | null }>,
   extraExtensions: string[] = [],
 ): boolean => {
-  if (item.file) {
-    return (item.file.type ?? "").startsWith("image/");
+  if (item.file?.type) {
+    return item.file.type.startsWith("image/");
   }
 
   const allExtensions = [...IMAGE_EXTENSIONS, ...extraExtensions];

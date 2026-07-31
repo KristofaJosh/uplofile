@@ -3,6 +3,7 @@ import type { DocumentPickerResponse } from "@react-native-documents/picker";
 
 import { acceptsFile, isVideoFile } from "../shared/utils";
 import type { RootProps, UploadFileItem, UplofileRootRef } from "../shared/types";
+import type { UplofileRootRef as NativeUplofileRootRef } from "./types";
 
 /**
  * Compile-time + runtime check that the shared, platform-neutral types
@@ -64,5 +65,19 @@ describe("native public type compatibility", () => {
     expect(
       acceptsFile({ name: "movie.mov", type: "video/quicktime" }, "video/*"),
     ).toBe(true);
+  });
+
+  it("omits the web-only onDrop/onDragOver (DOM DragEvent) members from the native ref type", () => {
+    // Compile-time guard: if either key were still present on the native
+    // ref type, this conditional would resolve to `true` and fail to
+    // assign into a `false`-typed const.
+    type HasDragHandlers = "onDrop" extends keyof NativeUplofileRootRef
+      ? true
+      : "onDragOver" extends keyof NativeUplofileRootRef
+        ? true
+        : false;
+    const hasDragHandlers: HasDragHandlers = false;
+
+    expect(hasDragHandlers).toBe(false);
   });
 });
