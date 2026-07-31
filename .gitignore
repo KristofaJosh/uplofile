@@ -13,5 +13,6 @@ test-results/
 **/.vercel/
 .junie/
 .pnpm-store/
+.claude/
 graphify-out/cost.json
 graphify-out/cache/
