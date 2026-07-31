@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/KristofaJosh/uplofile/compare/v3.1.1...v3.1.2) (2026-07-31)
+
+
+### Bug Fixes
+
+* use canonical git+https repository url ([#42](https://github.com/KristofaJosh/uplofile/issues/42)) ([c75f601](https://github.com/KristofaJosh/uplofile/commit/c75f6014a762f2f622a253807f35b125fdce2ffb))
+
 ## [3.1.1](https://github.com/KristofaJosh/uplofile/compare/v3.1.0...v3.1.1) (2026-07-31)
 
 
