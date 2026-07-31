@@ -12,3 +12,6 @@ test-results/
 **/android/
 **/.vercel/
 .junie/
+.pnpm-store/
+graphify-out/cost.json
+graphify-out/cache/
