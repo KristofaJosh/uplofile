@@ -7,9 +7,6 @@
       "ios",
       "android"
     ],
-    "plugins": [
-      "expo-document-picker"
-    ],
     "ios": {
       "bundleIdentifier": "com.chrisjosh.doc-native"
     }
