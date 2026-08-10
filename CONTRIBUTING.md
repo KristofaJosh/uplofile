@@ -67,11 +67,11 @@ pnpm run test
 
 ## Commit Message Conventions
 
-This project uses [semantic-release](https://semantic-release.gitbook.io/) to cut npm releases automatically from commits on `main`. The `feat:` and `fix:` prefixes are not just labels — semantic-release reads them to decide whether to publish a new version, regardless of which files the commit actually touched.
+This project follows [Conventional Commits](https://www.conventionalcommits.org/) for readability, but versioning is no longer inferred from commit type. Releases are managed by [Changesets](https://github.com/changesets/changesets): a bump only happens if your PR includes a changeset file.
 
-- Use `feat:` or `fix:` only for changes to the shipped package (`packages/uplofile`, `app/**`).
-- Use `chore:`, `docs:`, `ci:`, `refactor:`, or `test:` for anything that isn't shipped code — including changes under `.agents/**` (Claude/agent skill definitions) or `.claude/**`, and documentation-only edits. These types don't trigger a release.
-- A `feat:`-prefixed PR that only edits an internal skill doc will still bump the package's minor version and publish to npm — the release workflow triggers on any push to `main` that touches release-relevant paths, and semantic-release doesn't check content, only the commit type.
+- Use `feat:` or `fix:` for changes to the shipped package (`packages/uplofile`).
+- Use `chore:`, `docs:`, `ci:`, `refactor:`, or `test:` for anything that isn't shipped code — including changes under `.agents/**` (Claude/agent skill definitions) or `.claude/**`, and documentation-only edits.
+- If your PR changes `packages/uplofile` in a way consumers should know about, run `pnpm changeset`, pick a bump type (patch/minor/major), and commit the generated `.changeset/*.md` file alongside your change. PRs without a changeset never trigger a release, regardless of commit type — see [AGENTS.md](AGENTS.md#release-process) for the full flow.
 
 ## Pull Request Process
 

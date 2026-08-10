@@ -34,29 +34,19 @@ This is a monorepo managed with `pnpm`.
 - **Styling:** Tailwind CSS (mostly in docs, library components are unstyled)
 - **Bundler:** Bunchee (for the library), Vite (for the docs via Remix)
 - **Testing:** Vitest
-- **Release Automation:** semantic-release (via `.github/workflows/publish.yml`)
+- **Release Automation:** Changesets (via `.github/workflows/publish.yml`)
 
 ## Release Process
 
-Releases are triggered by pushing commits to `main`. **semantic-release** handles the entire release automatically.
+Releases go through a manual review gate via [Changesets](https://github.com/changesets/changesets). Only `packages/uplofile` is published; the `app/*` workspaces are ignored (see `.changeset/config.json`).
 
 ### How it works
 
-1. Push commits to `main` following **Conventional Commits** format:
-   - `feat: ...` → **minor** version bump
-   - `fix: ...` → **patch** version bump
-   - `BREAKING CHANGE: ...` → **major** version bump
-   - `chore: ...`, `docs: ...`, `refactor: ...` → **no release**
-2. `.github/workflows/publish.yml` runs on every push to `main`
-3. The commit-analyzer scans commits since the last tag:
-   - Only `feat`/`fix`/`BREAKING CHANGE` trigger a release
-   - `chore`/`docs`/`refactor`/`test`/`ci` → analyzer returns `null` → **no release**
-4. If a release is triggered, `semantic-release`:
-   - Updates `packages/uplofile/package.json` version
-   - Updates `CHANGELOG.md` with release notes
-   - Commits both files and creates a `v{x.y.z}` tag
-   - Publishes to npm (OIDC trusted publishing — no static tokens)
-   - Creates a GitHub Release
+1. On a feature branch, add a changeset for any user-facing change: `pnpm changeset` — pick a bump type (patch/minor/major) and write a summary. Commit the generated `.changeset/*.md` file with the PR. PRs with no changeset simply won't trigger a version bump (e.g. pure `chore`/`docs`/`ci`/`refactor` changes to non-shipped code need no changeset).
+2. CI (`.github/workflows/ci.yml`) runs tests/e2e on every PR.
+3. On merge to `main`, `.github/workflows/publish.yml` runs once CI on `main` succeeds (via `workflow_run`, so it never re-runs tests it already saw pass):
+   - If there are unreleased changesets, the `changesets/action` opens/updates a **"Version Packages"** PR that bumps `packages/uplofile/package.json` and prepends the changelog entries to `packages/uplofile/CHANGELOG.md`. No publish happens yet.
+   - Merging the "Version Packages" PR is the manual approval gate. That merge (once CI on `main` succeeds again) triggers the same workflow, which now finds no pending changesets and instead publishes to npm (OIDC trusted publishing — no static tokens) and creates a GitHub Release.
 
 ### Manual trigger
 
