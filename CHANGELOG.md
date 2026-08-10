@@ -56,6 +56,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **uplofile**: New `uplofile/native` entry point for React Native. Import from `uplofile/native` to get `Root`, `Trigger`, and `Preview` components that use `@react-native-documents/picker` instead of DOM file input. (#new-feature)
 - **uplofile**: Extract platform-agnostic `useUplofileState` hook from the web `Root` component. This hook powers both web and RN entry points with zero code duplication.
 - **uplofile**: Add `getFileName`, `createPreviewUrl`, and `revokePreviewUrl` adapter parameters to `useUplofileState` for platform-agnostic file source handling.
+- **uplofile**: Add an optional `pickFiles` prop to native `Root` so consumers can inject their own document/image picker instead of the hardcoded `@react-native-documents/picker` call, with `Root`'s `TFileSource` generic inferred from it end-to-end. Ships four named exports from `uplofile/native` — `adapterReactNativeDocumentsPicker`, `adapterExpoDocumentPicker`, `adapterExpoImagePicker`, `adapterReactNativeImagePicker` — each wrapping a caller-supplied picker function without importing the picker package itself. (#40)
+
+### Deprecated
+
+- **uplofile**: Omitting `pickFiles` on native `Root` now logs a one-time deprecation warning per `Root` instance (silence with `suppressDeprecationWarnings`). **This release is a minor** — the implicit `@react-native-documents/picker` fallback keeps working exactly as before. The fallback and the `@react-native-documents/picker` peer dependency will be removed in the next major version (follow-up issue to be filed). (#40)
 
 ### Changed
 

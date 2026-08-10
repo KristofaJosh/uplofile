@@ -9,13 +9,25 @@ export {
   getExtension,
   acceptsFile,
 } from "../shared/utils";
-export type { ItemActions, UploadStatus, UploadResult, BeforeUploadResult } from "../shared/types";
+export {
+  adapterReactNativeDocumentsPicker,
+  adapterExpoDocumentPicker,
+  adapterExpoImagePicker,
+  adapterReactNativeImagePicker,
+} from "./adapters";
+export type {
+  ItemActions,
+  UploadStatus,
+  UploadResult,
+  BeforeUploadResult,
+} from "../shared/types";
 export type {
   ImageUploaderContextValue,
   RootProps,
   UploadFileItem,
   UplofileRootRef,
   BeforeUploadFn,
+  PickFilesFn,
   TriggerRenderProps,
   PreviewRenderProps,
 } from "./types";
