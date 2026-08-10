@@ -72,6 +72,10 @@ Documentation
 - NPM: https://www.npmjs.com/package/uplofile
 - Website: https://uplofile.kristofajosh.dev
 
+## Releases
+
+Uplofile uses [Changesets](https://github.com/changesets/changesets) to manage versioning and publishing. Merging a PR with a changeset updates a standing "Version Packages" PR with the changelog and version bump; merging that PR is what actually publishes to npm. See [AGENTS.md](AGENTS.md#release-process) for the full flow and [packages/uplofile/CHANGELOG.md](packages/uplofile/CHANGELOG.md) for release history.
+
 ## Contributing
 
 Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get started with local development and how to submit pull requests.
