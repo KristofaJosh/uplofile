@@ -16,13 +16,19 @@ import type {
 } from "./types";
 import { getErrorMessage, uid } from "./utils";
 
+// Split in two so a progress tick — which only ever changes `items` — doesn't
+// re-render consumers (like Dropzone) that only read the stable half.
 // TFileSource is intentionally `any` here: the context must hold whichever
 // concrete file-source type a given platform's Root provides. `useUplofile`
 // re-asserts the caller's requested generics when reading.
-export const UploaderCtx = createContext<ImageUploaderContextValue<
-  any,
-  any
+export const UploaderStableCtx = createContext<Omit<
+  ImageUploaderContextValue<any, any>,
+  "items"
 > | null>(null);
+
+export const UploaderItemsCtx = createContext<UploadFileItem<any, any>[] | null>(
+  null,
+);
 
 export function useUplofileState<TMeta = any, TFileSource = unknown>({
   upload,

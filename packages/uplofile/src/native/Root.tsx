@@ -9,7 +9,11 @@ import {
   pick,
   type DocumentPickerResponse,
 } from "@react-native-documents/picker";
-import { UploaderCtx, useUplofileState } from "../shared/context";
+import {
+  UploaderItemsCtx,
+  UploaderStableCtx,
+  useUplofileState,
+} from "../shared/context";
 import type {
   ImageUploaderContextValue,
   ItemActions,
@@ -60,11 +64,13 @@ export const Root = forwardRef(
       }
     }, [acceptTypes, props.accept, props.multiple, state.selectFiles]);
 
-    const ctx = useMemo<
-      ImageUploaderContextValue<TMeta, DocumentPickerResponse>
+    // Stable half of the context: everything a consumer needs that never
+    // changes on a progress tick. Deliberately excludes `items` — see
+    // UploaderItemsCtx below.
+    const stableCtx = useMemo<
+      Omit<ImageUploaderContextValue<TMeta, DocumentPickerResponse>, "items">
     >(
       () => ({
-        items: state.items as UploadFileItem<TMeta, DocumentPickerResponse>[],
         setItems: state.setItems,
         isLoading: state.isLoading,
         disabled: props.disabled,
@@ -78,7 +84,6 @@ export const Root = forwardRef(
         name: props.name ?? "image",
       }),
       [
-        state.items,
         state.setItems,
         state.isLoading,
         props.disabled,
@@ -90,6 +95,11 @@ export const Root = forwardRef(
         openFileDialog,
       ],
     );
+
+    const itemsCtx = state.items as UploadFileItem<
+      TMeta,
+      DocumentPickerResponse
+    >[];
 
     useImperativeHandle(
       ref,
@@ -110,9 +120,11 @@ export const Root = forwardRef(
     );
 
     return (
-      <UploaderCtx.Provider value={ctx}>
-        <View>{props.children}</View>
-      </UploaderCtx.Provider>
+      <UploaderStableCtx.Provider value={stableCtx}>
+        <UploaderItemsCtx.Provider value={itemsCtx}>
+          <View>{props.children}</View>
+        </UploaderItemsCtx.Provider>
+      </UploaderStableCtx.Provider>
     );
   },
 );

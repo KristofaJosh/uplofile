@@ -129,54 +129,59 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
   </div>
 );
 
-const PreviewItem = ({
-  item,
-  actions,
-}: {
-  item: WebUploadFileItem;
-  actions: PreviewRenderProps["actions"];
-}) => {
-  const hasError = item.status === "error" || Boolean(item.error);
-  const stateLabel =
-    item.status === "removing"
-      ? "Removing"
-      : item.status === "uploading"
-        ? "Uploading"
-        : item.status === "error"
-          ? "Error"
-          : item.status === "canceled"
-            ? "Canceled"
-            : item.error
-              ? "Done (error)"
-              : "Done";
+// Memoized so a progress update on one item — which only replaces that
+// item's object in the `items` array — doesn't re-render sibling items keyed
+// by a different uid.
+export const PreviewItem = React.memo(
+  ({
+    item,
+    actions,
+  }: {
+    item: WebUploadFileItem;
+    actions: PreviewRenderProps["actions"];
+  }) => {
+    const hasError = item.status === "error" || Boolean(item.error);
+    const stateLabel =
+      item.status === "removing"
+        ? "Removing"
+        : item.status === "uploading"
+          ? "Uploading"
+          : item.status === "error"
+            ? "Error"
+            : item.status === "canceled"
+              ? "Canceled"
+              : item.error
+                ? "Done (error)"
+                : "Done";
 
-  return (
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="uplofile-preview__item"
-      data-state={item.status}
-      aria-label={`${item.name} - ${stateLabel}`}
-      aria-busy={item.status === "uploading" || item.status === "removing"}
-    >
-      {hasError && <ErrorBadge />}
-      <MediaContent item={item} />
-      {item.status === "uploading" && (
-        <UploadingOverlay progress={item.progress} />
-      )}
+    return (
       <div
-        className="uplofile-preview__overlay"
-        data-error={hasError ? "true" : undefined}
+        onClick={(e) => e.stopPropagation()}
+        className="uplofile-preview__item"
+        data-state={item.status}
+        aria-label={`${item.name} - ${stateLabel}`}
+        aria-busy={item.status === "uploading" || item.status === "removing"}
       >
-        <ActionButtons item={item} actions={actions} />
-        {hasError && (
-          <span className="uplofile-preview__error-message">
-            {item.error || "Upload failed"}
-          </span>
+        {hasError && <ErrorBadge />}
+        <MediaContent item={item} />
+        {item.status === "uploading" && (
+          <UploadingOverlay progress={item.progress} />
         )}
+        <div
+          className="uplofile-preview__overlay"
+          data-error={hasError ? "true" : undefined}
+        >
+          <ActionButtons item={item} actions={actions} />
+          {hasError && (
+            <span className="uplofile-preview__error-message">
+              {item.error || "Upload failed"}
+            </span>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
 
 export const Preview = <TMeta = any,>({
   render,

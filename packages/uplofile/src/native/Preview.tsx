@@ -33,69 +33,74 @@ export const Preview = <TMeta = any,>({ render }: Props<TMeta>) => {
   );
 };
 
-const PreviewItem = ({
-  item,
-  actions,
-}: {
-  item: UploadFileItem;
-  actions: PreviewRenderProps["actions"];
-}) => {
-  const sourceUri = item.url || item.previewUrl;
-  const hasError = item.status === "error" || Boolean(item.error);
+// Memoized so a progress update on one item — which only replaces that
+// item's object in the `items` array — doesn't re-render sibling items keyed
+// by a different uid.
+const PreviewItem = React.memo(
+  ({
+    item,
+    actions,
+  }: {
+    item: UploadFileItem;
+    actions: PreviewRenderProps["actions"];
+  }) => {
+    const sourceUri = item.url || item.previewUrl;
+    const hasError = item.status === "error" || Boolean(item.error);
 
-  return (
-    <View style={styles.item} key={item.uid}>
-      {hasError && <Text style={styles.errorBadge}>!</Text>}
+    return (
+      <View style={styles.item} key={item.uid}>
+        {hasError && <Text style={styles.errorBadge}>!</Text>}
 
-      {sourceUri ? (
-        <Image
-          source={{ uri: sourceUri }}
-          style={styles.media}
-          resizeMode="cover"
-        />
-      ) : (
-        <View style={styles.placeholder}>
-          <Text>{item.name.split(".").pop() || ""}</Text>
-        </View>
-      )}
+        {sourceUri ? (
+          <Image
+            source={{ uri: sourceUri }}
+            style={styles.media}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={styles.placeholder}>
+            <Text>{item.name.split(".").pop() || ""}</Text>
+          </View>
+        )}
 
-      {item.status === "uploading" && (
-        <View style={styles.overlay}>
-          <Text style={styles.progressText}>{item.progress ?? 0}%</Text>
-        </View>
-      )}
-
-      <View style={styles.actions}>
         {item.status === "uploading" && (
-          <TouchableOpacity
-            onPress={() => actions.cancel(item.uid)}
-            style={styles.actionButton}
-          >
-            <Text>Cancel</Text>
-          </TouchableOpacity>
+          <View style={styles.overlay}>
+            <Text style={styles.progressText}>{item.progress ?? 0}%</Text>
+          </View>
         )}
-        {(item.status === "error" || item.status === "canceled") && (
-          <TouchableOpacity
-            onPress={() => actions.retry(item.uid)}
-            style={styles.actionButton}
-          >
-            <Text>Retry</Text>
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity
-          onPress={() => actions.remove(item.uid)}
-          style={styles.actionButton}
-        >
-          <Text>Remove</Text>
-        </TouchableOpacity>
-      </View>
 
-      {hasError && item.error && (
-        <Text style={styles.errorText}>{item.error}</Text>
-      )}
-    </View>
-  );
-};
+        <View style={styles.actions}>
+          {item.status === "uploading" && (
+            <TouchableOpacity
+              onPress={() => actions.cancel(item.uid)}
+              style={styles.actionButton}
+            >
+              <Text>Cancel</Text>
+            </TouchableOpacity>
+          )}
+          {(item.status === "error" || item.status === "canceled") && (
+            <TouchableOpacity
+              onPress={() => actions.retry(item.uid)}
+              style={styles.actionButton}
+            >
+              <Text>Retry</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={() => actions.remove(item.uid)}
+            style={styles.actionButton}
+          >
+            <Text>Remove</Text>
+          </TouchableOpacity>
+        </View>
+
+        {hasError && item.error && (
+          <Text style={styles.errorText}>{item.error}</Text>
+        )}
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: { flexDirection: "row", flexWrap: "wrap", gap: 8 },

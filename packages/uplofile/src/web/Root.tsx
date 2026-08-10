@@ -5,7 +5,11 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { UploaderCtx, useUplofileState } from "../shared/context";
+import {
+  UploaderItemsCtx,
+  UploaderStableCtx,
+  useUplofileState,
+} from "../shared/context";
 import type {
   ImageUploaderContextValue,
   RootProps,
@@ -94,9 +98,12 @@ export const Root = forwardRef(
       [onInputChange, props.accept, props.multiple, props.disabled],
     );
 
-    const ctx = useMemo<ImageUploaderContextValue<TMeta, File>>(
+    // Stable half of the context: everything a consumer needs that never
+    // changes on a progress tick. Deliberately excludes `items` — see
+    // UploaderItemsCtx below — so consumers like Dropzone don't re-render
+    // when only an item's progress changes.
+    const stableCtx = useMemo<Omit<ImageUploaderContextValue<TMeta, File>, "items">>(
       () => ({
-        items: state.items as UploadFileItem<TMeta, File>[],
         setItems: state.setItems,
         isLoading: state.isLoading,
         disabled: props.disabled,
@@ -110,7 +117,6 @@ export const Root = forwardRef(
         name: props.name ?? "image",
       }),
       [
-        state.items,
         state.setItems,
         state.isLoading,
         props.disabled,
@@ -124,6 +130,8 @@ export const Root = forwardRef(
         getDropzoneProps,
       ],
     );
+
+    const itemsCtx = state.items as UploadFileItem<TMeta, File>[];
 
     useImperativeHandle(
       ref,
@@ -155,12 +163,14 @@ export const Root = forwardRef(
     );
 
     return (
-      <UploaderCtx.Provider value={ctx}>
-        <div data-part="root">
-          <input type="file" hidden {...fileInputProps} />
-          {props.children}
-        </div>
-      </UploaderCtx.Provider>
+      <UploaderStableCtx.Provider value={stableCtx}>
+        <UploaderItemsCtx.Provider value={itemsCtx}>
+          <div data-part="root">
+            <input type="file" hidden {...fileInputProps} />
+            {props.children}
+          </div>
+        </UploaderItemsCtx.Provider>
+      </UploaderStableCtx.Provider>
     );
   },
 );
