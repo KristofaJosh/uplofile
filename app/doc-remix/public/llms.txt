@@ -1,6 +1,6 @@
 # Uplofile
 
-Uplofile is a headless, composable React file upload library. It manages UI state, orchestration, and complex file upload lifecycles (uploading, removing, retrying) but leaves the network logic ("bring your own upload logic") entirely up to the user. 
+Uplofile is a composable React file upload library built from accessible UI primitives. It manages UI state, orchestration, and complex file upload lifecycles (uploading, removing, retrying) but leaves the network logic ("bring your own upload logic") entirely up to the user.
 
 ## Core Philosophy
 - Uploads are UI state problems disguised as network problems.
