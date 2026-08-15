@@ -22,7 +22,7 @@ This project is a monorepo managed with [pnpm](https://pnpm.io/).
 ## Project Structure
 
 - `packages/uplofile`: The core library package.
-- `app/doc`: The documentation website (built with Vite and React).
+- `app/doc-remix`: The documentation website (built with React Router and Tailwind).
 
 ## Development Workflow
 
