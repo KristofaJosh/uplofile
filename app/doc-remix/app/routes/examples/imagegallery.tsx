@@ -2,7 +2,9 @@ import type { MetaFunction } from "react-router";
 import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./imagegallery.demo.tsx";
-import code from "./imagegallery.demo.tsx?raw";
+import demoCode from "./imagegallery.demo.tsx?raw";
+import imageItemCode from "./imagegallery.imageitem.demo.tsx?raw";
+import addTileCode from "./imagegallery.addtile.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
   return withPageMeta("/examples/image-gallery", [
@@ -19,7 +21,11 @@ const ExampleImageGallery = () => {
     <ExamplePage
       title="Image Gallery Uploader"
       description="An image-focused uploader with thumbnail previews in a grid layout."
-      code={code}
+      codeTabs={[
+        { label: "Image gallery demo", code: demoCode },
+        { label: "Add image tile", code: addTileCode },
+        { label: "Image item", code: imageItemCode },
+      ]}
       keyPoints={[
         <>
           Uses <code className="code-inline">accept="image/*"</code> to filter

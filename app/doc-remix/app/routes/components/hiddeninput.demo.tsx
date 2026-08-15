@@ -1,19 +1,20 @@
-import { UplofileRoot, UplofileHiddenInput } from "@/components/ui/uplofile";
+import { Dropzone, HiddenInput, Preview, Root, Trigger } from "uplofile";
 
-export default function HiddenInputDemo() {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    console.log("Form data:", formData.get("attachments"));
-  };
+const upload = async (file: File) => ({ url: URL.createObjectURL(file) });
 
+export function AttachmentForm() {
   return (
-    <form onSubmit={handleSubmit}>
-      <UplofileRoot upload={async () => ({ url: "" })}>
-        {/* ... other components */}
-        <UplofileHiddenInput name="attachments" />
-      </UplofileRoot>
-      <button type="submit">Submit</button>
+    <form action="/api/posts" method="post">
+      <Root upload={upload} name="attachments">
+        <Dropzone>
+          <Trigger>Select files</Trigger>
+          <Preview />
+        </Dropzone>
+
+        {/* Posts done items as JSON: [{ id, name, url, meta? }]. */}
+        <HiddenInput />
+      </Root>
+      <button type="submit">Publish</button>
     </form>
   );
 }

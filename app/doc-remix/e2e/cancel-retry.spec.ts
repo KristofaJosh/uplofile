@@ -38,7 +38,9 @@ test.describe("Cancel & Retry", () => {
     await page.locator('[data-part="root"]').waitFor();
 
     // Force mockUpload to fail (failChance is 0.4, so any value < 0.4 triggers failure)
-    await page.evaluate(() => { Math.random = () => 0; });
+    await page.evaluate(() => {
+      Math.random = () => 0;
+    });
 
     await triggerUpload(page);
 

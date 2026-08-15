@@ -30,40 +30,51 @@ const ExampleDefaultPreview = () => {
 
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">Default & Custom Preview</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          Compare the built-in preview with a custom render tailored to a
-          compact file list.
+      <article className="doc-article recipe-article">
+        <div className="breadcrumb">
+          <span>Recipes</span>
+          <span>›</span>
+          <span>Default preview</span>
+        </div>
+        <h1>Default preview</h1>
+        <p className="doc-lead">
+          Compare the built-in preview with a completely unstyled custom render.
         </p>
 
         <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Default Preview
-          </h2>
-          <div className="not-prose p-6 border border-border rounded-xl bg-muted/10 shadow-sm mb-4">
+          <div className="section-label">
+            <span>Built-in preview</span>
+            <span>mock transport</span>
+          </div>
+          <div className="recipe-preview">
             <StyledDemo />
           </div>
-          <CodeBlock language="tsx" code={styledCode} />
+          <CodeBlock
+            language="tsx"
+            code={styledCode}
+            filename="DefaultPreview.tsx"
+          />
         </section>
 
         <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Custom Preview
-          </h2>
-          <div className="not-prose p-6 border border-border rounded-xl bg-muted/10 shadow-sm mb-4">
+          <div className="section-label">
+            <span>Custom render</span>
+          </div>
+          <div className="recipe-preview">
             <CustomDemo />
           </div>
-          <CodeBlock language="tsx" code={customCode} />
+          <CodeBlock
+            language="tsx"
+            code={customCode}
+            filename="CustomPreview.tsx"
+          />
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Key Points
-          </h2>
-          <ul className="space-y-2 text-muted-foreground">
+        <section className="recipe-notes">
+          <h2>Notes</h2>
+          <ul>
             {keyPoints.map((point, i) => (
-              <li key={i}>→ {point}</li>
+              <li key={i}>{point}</li>
             ))}
           </ul>
         </section>

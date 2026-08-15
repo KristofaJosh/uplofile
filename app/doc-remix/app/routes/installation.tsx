@@ -1,199 +1,117 @@
 import { useState } from "react";
 import type { MetaFunction } from "react-router";
-import { withPageMeta } from "@/lib/seo";
-import { DocsLayout } from "@/components/DocsLayout";
+import {
+  IoArrowForwardOutline,
+  IoCheckmark,
+  IoCopyOutline,
+} from "react-icons/io5";
 import { CodeBlock } from "@/components/CodeBlock";
-import { PlatformTabs } from "@/components/PlatformTabs";
+import { DocsLayout } from "@/components/DocsLayout";
+import { useCopy } from "@/hooks/use-copy";
 import uplofileConfigString from "@/components/ui/uplofile?raw";
+import { withPageMeta } from "@/lib/seo";
 
-type Platform = "web" | "react-native";
+const packages = {
+  npm: "npm install uplofile",
+  pnpm: "pnpm add uplofile",
+  yarn: "yarn add uplofile",
+  bun: "bun add uplofile",
+};
+const exports = [
+  ["Root", "state + context"],
+  ["Trigger", "opens the picker"],
+  ["Dropzone", "drop target"],
+  ["Preview", "the file list"],
+  ["HiddenInput", "classic form post"],
+  ["Cancel · Retry · Remove", "action buttons"],
+  ["useUplofile()", "context hook"],
+  ["isImageFile …", "helpers"],
+];
 
-export const meta: MetaFunction = () => {
-  return withPageMeta("/installation", [
-    { title: "Installation - Uplofile" },
+export const meta: MetaFunction = () =>
+  withPageMeta("/installation", [
+    { title: "Installation — Uplofile" },
     {
       name: "description",
       content:
-        "Learn how to install and set up Uplofile in your React project.",
+        "Install Uplofile and add its composable upload primitives to your React app.",
     },
   ]);
-};
 
 export default function Installation() {
-  const [platform, setPlatform] = useState<Platform>("web");
-
+  const [manager, setManager] = useState<keyof typeof packages>("npm");
+  const [copied, copy] = useCopy();
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">Installation</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          Get started with Uplofile in your React project.
+      <article className="doc-article">
+        <h1>Installation</h1>
+        <p className="doc-lead">
+          One dependency, no peer setup, no CSS import. React 16 and up.
         </p>
-
-        <PlatformTabs
-          className="mb-8"
-          platform={platform}
-          onPlatformChange={setPlatform}
-        />
-
-        {platform === "web" ? (
-          <>
-            <section className="space-y-4 mb-12">
-              <h2 className="text-xl font-semibold border-b border-border pb-2">
-                Install the package
-              </h2>
-              <p className="text-muted-foreground">
-                Install Uplofile using your preferred package manager:
-              </p>
-
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm font-medium mb-2">npm</p>
-                  <CodeBlock code="npm install uplofile" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">yarn</p>
-                  <CodeBlock code="yarn add uplofile" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">pnpm</p>
-                  <CodeBlock code="pnpm add uplofile" />
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-4 mb-12">
-              <h2 className="text-xl font-semibold border-b border-border pb-2">
-                Create Component File
-              </h2>
-              <p className="text-muted-foreground">
-                Create a file <code className="code-inline">uplofile.tsx</code> in
-                your <code className="code-inline">src/components</code> directory:
-              </p>
-
-              <CodeBlock code={uplofileConfigString} language="tsx" />
-            </section>
-
-            <section className="space-y-4 mb-12">
-              <h2 className="text-xl font-semibold border-b border-border pb-2">
-                Basic Usage
-              </h2>
-              <p className="text-muted-foreground">
-                Import and use the components in your app:
-              </p>
-
-              <CodeBlock
-                code={`import {
-  UplofileRoot,
-  UplofileDropzone,
-  UplofileTrigger,
-  UplofilePreview,
-} from "@/components/uplofile";
-
-function FileUpload() {
-  return (
-    <UplofileRoot>
-      <UplofileDropzone className="border-2 border-dashed p-8 rounded-lg">
-        <UplofileTrigger>Click or drop files here</UplofileTrigger>
-        <UplofilePreview />
-      </UplofileDropzone>
-    </UplofileRoot>
-  );
-}`}
-                language="tsx"
-              />
-            </section>
-          </>
-        ) : (
-          <>
-            <section className="space-y-4 mb-12">
-              <h2 className="text-xl font-semibold border-b border-border pb-2">
-                Install the package
-              </h2>
-              <p className="text-muted-foreground">
-                Install Uplofile and its React Native peer dependency:
-              </p>
-
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm font-medium mb-2">npm</p>
-                  <CodeBlock code="npm install uplofile react-native @react-native-documents/picker" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">yarn</p>
-                  <CodeBlock code="yarn add uplofile react-native @react-native-documents/picker" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">pnpm</p>
-                  <CodeBlock code="pnpm add uplofile react-native @react-native-documents/picker" />
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-4 mb-12">
-              <h2 className="text-xl font-semibold border-b border-border pb-2">
-                Basic Usage
-              </h2>
-              <p className="text-muted-foreground">
-                Import from <code className="code-inline">uplofile/native</code> and wrap your
-                app with the <code className="code-inline">Root</code> component:
-              </p>
-
-              <CodeBlock
-                code={`import { Root, Trigger, Preview } from "uplofile/native";
-
-function FileUpload() {
-  return (
-    <Root upload={myUploadFunction}>
-      <Trigger>Select Files</Trigger>
-      <Preview />
-    </Root>
-  );
-}`}
-                language="tsx"
-              />
-            </section>
-
-
-          </>
-        )}
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Next Steps
-          </h2>
-          <ul className="space-y-2 text-muted-foreground">
-            <li>
-              → Check out the{" "}
-              <a
-                href="/quick-start"
-                className="text-primary underline underline-offset-4"
+        <section id="install">
+          <div className="install-tabs">
+            <div className="install-tabs__bar">
+              {(Object.keys(packages) as Array<keyof typeof packages>).map(
+                (item) => (
+                  <button
+                    type="button"
+                    key={item}
+                    className={manager === item ? "is-active" : ""}
+                    onClick={() => setManager(item)}
+                  >
+                    {item}
+                  </button>
+                ),
+              )}
+              <button
+                type="button"
+                className="install-tabs__copy"
+                onClick={() => void copy(packages[manager])}
+                aria-label="Copy installation command"
               >
-                Quick Start guide
-              </a>{" "}
-              for a complete example
-            </li>
-            <li>
-              → Learn about each{" "}
-              <a
-                href="/components/root"
-                className="text-primary underline underline-offset-4"
-              >
-                component
-              </a>{" "}
-              in detail
-            </li>
-            <li>
-              → Explore the{" "}
-              <a
-                href="/api/props"
-                className="text-primary underline underline-offset-4"
-              >
-                API reference
-              </a>
-            </li>
-          </ul>
+                {copied ? (
+                  <IoCheckmark size={14} />
+                ) : (
+                  <IoCopyOutline size={14} />
+                )}
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
+            <pre>{packages[manager]}</pre>
+          </div>
         </section>
+        <section id="wrapper">
+          <h2>Optional: a local wrapper</h2>
+          <p>
+            The exports are generic names. Most projects re-export them once
+            with their own defaults so app code never repeats the upload
+            function.
+          </p>
+          <CodeBlock
+            code={uplofileConfigString}
+            filename="src/components/uplofile.tsx"
+          />
+        </section>
+        <section id="exports">
+          <h2>What ships</h2>
+          <div className="exports-grid">
+            {exports.map(([name, detail]) => (
+              <div key={name}>
+                <code>{name}</code>
+                <span>{detail}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+        <div className="doc-pagination">
+          <span />
+          <a href="/quick-start">
+            <small>Next</small>
+            <span>
+              Quick start <IoArrowForwardOutline aria-hidden="true" size={14} />
+            </span>
+          </a>
+        </div>
       </article>
     </DocsLayout>
   );

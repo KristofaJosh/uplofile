@@ -5,7 +5,10 @@ import React, {
   useMemo,
 } from "react";
 import { View } from "react-native";
-import { pick, type DocumentPickerResponse } from "@react-native-documents/picker";
+import {
+  pick,
+  type DocumentPickerResponse,
+} from "@react-native-documents/picker";
 import { UploaderCtx, useUplofileState } from "../shared/context";
 import type {
   ImageUploaderContextValue,
@@ -57,7 +60,9 @@ export const Root = forwardRef(
       }
     }, [acceptTypes, props.accept, props.multiple, state.selectFiles]);
 
-    const ctx = useMemo<ImageUploaderContextValue<TMeta, DocumentPickerResponse>>(
+    const ctx = useMemo<
+      ImageUploaderContextValue<TMeta, DocumentPickerResponse>
+    >(
       () => ({
         items: state.items as UploadFileItem<TMeta, DocumentPickerResponse>[],
         setItems: state.setItems,

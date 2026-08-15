@@ -1,11 +1,14 @@
+import { IoArrowForwardOutline } from "react-icons/io5";
 import type { MetaFunction } from "react-router";
-import { withPageMeta } from "@/lib/seo";
-import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import { DocsLayout } from "@/components/DocsLayout";
+import { ImportLine } from "@/components/ImportLine";
+import { PropRows, type Prop } from "@/components/PropRow";
 import code from "./dropzone.demo.tsx?raw";
+import { withPageMeta } from "@/lib/seo";
 
-export const meta: MetaFunction = () => {
-  return withPageMeta("/components/dropzone", [
+export const meta: MetaFunction = () =>
+  withPageMeta("/components/dropzone", [
     { title: "Dropzone Component - Uplofile" },
     {
       name: "description",
@@ -13,78 +16,64 @@ export const meta: MetaFunction = () => {
         "The Dropzone component provides a drag-and-drop area for file uploads.",
     },
   ]);
-};
+const props: Prop[] = [
+  {
+    name: "className",
+    signature: "string",
+    description: (
+      <>
+        A plain <code>{"<div>"}</code> by default. Style{" "}
+        <code>data-dragging</code> for hover feedback: Dropzone tracks
+        enter/leave counts so it stays accurate over nested children.
+      </>
+    ),
+  },
+  {
+    name: "asChild",
+    signature: "boolean",
+    description:
+      "Merge dropzone behavior onto your own element instead of rendering a div.",
+    default: "false",
+  },
+  {
+    name: "...rest",
+    signature: "HTMLAttributes<HTMLElement>",
+    description:
+      "Any other div attribute. onDrop and onDragOver you pass are called first, then Uplofile's own handlers run unless you call preventDefault().",
+  },
+];
 
-const ComponentDropzone = () => {
+export default function ComponentDropzone() {
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">Dropzone</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          A drag-and-drop zone for file uploads with visual feedback.
+      <article className="doc-article">
+        <h1>Dropzone</h1>
+        <p className="doc-lead">
+          A drag-and-drop target. Unstyled: wrap whatever you already render and
+          read <code>data-dragging</code> for the hover state.
         </p>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Usage
-          </h2>
-
-          <CodeBlock code={code} language="tsx" />
+        <ImportLine names="Dropzone" />
+        <section id="usage">
+          <h2>Usage</h2>
+          <CodeBlock code={code} filename="Uploader.tsx" />
         </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Props
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-2 font-semibold">Prop</th>
-                  <th className="text-left py-3 px-2 font-semibold">Type</th>
-                  <th className="text-left py-3 px-2 font-semibold">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-muted-foreground">
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">className</code>
-                  </td>
-                  <td className="py-3 px-2">string</td>
-                  <td className="py-3 px-2">
-                    Use data attributes like{" "}
-                    <code className="code-inline">data-dragging</code> for
-                    styling
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">asChild</code>
-                  </td>
-                  <td className="py-3 px-2">boolean</td>
-                  <td className="py-3 px-2">
-                    Merge props onto the child element
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">...rest</code>
-                  </td>
-                  <td className="py-3 px-2">HTMLAttributes</td>
-                  <td className="py-3 px-2">
-                    Supports all standard HTML attributes
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <section id="props">
+          <h2>Props</h2>
+          <PropRows items={props} />
         </section>
+        <div className="doc-pagination">
+          <a href="/components/preview">
+            <small>Previous</small>
+            <span>Preview</span>
+          </a>
+          <a href="/components/hidden-input">
+            <small>Next</small>
+            <span>
+              HiddenInput <IoArrowForwardOutline size={14} />
+            </span>
+          </a>
+        </div>
       </article>
     </DocsLayout>
   );
-};
-
-export default ComponentDropzone;
+}

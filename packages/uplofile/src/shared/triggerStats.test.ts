@@ -60,7 +60,11 @@ describe("computeTriggerStats", () => {
         name: "doc.pdf",
         status: "uploading",
         progress: 10,
-        file: { uri: "file:///doc.pdf", name: "doc.pdf", type: "application/pdf" },
+        file: {
+          uri: "file:///doc.pdf",
+          name: "doc.pdf",
+          type: "application/pdf",
+        },
       },
     ];
 

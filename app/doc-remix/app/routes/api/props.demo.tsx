@@ -1,4 +1,4 @@
-import { type UploadFileItem } from "uplofile";
+import type { UploadFileItem } from "uplofile";
 
 function FileInfo({ item }: { item: UploadFileItem }) {
   return (

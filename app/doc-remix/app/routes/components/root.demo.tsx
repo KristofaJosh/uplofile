@@ -1,22 +1,17 @@
-import { UplofileRoot } from "@/components/ui/uplofile";
+import { Root } from "uplofile";
 
-export default function RootDemo() {
+export function Uploader({ children }: { children: React.ReactNode }) {
   return (
-    <UplofileRoot
-      upload={async (file, signal, onProgress) => {
-        // Implement your upload logic here
-        // e.g., using fetch with FormData
-        return { url: "https://example.com/image.jpg", id: "123" };
-      }}
-      removeMode="optimistic"
-      onRemove={async (item, signal) => {
-        // Optional: implement server-side removal
-      }}
-      onChange={(items) => {
-        console.log("Files changed:", items);
+    <Root
+      upload={async (file) => {
+        const body = new FormData();
+        body.append("file", file);
+        const response = await fetch("/api/upload", { method: "POST", body });
+        if (!response.ok) throw new Error("Upload failed");
+        return response.json(); // { url, id?, meta?, previewUrl? }
       }}
     >
-      {/* Child components */}
-    </UplofileRoot>
+      {children}
+    </Root>
   );
 }

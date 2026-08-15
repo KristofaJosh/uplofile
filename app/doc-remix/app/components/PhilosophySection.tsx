@@ -1,4 +1,8 @@
-import { IoLayersOutline, IoSettingsOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
+import {
+  IoLayersOutline,
+  IoSettingsOutline,
+  IoShieldCheckmarkOutline,
+} from "react-icons/io5";
 
 const principles = [
   {

@@ -2,7 +2,9 @@ import type { MetaFunction } from "react-router";
 import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./beforeuploadvalidation.demo.tsx";
-import code from "./beforeuploadvalidation.demo.tsx?raw";
+import demoCode from "./beforeuploadvalidation.demo.tsx?raw";
+import validationRuleCode from "./beforeuploadvalidation.rule.demo.tsx?raw";
+import fileItemCode from "./beforeuploadvalidation.fileitem.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
   return withPageMeta("/examples/validation", [
@@ -16,7 +18,11 @@ const ExampleBeforeUploadValidation = () => {
     <ExamplePage
       title="Before Upload Validation"
       description="Validate or enrich files before they are added to the state and uploaded."
-      code={code}
+      codeTabs={[
+        { label: "Before upload validation demo", code: demoCode },
+        { label: "Validation rule", code: validationRuleCode },
+        { label: "Validation file item", code: fileItemCode },
+      ]}
       keyPoints={[
         <>
           Use the <code className="code-inline">beforeUpload</code> prop on{" "}

@@ -13,10 +13,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 
 export const meta: MetaFunction = () => {
-  return [
-    { charset: "utf-8" },
-    { name: "viewport", content: "width=device-width, initial-scale=1" },
-  ];
+  return [{ name: "viewport", content: "width=device-width, initial-scale=1" }];
 };
 
 export const links: Route.LinksFunction = () => [
@@ -42,10 +39,17 @@ export const links: Route.LinksFunction = () => [
   { rel: "manifest", href: "/site.webmanifest" },
 ];
 
+// Runs synchronously before first paint so a stored/preferred dark theme is
+// applied before any CSS renders. Keep the storage key and fallback logic in
+// sync with Header.tsx's theme effect.
+const themeInitScript = `(function(){try{var t=localStorage.getItem("uplofile-theme");var d=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);}catch(e){}})();`;
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <meta charSet="utf-8" />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Meta />
         <Links />
       </head>

@@ -19,10 +19,12 @@ test.describe("Root Imperative API", () => {
     await fileChooser.setFiles(testFile);
 
     const root = page.locator('[data-part="root"]');
-    await expect(root.locator('[aria-label*="test.txt"]').first()).toBeVisible({ timeout: 10000 });
+    await expect(root.locator('[aria-label*="test.txt"]').first()).toBeVisible({
+      timeout: 10000,
+    });
 
-    await expect(
-      root.locator('[data-state="done"]'),
-    ).toBeVisible({ timeout: 30000 });
+    await expect(root.locator('[data-state="done"]')).toBeVisible({
+      timeout: 30000,
+    });
   });
 });
