@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
   type MetaFunction,
 } from "react-router";
+import { Analytics } from "@vercel/analytics/react";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -14,47 +15,7 @@ import "./app.css";
 export const meta: MetaFunction = () => {
   return [
     { charset: "utf-8" },
-    { title: "Uplofile - React File Upload Components" },
     { name: "viewport", content: "width=device-width, initial-scale=1" },
-    {
-      name: "description",
-      content:
-        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
-    },
-
-    // Open Graph / Facebook
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: "https://uplofile.kristofajosh.dev/" },
-    {
-      property: "og:title",
-      content: "Uplofile - React File Upload Components",
-    },
-    {
-      property: "og:description",
-      content:
-        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
-    },
-    {
-      property: "og:image",
-      content: "https://uplofile.kristofajosh.dev/og-image.png",
-    },
-
-    // Twitter
-    { property: "twitter:card", content: "summary_large_image" },
-    { property: "twitter:url", content: "https://uplofile.kristofajosh.dev/" },
-    {
-      property: "twitter:title",
-      content: "Uplofile - React File Upload Components",
-    },
-    {
-      property: "twitter:description",
-      content:
-        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
-    },
-    {
-      property: "twitter:image",
-      content: "https://uplofile.kristofajosh.dev/og-image.png",
-    },
   ];
 };
 
@@ -85,13 +46,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body>
         {children}
+        <Analytics />
         <ScrollRestoration />
         <Scripts />
       </body>

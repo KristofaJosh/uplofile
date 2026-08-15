@@ -1,17 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./batchupload.demo.tsx";
 import code from "./batchupload.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/batch-upload", [
     { title: "Batch Upload Example - Uplofile" },
     {
       name: "description",
       content:
         "A batch file uploader example that collects files and sends them as a single request.",
     },
-  ];
+  ]);
 };
 
 const ExampleBatchUpload = () => {

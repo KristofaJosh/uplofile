@@ -1,17 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import { ClientOnly } from "@/components/ClientOnly";
 import Demo from "./sortablegallery.demo.tsx";
 import code from "./sortablegallery.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/sortable-gallery", [
     { title: "Sortable Gallery Example - Uplofile" },
     {
       name: "description",
       content: "A sortable image gallery with drag-and-drop reordering.",
     },
-  ];
+  ]);
 };
 
 const ExampleSortableGallery = () => {

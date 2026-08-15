@@ -1,13 +1,14 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./beforeuploadvalidation.demo.tsx";
 import code from "./beforeuploadvalidation.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/validation", [
     { title: "Validation Example - Uplofile" },
     { name: "description", content: "How to validate files before upload." },
-  ];
+  ]);
 };
 
 const ExampleBeforeUploadValidation = () => {

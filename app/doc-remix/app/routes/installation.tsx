@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import { PlatformTabs } from "@/components/PlatformTabs";
@@ -8,14 +9,14 @@ import uplofileConfigString from "@/components/ui/uplofile?raw";
 type Platform = "web" | "react-native";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/installation", [
     { title: "Installation - Uplofile" },
     {
       name: "description",
       content:
         "Learn how to install and set up Uplofile in your React project.",
     },
-  ];
+  ]);
 };
 
 export default function Installation() {

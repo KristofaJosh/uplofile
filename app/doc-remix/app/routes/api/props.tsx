@@ -1,17 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./props.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/api/props", [
     { title: "Props API - Uplofile" },
     {
       name: "description",
       content:
         "Complete reference for all props available in Uplofile components.",
     },
-  ];
+  ]);
 };
 
 const ApiProps = () => {

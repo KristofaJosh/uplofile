@@ -1,13 +1,14 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./dropzoneuploader.demo.tsx";
 import code from "./dropzoneuploader.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/dropzone", [
     { title: "Dropzone Uploader Example - Uplofile" },
     { name: "description", content: "A drag-and-drop file uploader example." },
-  ];
+  ]);
 };
 
 const ExampleDropzoneUploader = () => {

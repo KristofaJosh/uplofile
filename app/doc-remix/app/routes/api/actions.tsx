@@ -1,17 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./action.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/api/actions", [
     { title: "Actions API - Uplofile" },
     {
       name: "description",
       content:
         "Learn about actions available for controlling Uplofile components programmatically.",
     },
-  ];
+  ]);
 };
 
 const ApiActions = () => {

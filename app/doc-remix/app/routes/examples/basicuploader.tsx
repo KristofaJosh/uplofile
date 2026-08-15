@@ -1,16 +1,17 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./basicuploader.demo.tsx";
 import code from "./basicuploader.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/basic", [
     { title: "Basic Uploader Example - Uplofile" },
     {
       name: "description",
       content: "A basic file uploader example using Uplofile components.",
     },
-  ];
+  ]);
 };
 
 const ExampleBasicUploader = () => {

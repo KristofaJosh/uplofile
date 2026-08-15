@@ -1,4 +1,5 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import StyledDemo from "./defaultpreview_styled.demo.tsx";
@@ -7,10 +8,10 @@ import CustomDemo from "./defaultpreview_custom.demo.tsx";
 import customCode from "./defaultpreview_custom.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/default-preview", [
     { title: "Default Preview Example - Uplofile" },
     { name: "description", content: "Example showing default file previews." },
-  ];
+  ]);
 };
 
 const ExampleDefaultPreview = () => {

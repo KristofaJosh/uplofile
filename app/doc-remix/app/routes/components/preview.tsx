@@ -1,17 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./preview.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/components/preview", [
     { title: "Preview Component - Uplofile" },
     {
       name: "description",
       content:
         "The Preview component displays file previews with images, videos, and file icons.",
     },
-  ];
+  ]);
 };
 
 const ComponentPreview = () => {

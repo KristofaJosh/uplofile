@@ -8,13 +8,13 @@ const testFile = path.resolve(__dirname, "fixtures", "test.txt");
 test.describe("Root Imperative API", () => {
   test("opens file dialog via ref.openFileDialog", async ({ page }) => {
     await page.goto("/examples/root-imperative");
-    await page.locator('[data-part="root"]').waitFor();
+    const openFileDialogButton = page.getByRole("button", {
+      name: "Open File Dialog via Ref",
+    });
+    await expect(openFileDialogButton).toBeVisible();
 
     const fileChooserPromise = page.waitForEvent("filechooser");
-    await page.evaluate(() => {
-      const input = document.querySelector<HTMLInputElement>('[data-part="root"] input[type="file"]');
-      input?.click();
-    });
+    await openFileDialogButton.click();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(testFile);
 

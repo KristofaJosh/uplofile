@@ -1,13 +1,14 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./formintegration.demo.tsx";
 import code from "./formintegration.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/form", [
     { title: "Form Integration Example - Uplofile" },
     { name: "description", content: "How to integrate Uplofile with forms." },
-  ];
+  ]);
 };
 
 const ExampleFormIntegration = () => {

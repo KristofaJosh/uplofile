@@ -1,17 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./dropzone.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/components/dropzone", [
     { title: "Dropzone Component - Uplofile" },
     {
       name: "description",
       content:
         "The Dropzone component provides a drag-and-drop area for file uploads.",
     },
-  ];
+  ]);
 };
 
 const ComponentDropzone = () => {
