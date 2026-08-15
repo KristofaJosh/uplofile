@@ -1,18 +1,19 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./root.demo.tsx?raw";
 import codeImperative from "./rootimperativeintro.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/components/root", [
     { title: "Root Component - Uplofile" },
     {
       name: "description",
       content:
         "The Root component is the main container for Uplofile file upload functionality.",
     },
-  ];
+  ]);
 };
 
 const ComponentRoot = () => {

@@ -1,16 +1,17 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./rootimperative.demo.tsx";
 import code from "./rootimperative.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/root-imperative", [
     { title: "Root Imperative Example - Uplofile" },
     {
       name: "description",
       content: "Using the Root component imperatively for full control.",
     },
-  ];
+  ]);
 };
 
 const ExampleRootImperative = () => {

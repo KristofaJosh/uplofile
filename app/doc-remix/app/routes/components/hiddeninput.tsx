@@ -1,16 +1,17 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./hiddeninput.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/components/hidden-input", [
     { title: "HiddenInput Component - Uplofile" },
     {
       name: "description",
       content: "HiddenInput renders a hidden form input used to carry upload data for forms.",
     },
-  ];
+  ]);
 };
 
 const ComponentHiddenInput = () => {

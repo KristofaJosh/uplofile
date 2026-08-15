@@ -1,16 +1,17 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import quickStartDemo from "./quickstart.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/quick-start", [
     { title: "Quick Start - Uplofile" },
     {
       name: "description",
       content: "Get started quickly with Uplofile file upload components.",
     },
-  ];
+  ]);
 };
 
 export default function QuickStart() {

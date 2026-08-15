@@ -1,13 +1,14 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./filelistwithactions.demo.tsx";
 import code from "./filelistwithactions.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/file-list", [
     { title: "File List Example - Uplofile" },
     { name: "description", content: "A file list with actions example." },
-  ];
+  ]);
 };
 
 const ExampleFileListWithActions = () => {

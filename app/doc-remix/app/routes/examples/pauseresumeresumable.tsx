@@ -1,17 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./pauseresumeresumable.demo.tsx";
 import code from "./pauseresumeresumable.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/pause-resume", [
     { title: "Pause/Resume Example - Uplofile" },
     {
       name: "description",
       content:
         "Build pause and resume behavior with custom upload adapters and useUplofile.",
     },
-  ];
+  ]);
 };
 
 const ExamplePauseResumeResumable = () => {

@@ -1,4 +1,5 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { PhilosophySection } from "@/components/PhilosophySection";
@@ -6,41 +7,14 @@ import { FeaturesSection } from "@/components/FeaturesSection";
 import { FAQSection } from "@/components/FAQSection";
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: "Uplofile - Composable File Upload Components for React" },
+  return withPageMeta("/", [
+    { title: "Uplofile — Composable React File Upload UI Primitives" },
     {
       name: "description",
       content:
         "Composable file upload components for React. Accessible UI primitives that are easy to integrate and style.",
     },
-    {
-      property: "og:title",
-      content: "Uplofile - Composable File Upload Components for React",
-    },
-    {
-      property: "og:description",
-      content:
-        "Composable file upload components for React. Accessible UI primitives that are easy to integrate and style.",
-    },
-    { property: "og:url", content: "https://uplofile.kristofajosh.dev/" },
-    {
-      property: "og:image",
-      content: "https://uplofile.kristofajosh.dev/web-app-manifest-512x512.png",
-    },
-    { name: "twitter:card", content: "summary_large_image" },
-    {
-      name: "twitter:title",
-      content: "Uplofile - Composable File Upload Components for React",
-    },
-    {
-      name: "twitter:description",
-      content: "Composable file upload components for React.",
-    },
-    {
-      name: "twitter:image",
-      content: "https://uplofile.kristofajosh.dev/web-app-manifest-512x512.png",
-    },
-  ];
+  ]);
 };
 
 const homepageJsonLd = {

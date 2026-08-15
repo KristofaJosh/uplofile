@@ -1,4 +1,5 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import DeclarativeDemo from "./loadingstate_declarative.demo.tsx";
@@ -9,13 +10,13 @@ import FormDemo from "./loadingstate_form.demo.tsx";
 import formCode from "./loadingstate_form.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/loading-state", [
     { title: "Loading State Example - Uplofile" },
     {
       name: "description",
       content: "Handling loading and progress states in Uplofile.",
     },
-  ];
+  ]);
 };
 
 const ExampleLoadingState = () => {

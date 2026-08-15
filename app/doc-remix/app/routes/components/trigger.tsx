@@ -1,16 +1,17 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
 import code from "./trigger.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/components/trigger", [
     { title: "Trigger Component - Uplofile" },
     {
       name: "description",
       content: "The Trigger component opens the file picker dialog.",
     },
-  ];
+  ]);
 };
 
 const ComponentTrigger = () => {

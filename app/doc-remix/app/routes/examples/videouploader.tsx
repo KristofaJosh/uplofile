@@ -1,13 +1,14 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./videouploader.demo.tsx";
 import code from "./videouploader.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/video", [
     { title: "Video Uploader Example - Uplofile" },
     { name: "description", content: "A video upload example with preview." },
-  ];
+  ]);
 };
 
 const ExampleVideoUploader = () => {
