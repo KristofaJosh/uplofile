@@ -13,10 +13,6 @@ const tocByPath: Record<string, Array<[string, string]>> = {
     ["#file", "The file"],
     ["#next", "Next changes"],
   ],
-  "/playground": [
-    ["#editor", "Editor"],
-    ["#preview", "Preview"],
-  ],
   "/api/props": [
     ["#item", "UploadFileItem"],
     ["#status", "UploadStatus"],

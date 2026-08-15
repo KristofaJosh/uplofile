@@ -14,7 +14,6 @@ export const sidebarItems: SidebarSection[] = [
     items: [
       { title: "Installation", href: "/installation" },
       { title: "Quick start", href: "/quick-start" },
-      { title: "Playground", href: "/playground", badge: "live" },
     ],
   },
   {
