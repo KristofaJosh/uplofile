@@ -99,6 +99,10 @@ jobs:
         if: needs.changes.outputs.code == 'true'
         run: pnpm --filter uplofile build
 
+      - name: Build docs site
+        if: needs.changes.outputs.code == 'true'
+        run: pnpm --filter doc-remix build
+
       - name: Run e2e tests
         if: needs.changes.outputs.code == 'true'
         run: pnpm --filter doc-remix test:e2e
