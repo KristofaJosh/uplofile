@@ -8,7 +8,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 2 : undefined,
   reporter: "html",
   use: {
     baseURL: BASE_URL,
@@ -21,9 +21,18 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm exec react-router dev --port ${PORT}`,
+    // CI serves the production build instead of the Vite dev server: dev
+    // mode transforms each route's modules on demand on first request, and
+    // that latency stacks with hydration under the CPU contention of
+    // multiple parallel workers, causing trigger clicks to land before
+    // React attaches its listeners (Playwright's file-chooser wait then
+    // times out). The prebuilt server has no such on-demand transform cost.
+    command: process.env.CI
+      ? "pnpm exec react-router-serve ./build/server/index.js"
+      : `pnpm exec react-router dev --port ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
+    env: { PORT: String(PORT) },
   },
 });

@@ -1,6 +1,7 @@
-import { test, expect, type Page } from "@playwright/test";
 import path from "path";
 import { fileURLToPath } from "url";
+import { test, expect } from "./fixtures.ts";
+import type { Page } from "@playwright/test";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const testFile = path.resolve(__dirname, "fixtures", "test.txt");

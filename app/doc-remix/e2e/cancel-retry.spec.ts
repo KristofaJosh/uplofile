@@ -1,5 +1,6 @@
-import { test, expect, type Page } from "@playwright/test";
 import { Buffer } from "node:buffer";
+import { test, expect } from "./fixtures.ts";
+import type { Page } from "@playwright/test";
 
 test.describe("Cancel & Retry", () => {
   const videoFile = {
@@ -33,28 +34,30 @@ test.describe("Cancel & Retry", () => {
     await expect(root.getByText("test.txt")).toBeVisible();
   });
 
-  test("shows retry button on upload failure", async ({ page }) => {
-    await page.goto("/examples/video");
-    await page.locator('[data-part="root"]').waitFor();
+  test.describe("upload failure", () => {
+    test.use({ mockUploadOutcome: "failure" });
 
-    // Force mockUpload to fail (failChance is 0.4, so any value < 0.4 triggers failure)
-    await page.evaluate(() => {
-      Math.random = () => 0;
-    });
+    test("shows retry button on upload failure", async ({ page }) => {
+      await page.goto("/examples/video");
+      await page.locator('[data-part="root"]').waitFor();
 
-    await triggerUpload(page);
+      await triggerUpload(page);
 
-    const root = page.locator('[data-part="root"]');
-    await expect(root.getByText("test.txt")).toBeVisible({ timeout: 10000 });
+      const root = page.locator('[data-part="root"]');
+      await expect(root.getByText("test.txt")).toBeVisible({
+        timeout: 10000,
+      });
 
-    const retryButton = root.locator('[data-part="retry"]');
-    await expect(retryButton).toBeVisible({ timeout: 30000 });
+      const retryButton = root.locator('[data-part="retry"]');
+      await expect(retryButton).toBeVisible({ timeout: 30000 });
 
-    // Click retry — Math.random still returns 0, but the uploading phase
-    // (~4.5s before the forced failure) is long enough to catch cancel
-    await retryButton.click();
-    await expect(root.locator('[data-part="cancel"]')).toBeVisible({
-      timeout: 5000,
+      // Click retry — Math.random is still pinned to force failure, but the
+      // uploading phase (~4.5s before the forced failure) is long enough to
+      // catch cancel
+      await retryButton.click();
+      await expect(root.locator('[data-part="cancel"]')).toBeVisible({
+        timeout: 5000,
+      });
     });
   });
 });
