@@ -4,7 +4,6 @@ export default [
   index("routes/_index.tsx"),
   route("installation", "routes/installation.tsx"),
   route("quick-start", "routes/quick-start.tsx"),
-  route("playground", "routes/playground.tsx"),
 
   // Components
   route("components/root", "routes/components/root.tsx"),

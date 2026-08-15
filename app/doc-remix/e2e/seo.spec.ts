@@ -10,7 +10,6 @@ const publicRoutes = [
   "/",
   "/installation",
   "/quick-start",
-  "/playground",
   "/components/root",
   "/components/trigger",
   "/components/preview",
