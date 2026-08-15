@@ -106,7 +106,7 @@ const ApiActions = () => {
             <small>Previous</small>
             <span>Types</span>
           </a>
-          <a href="/examples/default-preview">
+          <a href="/examples/simple-preview">
             <small>Next</small>
             <span>
               Examples <IoArrowForwardOutline size={14} />

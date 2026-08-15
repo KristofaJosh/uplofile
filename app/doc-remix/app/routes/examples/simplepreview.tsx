@@ -2,19 +2,19 @@ import type { MetaFunction } from "react-router";
 import { withPageMeta } from "@/lib/seo";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
-import StyledDemo from "./defaultpreview_styled.demo.tsx";
-import styledCode from "./defaultpreview_styled.demo.tsx?raw";
-import CustomDemo from "./defaultpreview_custom.demo.tsx";
-import customCode from "./defaultpreview_custom.demo.tsx?raw";
+import StyledDemo from "./simplepreview_styled.demo.tsx";
+import styledCode from "./simplepreview_styled.demo.tsx?raw";
+import CustomDemo from "./simplepreview_custom.demo.tsx";
+import customCode from "./simplepreview_custom.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return withPageMeta("/examples/default-preview", [
-    { title: "Default Preview Example - Uplofile" },
+  return withPageMeta("/examples/simple-preview", [
+    { title: "Simple Preview Example - Uplofile" },
     { name: "description", content: "Example showing default file previews." },
   ]);
 };
 
-const ExampleDefaultPreview = () => {
+const ExampleSimplePreview = () => {
   const keyPoints = [
     <>
       Built-in <code className="code-inline">UplofilePreview</code> with
@@ -34,9 +34,9 @@ const ExampleDefaultPreview = () => {
         <div className="breadcrumb">
           <span>Recipes</span>
           <span>›</span>
-          <span>Default preview</span>
+          <span>Simple preview</span>
         </div>
-        <h1>Default preview</h1>
+        <h1>Simple preview</h1>
         <p className="doc-lead">
           Compare the built-in preview with a completely unstyled custom render.
         </p>
@@ -52,7 +52,7 @@ const ExampleDefaultPreview = () => {
           <CodeBlock
             language="tsx"
             code={styledCode}
-            filename="DefaultPreview.tsx"
+            filename="SimplePreview.tsx"
           />
         </section>
 
@@ -83,4 +83,4 @@ const ExampleDefaultPreview = () => {
   );
 };
 
-export default ExampleDefaultPreview;
+export default ExampleSimplePreview;

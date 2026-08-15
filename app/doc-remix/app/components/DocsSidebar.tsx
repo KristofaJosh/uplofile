@@ -48,7 +48,7 @@ export const sidebarItems: SidebarSection[] = [
       { title: "Validation", href: "/examples/validation" },
       { title: "Form integration", href: "/examples/form" },
       { title: "Loading state", href: "/examples/loading-state" },
-      { title: "Default preview", href: "/examples/default-preview" },
+      { title: "Simple preview", href: "/examples/simple-preview" },
       { title: "Imperative control", href: "/examples/root-imperative" },
       { title: "Pause / resume", href: "/examples/pause-resume" },
       { title: "Batch upload", href: "/examples/batch-upload" },

@@ -2,7 +2,8 @@ import type { MetaFunction } from "react-router";
 import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./batchupload.demo.tsx";
-import code from "./batchupload.demo.tsx?raw";
+import demoCode from "./batchupload.demo.tsx?raw";
+import fileItemCode from "./batchupload.batchfileitem.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
   return withPageMeta("/examples/batch-upload", [
@@ -20,7 +21,10 @@ const ExampleBatchUpload = () => {
     <ExamplePage
       title="Batch Upload"
       description="Collect multiple files and upload them all at once in a single request."
-      code={code}
+      codeTabs={[
+        { label: "Batch upload demo", code: demoCode },
+        { label: "Batch file item", code: fileItemCode },
+      ]}
       keyPoints={[
         <>
           The <code className="code-inline">upload</code> function defers

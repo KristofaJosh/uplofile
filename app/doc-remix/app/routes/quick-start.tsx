@@ -32,7 +32,7 @@ export default function QuickStart() {
               <code>beforeUpload</code>
               <span>Reject files before they leave the browser</span>
             </Link>
-            <Link to="/examples/default-preview">
+            <Link to="/examples/simple-preview">
               <code>render</code>
               <span>Replace the built-in preview with your own markup</span>
             </Link>
