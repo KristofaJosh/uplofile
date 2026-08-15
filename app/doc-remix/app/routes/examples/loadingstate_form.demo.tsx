@@ -34,7 +34,8 @@ export default function LoadingStateFormDemo() {
             >
               {isLoading ? (
                 <span className="inline-flex items-center gap-2">
-                  <IoReloadOutline className="h-4 w-4 animate-spin" /> Preparing…
+                  <IoReloadOutline className="h-4 w-4 animate-spin" />{" "}
+                  Preparing…
                 </span>
               ) : (
                 "Add attachments"

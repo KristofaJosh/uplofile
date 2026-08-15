@@ -22,55 +22,49 @@ export const meta: MetaFunction = () => {
 const ExampleLoadingState = () => {
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">
-          Loading State & Initial Hydration
-        </h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          Use <code className="code-inline">isLoading</code> to wait for
-          asynchronous
-          <code className="code-inline">initial</code> files to hydrate before
-          rendering UI or enabling actions. You can also subscribe imperatively
-          via <code className="code-inline">ref.current.onLoadingChange</code>.
+      <article className="doc-article recipe-article">
+        <div className="breadcrumb">
+          <span>Recipes</span>
+          <span>›</span>
+          <span>Loading state</span>
+        </div>
+        <h1>Loading state</h1>
+        <p className="doc-lead">
+          Wait for asynchronous initial files before rendering UI or enabling
+          actions.
         </p>
 
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Declarative gating with isLoading
-          </h2>
-          <p className="text-muted-foreground">
+        <section>
+          <h2>Declarative gating</h2>
+          <p>
             Render a skeleton while initial files are loading, then render your
             preview once hydration is complete.
           </p>
-          <div className="not-prose p-6 border border-border rounded-xl bg-muted/10 shadow-sm mb-4">
+          <div className="recipe-preview">
             <DeclarativeDemo />
           </div>
           <CodeBlock language="tsx" code={declarativeCode} />
         </section>
 
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Imperative subscription via ref.onLoadingChange
-          </h2>
-          <p className="text-muted-foreground">
+        <section>
+          <h2>Imperative subscription</h2>
+          <p>
             Subscribe to loading changes using an imperative ref, and toggle
             your own UI state when hydration completes.
           </p>
-          <div className="not-prose p-6 border border-border rounded-xl bg-muted/10 shadow-sm mb-4">
+          <div className="recipe-preview">
             <ImperativeDemo />
           </div>
           <CodeBlock language="tsx" code={imperativeCode} />
         </section>
 
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Form integration: disable submit until ready
-          </h2>
-          <p className="text-muted-foreground">
+        <section>
+          <h2>Form integration</h2>
+          <p>
             Prevent premature form submission by disabling the submit button
             until initial files finish hydrating.
           </p>
-          <div className="not-prose p-6 border border-border rounded-xl bg-muted/10 shadow-sm mb-4">
+          <div className="recipe-preview">
             <FormDemo />
           </div>
           <CodeBlock language="tsx" code={formCode} />

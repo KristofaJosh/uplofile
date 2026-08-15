@@ -1,16 +1,25 @@
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 
-export const sidebarItems = [
+export type SidebarItem = { title: string; href: string; badge?: string };
+export type SidebarSection = {
+  title: string;
+  code?: boolean;
+  items: SidebarItem[];
+};
+
+export const sidebarItems: SidebarSection[] = [
   {
-    title: "Getting Started",
+    title: "Start",
     items: [
       { title: "Installation", href: "/installation" },
-      { title: "Quick Start", href: "/quick-start" },
+      { title: "Quick start", href: "/quick-start" },
+      { title: "Playground", href: "/playground", badge: "live" },
     ],
   },
   {
     title: "Components",
+    code: true,
     items: [
       { title: "Root", href: "/components/root" },
       { title: "Trigger", href: "/components/trigger" },
@@ -20,60 +29,59 @@ export const sidebarItems = [
     ],
   },
   {
-    title: "API Reference",
+    title: "Reference",
     items: [
-      { title: "Props", href: "/api/props" },
+      { title: "Types", href: "/api/props" },
       { title: "Actions", href: "/api/actions" },
+      { title: "useUplofile", href: "/api/use-uplofile" },
     ],
   },
   {
-    title: "Examples",
+    title: "Recipes",
     items: [
-      { title: "Default Preview", href: "/examples/default-preview" },
-      { title: "Basic Uploader", href: "/examples/basic" },
+      { title: "Basic uploader", href: "/examples/basic" },
       { title: "Dropzone", href: "/examples/dropzone" },
-      { title: "Image Gallery", href: "/examples/image-gallery" },
-      { title: "Sortable Gallery", href: "/examples/sortable-gallery" },
-      { title: "Avatar Uploader", href: "/examples/avatar" },
-      { title: "File List with Actions", href: "/examples/file-list" },
-      { title: "Video Uploader", href: "/examples/video" },
+      { title: "Image gallery", href: "/examples/image-gallery" },
+      { title: "Sortable gallery", href: "/examples/sortable-gallery" },
+      { title: "Avatar", href: "/examples/avatar" },
+      { title: "Video uploader", href: "/examples/video" },
+      { title: "File list", href: "/examples/file-list" },
       { title: "Validation", href: "/examples/validation" },
-      { title: "Form Integration", href: "/examples/form" },
-      { title: "Imperative Root", href: "/examples/root-imperative" },
-      { title: "Loading State", href: "/examples/loading-state" },
-      { title: "Pause / Resume", href: "/examples/pause-resume" },
-      { title: "Batch Upload", href: "/examples/batch-upload" },
+      { title: "Form integration", href: "/examples/form" },
+      { title: "Loading state", href: "/examples/loading-state" },
+      { title: "Default preview", href: "/examples/default-preview" },
+      { title: "Imperative control", href: "/examples/root-imperative" },
+      { title: "Pause / resume", href: "/examples/pause-resume" },
+      { title: "Batch upload", href: "/examples/batch-upload" },
     ],
   },
 ];
 
 export const DocsSidebar = () => {
   const location = useLocation();
-
   return (
-    <aside className="hidden lg:block w-64 shrink-0">
-      <nav className="sticky top-20 space-y-6">
+    <aside className="docs-sidebar">
+      <nav aria-label="Documentation navigation">
         {sidebarItems.map((section) => (
-          <div key={section.title}>
-            <h4 className="font-semibold text-sm mb-2">{section.title}</h4>
-            <ul className="space-y-1">
-              {section.items.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    to={item.href}
-                    className={cn(
-                      "block text-sm py-1.5 px-3 rounded-md transition-colors",
-                      location.pathname === item.href
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted",
-                    )}
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <section key={section.title} className="sidebar-section">
+            <h2>{section.title}</h2>
+            {section.items.map((item) => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "sidebar-link",
+                  section.code && "sidebar-link--code",
+                  location.pathname === item.href && "sidebar-link--active",
+                )}
+              >
+                <span>{item.title}</span>
+                {item.badge && (
+                  <small className="sidebar-link__badge">{item.badge}</small>
+                )}
+              </Link>
+            ))}
+          </section>
         ))}
       </nav>
     </aside>

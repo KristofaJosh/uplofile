@@ -1,182 +1,148 @@
+import { IoArrowForwardOutline } from "react-icons/io5";
 import type { MetaFunction } from "react-router";
-import { withPageMeta } from "@/lib/seo";
-import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import { DocsLayout } from "@/components/DocsLayout";
+import { ImportLine } from "@/components/ImportLine";
+import { PropRows, type Prop } from "@/components/PropRow";
 import code from "./trigger.demo.tsx?raw";
+import { withPageMeta } from "@/lib/seo";
 
-export const meta: MetaFunction = () => {
-  return withPageMeta("/components/trigger", [
+export const meta: MetaFunction = () =>
+  withPageMeta("/components/trigger", [
     { title: "Trigger Component - Uplofile" },
     {
       name: "description",
       content: "The Trigger component opens the file picker dialog.",
     },
   ]);
-};
 
-const ComponentTrigger = () => {
+const asChildExample = `<Trigger asChild>\n  <button className="custom-button">\n    <UploadIcon /> Upload files\n  </button>\n</Trigger>`;
+const renderProps: Prop[] = [
+  {
+    name: "items",
+    signature: "UploadFileItem[]",
+    description: "Every item Root currently holds.",
+  },
+  {
+    name: "isLoading",
+    signature: "boolean",
+    description: (
+      <>
+        True while <code>initial</code> is still resolving.
+      </>
+    ),
+  },
+  {
+    name: "isUploading",
+    signature: "boolean",
+    description: "True while at least one file is in flight.",
+  },
+  {
+    name: "uploadingCount",
+    signature: "number",
+    description: "Files currently uploading.",
+  },
+  {
+    name: "doneCount",
+    signature: "number",
+    description: "Files that finished successfully.",
+  },
+  { name: "errorCount", signature: "number", description: "Files that threw." },
+  {
+    name: "totalProgress",
+    signature: "number | undefined",
+    description: "Average progress across active uploads.",
+  },
+  {
+    name: "open",
+    signature: "() => void",
+    description:
+      "Opens the file picker. The same call the click handler makes.",
+  },
+];
+const props: Prop[] = [
+  {
+    name: "asChild",
+    signature: "boolean",
+    description: (
+      <>
+        Merge trigger behavior onto your own child element instead of rendering
+        a <code>{"<button>"}</code>.
+      </>
+    ),
+    default: "false",
+  },
+  {
+    name: "render",
+    signature: "(api: TriggerRenderProps) => ReactNode",
+    description: "Render from live upload state instead of children.",
+  },
+  {
+    name: "children",
+    signature: "ReactNode",
+    description:
+      "Button content. Use render when the content needs live upload state.",
+  },
+  {
+    name: "...rest",
+    signature: "HTMLAttributes<HTMLElement>",
+    description: (
+      <>
+        Everything else is passed through. <code>disabled</code> comes from{" "}
+        <code>{"<Root>"}</code>, not a Trigger prop.
+      </>
+    ),
+  },
+];
+
+export default function ComponentTrigger() {
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">Trigger</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          A clickable element that opens the file picker dialog.
+      <article className="doc-article">
+        <h1>Trigger</h1>
+        <p className="doc-lead">
+          A clickable element that opens the file picker. Renders a plain{" "}
+          <code>{"<button>"}</code> unless you pass <code>asChild</code>.
         </p>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Usage
-          </h2>
-
-          <CodeBlock code={code} language="tsx" />
-        </section>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            With Custom Element
-          </h2>
-          <p className="text-muted-foreground">
-            Use <code className="code-inline">asChild</code> to render your own
-            element:
+        <ImportLine names="Trigger" />
+        <section id="usage">
+          <h2>Usage</h2>
+          <p>
+            Use it as-is with children, or pass <code>render</code> to read live
+            upload state.
           </p>
-
-          <CodeBlock
-            code={`<UplofileTrigger asChild>
-  <button className="custom-button">
-    <UploadIcon /> Upload files
-  </button>
-</UplofileTrigger>`}
-            language="tsx"
-          />
-        </section>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Render Props
-          </h2>
-          <p className="text-muted-foreground">
-            You can use a function as children or the{" "}
-            <code className="code-inline">render</code> prop to access internal
-            state. See the "Usage" example above for a live demonstration of
-            render props.
+          <CodeBlock code={code} filename="Uploader.tsx" />
+          <p>
+            Use <code>asChild</code> to merge its click handler onto your own
+            element instead:
           </p>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <caption className="sr-only">Render props available to trigger children</caption>
-              <thead>
-                <tr className="border-b border-border">
-                  <th scope="col" className="text-left py-3 px-2 font-semibold">
-                    Property
-                  </th>
-                  <th scope="col" className="text-left py-3 px-2 font-semibold">Type</th>
-                  <th scope="col" className="text-left py-3 px-2 font-semibold">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-muted-foreground">
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">items</code>
-                  </td>
-                  <td className="py-3 px-2">type UploadFileItem[]</td>
-                  <td className="py-3 px-2">Array of all file items</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">isUploading</code>
-                  </td>
-                  <td className="py-3 px-2">boolean</td>
-                  <td className="py-3 px-2">Whether any file is uploading</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">uploadingCount</code>
-                  </td>
-                  <td className="py-3 px-2">number</td>
-                  <td className="py-3 px-2">
-                    Number of files currently uploading
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">doneCount</code>
-                  </td>
-                  <td className="py-3 px-2">number</td>
-                  <td className="py-3 px-2">
-                    Number of successfully uploaded files
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">errorCount</code>
-                  </td>
-                  <td className="py-3 px-2">number</td>
-                  <td className="py-3 px-2">Number of failed uploads</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">totalProgress</code>
-                  </td>
-                  <td className="py-3 px-2">number | undefined</td>
-                  <td className="py-3 px-2">
-                    Average progress of all active uploads
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">open</code>
-                  </td>
-                  <td className="py-3 px-2">() =&gt; void</td>
-                  <td className="py-3 px-2">
-                    Function to open the file dialog
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <CodeBlock code={asChildExample} filename="Uploader.tsx" />
         </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Props
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <caption className="sr-only">Trigger component props</caption>
-              <thead>
-                <tr className="border-b border-border">
-                  <th scope="col" className="text-left py-3 px-2 font-semibold">Prop</th>
-                  <th scope="col" className="text-left py-3 px-2 font-semibold">Type</th>
-                  <th scope="col" className="text-left py-3 px-2 font-semibold">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-muted-foreground">
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">asChild</code>
-                  </td>
-                  <td className="py-3 px-2">boolean</td>
-                  <td className="py-3 px-2">Merge props onto child element</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">disabled</code>
-                  </td>
-                  <td className="py-3 px-2">boolean</td>
-                  <td className="py-3 px-2">Disable the trigger</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <section id="render">
+          <h2>Render props</h2>
+          <p>
+            Passed to <code>render</code>, or available as the
+            function-as-children form.
+          </p>
+          <PropRows items={renderProps} />
         </section>
+        <section id="props">
+          <h2>Props</h2>
+          <PropRows items={props} />
+        </section>
+        <div className="doc-pagination">
+          <a href="/components/root">
+            <small>Previous</small>
+            <span>Root</span>
+          </a>
+          <a href="/components/preview">
+            <small>Next</small>
+            <span>
+              Preview <IoArrowForwardOutline size={14} />
+            </span>
+          </a>
+        </div>
       </article>
     </DocsLayout>
   );
-};
-
-export default ComponentTrigger;
+}

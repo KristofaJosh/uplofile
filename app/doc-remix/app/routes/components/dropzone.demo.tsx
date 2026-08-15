@@ -1,20 +1,15 @@
-import {
-  UplofileRoot,
-  UplofileDropzone,
-  UplofileTrigger,
-  UplofilePreview,
-} from "@/components/ui/uplofile";
+import { Dropzone, Preview, Root, Trigger } from "uplofile";
 
-export default function DropzoneDemo() {
+const upload = async (file: File) => ({ url: URL.createObjectURL(file) });
+
+export function Uploader() {
   return (
-    <UplofileRoot upload={async () => ({ url: "" })}>
-      <UplofileDropzone className="border-2 border-dashed p-8 rounded-lg transition-colors data-[dragging=true]:border-primary data-[dragging=true]:bg-primary/5">
-        <span>Drop files here or </span>
-        <UplofileTrigger className="underline text-blue-500">
-          click to browse
-        </UplofileTrigger>
-        <UplofilePreview />
-      </UplofileDropzone>
-    </UplofileRoot>
+    <Root upload={upload}>
+      {/* data-dragging="true" while a file hovers over the zone. */}
+      <Dropzone className="rounded-lg border border-dashed p-8 data-[dragging=true]:border-accent">
+        Drop files here, or <Trigger>browse</Trigger>
+        <Preview />
+      </Dropzone>
+    </Root>
   );
 }

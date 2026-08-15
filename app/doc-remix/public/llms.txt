@@ -119,3 +119,5 @@ For more complex usage patterns, refer to the official documentation and interac
 - [Pause / Resume (Resumable Uploads)](https://uplofile.kristofajosh.dev/examples/pause-resume)
 - [Batch Upload — Collect Files, Then Upload as One](https://uplofile.kristofajosh.dev/examples/batch-upload)
 - [Imperative Actions via Ref](https://uplofile.kristofajosh.dev/examples/root-imperative)
+- [Interactive Playground](https://uplofile.kristofajosh.dev/playground)
+- [useUplofile Hook Reference](https://uplofile.kristofajosh.dev/api/use-uplofile)
