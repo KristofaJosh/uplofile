@@ -174,9 +174,7 @@ export const getNativePickerAcceptTypes = (
   const tokens = getValidAcceptTokens(accept);
   if (!tokens) return undefined;
 
-  return tokens.some((token) => token.startsWith("."))
-    ? undefined
-    : tokens;
+  return tokens.some((token) => token.startsWith(".")) ? undefined : tokens;
 };
 
 /**

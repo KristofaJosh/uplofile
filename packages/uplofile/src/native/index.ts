@@ -9,7 +9,12 @@ export {
   getExtension,
   acceptsFile,
 } from "../shared/utils";
-export type { ItemActions, UploadStatus, UploadResult, BeforeUploadResult } from "../shared/types";
+export type {
+  ItemActions,
+  UploadStatus,
+  UploadResult,
+  BeforeUploadResult,
+} from "../shared/types";
 export type {
   ImageUploaderContextValue,
   RootProps,
