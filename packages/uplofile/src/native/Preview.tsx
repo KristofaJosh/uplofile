@@ -41,10 +41,11 @@ const PreviewItem = ({
   actions: PreviewRenderProps["actions"];
 }) => {
   const sourceUri = item.url || item.previewUrl;
+  const hasError = item.status === "error" || Boolean(item.error);
 
   return (
     <View style={styles.item} key={item.uid}>
-      {item.status === "error" && <Text style={styles.errorBadge}>!</Text>}
+      {hasError && <Text style={styles.errorBadge}>!</Text>}
 
       {sourceUri ? (
         <Image
@@ -89,7 +90,7 @@ const PreviewItem = ({
         </TouchableOpacity>
       </View>
 
-      {item.status === "error" && item.error && (
+      {hasError && item.error && (
         <Text style={styles.errorText}>{item.error}</Text>
       )}
     </View>

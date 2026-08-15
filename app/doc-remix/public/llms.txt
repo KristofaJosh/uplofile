@@ -12,7 +12,8 @@ Uplofile is a composable React file upload library built from accessible UI prim
 ### 1. `UplofileRoot` (The Provider)
 Manages the entire upload state. Must wrap all other components.
 - **`upload`**: `(file: File, signal: AbortSignal, setProgress: (pct: number) => void) => Promise<{ url: string; id?: string }>` - The core upload logic.
-- **`onRemove`**: `(item: UploadFileItem, signal: AbortSignal) => Promise<void>` - Optional server-side delete logic.
+- **`initial`**: `MaybePromise<Array<Pick<UploadFileItem, 'uid' | 'id' | 'name' | 'url' | 'meta'>>>` - Pre-hydrated files from the server. If you pass a `Promise`, **you must catch/handle its rejection yourself** — `Root` does not attach a `.catch`, so a rejected `initial` promise becomes an unhandled rejection. Initial-load errors are consumer-owned, not surfaced through `item.error`.
+- **`onRemove`**: `(item: UploadFileItem, signal: AbortSignal) => Promise<void>` - Optional server-side delete logic. If it throws/rejects, the item is kept (or restored, in `optimistic` mode) with `status: 'done'` and `item.error` set to the failure message, so `onChange` consumers can distinguish a failed removal from a successful one. `item.error` is cleared as soon as a new removal attempt begins, and `actions.remove(uid)` remains available to retry.
 - **`removeMode`**: `'optimistic'` (default) or `'strict'`.
 - **`beforeUpload`**: Hook to validate or transform files before they start uploading.
 - **`accept`, `multiple`, `maxCount`**: Standard HTML5 file constraints. Extension filters must be dot-prefixed, such as `.pdf` or `.tar.gz`. Invalid `accept` tokens are ignored, matching browser-permissive behavior.

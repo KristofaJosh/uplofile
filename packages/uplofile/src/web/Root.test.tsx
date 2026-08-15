@@ -665,6 +665,60 @@ describe("Root Component", () => {
         expect(items).toHaveLength(1);
         expect(items[0].uid).toBe(uid);
         expect(items[0].status).toBe("done");
+        expect(items[0].error).toBe("Server error");
+      });
+    });
+
+    it("should clear the previous error and remove successfully on retry (optimistic)", async () => {
+      let resolveSecond: (() => void) | undefined;
+      const onRemove = vi
+        .fn()
+        .mockRejectedValueOnce(new Error("Server error"))
+        .mockImplementationOnce(
+          () =>
+            new Promise<void>((resolve) => {
+              resolveSecond = resolve;
+            }),
+        );
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root upload={upload} onRemove={onRemove} ref={(r) => (ref = r)}>
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => {
+        expect(ref!.getItems()[0]?.status).toBe("done");
+        expect(ref!.getItems()[0]?.error).toBe("Server error");
+      });
+
+      ref!.actions.remove(uid);
+
+      // Optimistic mode clears the error by dropping the item from the list
+      // immediately; while the retry is in flight there's no stale error left
+      // to display.
+      await waitFor(() => {
+        expect(ref!.getItems().find((i) => i.uid === uid)).toBeUndefined();
+      });
+
+      resolveSecond?.();
+
+      await waitFor(() => {
+        expect(onRemove).toHaveBeenCalledTimes(2);
+        expect(ref!.getItems()).toHaveLength(0);
       });
     });
 
@@ -734,6 +788,65 @@ describe("Root Component", () => {
         expect(items).toHaveLength(1);
         expect(items[0].uid).toBe(uid);
         expect(items[0].status).toBe("done");
+        expect(items[0].error).toBe("Server error");
+      });
+    });
+
+    it("should clear the previous error and remove successfully on retry (strict)", async () => {
+      let resolveSecond: (() => void) | undefined;
+      const onRemove = vi
+        .fn()
+        .mockRejectedValueOnce(new Error("Server error"))
+        .mockImplementationOnce(
+          () =>
+            new Promise<void>((resolve) => {
+              resolveSecond = resolve;
+            }),
+        );
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root
+          upload={upload}
+          onRemove={onRemove}
+          removeMode="strict"
+          ref={(r) => (ref = r)}
+        >
+          <div />
+        </Root>,
+      );
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      ref!.onDrop({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: { files: [file] },
+      } as any);
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+
+      const uid = ref!.getItems()[0].uid;
+      ref!.actions.remove(uid);
+
+      await waitFor(() => {
+        expect(ref!.getItems()[0]?.status).toBe("done");
+        expect(ref!.getItems()[0]?.error).toBe("Server error");
+      });
+
+      ref!.actions.remove(uid);
+
+      // The "removing" transition clears the stale error before the retry's
+      // onRemove call has even resolved.
+      await waitFor(() => {
+        expect(ref!.getItems()[0]?.status).toBe("removing");
+        expect(ref!.getItems()[0]?.error).toBeUndefined();
+      });
+
+      resolveSecond?.();
+
+      await waitFor(() => {
+        expect(onRemove).toHaveBeenCalledTimes(2);
+        expect(ref!.getItems()).toHaveLength(0);
       });
     });
   });

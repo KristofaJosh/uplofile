@@ -40,6 +40,7 @@ const tocByPath: Record<string, Array<[string, string]>> = {
   ],
   "/components/preview": [
     ["#usage", "Usage"],
+    ["#removal-errors", "Failed removals"],
     ["#render", "Render props"],
     ["#props", "Props"],
   ],

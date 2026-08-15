@@ -24,7 +24,7 @@ const itemType = `type UploadFileItem<TMeta = any, TFileSource = unknown> = {
   file?: TFileSource;   // undefined for pre-hydrated files
   status: UploadStatus;
   progress?: number;    // 0–100, only while uploading
-  error?: string;
+  error?: string;       // set on a failed upload or a failed onRemove (status stays "done")
   meta?: TMeta;         // anything you attach in beforeUpload
 };`;
 
@@ -39,7 +39,7 @@ type UploadResult<TMeta = any> = {
 const statuses: [string, string][] = [
   ["idle", "Selected and waiting for upload to start"],
   ["uploading", "In flight. progress is populated if you call setProgress"],
-  ["done", "url is now set"],
+  ["done", "url is now set; may carry a leftover error if a removal attempt failed"],
   [
     "error",
     "upload() rejected, or beforeUpload returned an invalid result with a reason",

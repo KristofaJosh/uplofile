@@ -8,8 +8,13 @@ import {
   useState,
 } from "react";
 
-import type { ImageUploaderContextValue, ItemActions, RootProps, UploadFileItem } from "./types";
-import { uid } from "./utils";
+import type {
+  ImageUploaderContextValue,
+  ItemActions,
+  RootProps,
+  UploadFileItem,
+} from "./types";
+import { getErrorMessage, uid } from "./utils";
 
 // TFileSource is intentionally `any` here: the context must hold whichever
 // concrete file-source type a given platform's Root provides. `useUplofile`
@@ -233,7 +238,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
                   status: wasAborted ? "canceled" : "error",
                   error: wasAborted
                     ? undefined
-                    : err?.message || "Upload failed",
+                    : getErrorMessage(err, "Upload failed"),
                 }
               : it,
           ),
@@ -373,12 +378,15 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
           try {
             await onRemove(item, ctrl.signal);
             revokePreview();
-          } catch {
+          } catch (err: any) {
             emitChange((list) => {
               if (list.some((i) => i.uid === uidStr)) return list;
-              const restored = removed
-                ? { ...removed, status: "done" as const }
-                : { ...item, status: "done" as const };
+              const base = removed ?? item;
+              const restored = {
+                ...base,
+                status: "done" as const,
+                error: getErrorMessage(err, "Removal failed"),
+              };
               return [...list, restored];
             });
           } finally {
@@ -387,17 +395,25 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
         } else {
           emitChange((list) =>
             list.map((it) =>
-              it.uid === uidStr ? { ...it, status: "removing" as const } : it,
+              it.uid === uidStr
+                ? { ...it, status: "removing" as const, error: undefined }
+                : it,
             ),
           );
           try {
             await onRemove(item, ctrl.signal);
             revokePreview();
             emitChange((list) => list.filter((i) => i.uid !== uidStr));
-          } catch {
+          } catch (err: any) {
             emitChange((list) =>
               list.map((it) =>
-                it.uid === uidStr ? { ...it, status: "done" as const } : it,
+                it.uid === uidStr
+                  ? {
+                      ...it,
+                      status: "done" as const,
+                      error: getErrorMessage(err, "Removal failed"),
+                    }
+                  : it,
               ),
             );
           } finally {
