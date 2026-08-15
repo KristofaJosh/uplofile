@@ -6,6 +6,7 @@ import { ImportLine } from "@/components/ImportLine";
 import { PropRows, type Prop } from "@/components/PropRow";
 import code from "./preview.demo.tsx?raw";
 import customCode from "./preview.custom.demo.tsx?raw";
+import removalErrorCode from "./preview.removal-error.demo.tsx?raw";
 import { withPageMeta } from "@/lib/seo";
 
 export const meta: MetaFunction = () =>
@@ -82,6 +83,18 @@ export default function ComponentPreview() {
             list from the same state:
           </p>
           <CodeBlock code={customCode} filename="CustomPreview.tsx" />
+        </section>
+        <section id="removal-errors">
+          <h2>Failed removals</h2>
+          <p>
+            If <code>onRemove</code> throws or rejects, the item stays (or is
+            restored, in optimistic mode) at <code>status: "done"</code> with{" "}
+            <code>error</code> set to the failure message. The built-in grid
+            shows the same error badge and message it uses for a failed
+            upload, and the file stays removable — no <code>render</code>{" "}
+            prop or custom handling needed:
+          </p>
+          <CodeBlock code={removalErrorCode} filename="Uploader.tsx" />
         </section>
         <section id="render">
           <h2>Render props</h2>

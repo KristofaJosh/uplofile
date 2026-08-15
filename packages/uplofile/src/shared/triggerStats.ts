@@ -20,6 +20,7 @@ export function computeTriggerStats<TMeta = any, TFileSource = unknown>(
         break;
       case "done":
         doneCount++;
+        if (item.error) errorCount++;
         break;
       case "error":
         errorCount++;

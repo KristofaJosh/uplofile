@@ -64,7 +64,10 @@ const props: Prop[] = [
     signature: "(item, signal) => Promise<unknown>",
     description: (
       <>
-        Server-side delete. Pair with <code>removeMode</code>.
+        Server-side delete. Pair with <code>removeMode</code>. If it throws
+        or rejects, the item stays (or is restored, in optimistic mode) at{" "}
+        <code>status: "done"</code> with <code>error</code> set to the
+        failure message; a new removal attempt clears it.
       </>
     ),
   },
@@ -75,7 +78,8 @@ const props: Prop[] = [
       <>
         Files already on your server. Each item needs <code>uid</code>,{" "}
         <code>name</code>, and <code>url</code>; <code>id</code> and{" "}
-        <code>meta</code> are optional.
+        <code>meta</code> are optional. If you pass a promise, you own its
+        rejection — <code>Root</code> does not attach a <code>.catch</code>.
       </>
     ),
     default: "[]",
