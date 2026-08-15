@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/uplofile";
 import { mockUpload } from "@/lib/utils.ts";
 
-export default function DefaultPreviewStyledDemo() {
+export default function SimplePreviewStyledDemo() {
   return (
     <UplofileRoot
       upload={mockUpload}
@@ -24,7 +24,7 @@ export default function DefaultPreviewStyledDemo() {
       </UplofileTrigger>
 
       <div className="mt-8 border-t pt-8">
-        <h3 className="text-sm font-medium mb-4">Default Preview:</h3>
+        <h3 className="text-sm font-medium mb-4">Simple Preview:</h3>
         <UplofilePreview />
       </div>
     </UplofileRoot>

@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/uplofile";
 import { mockOnRemove, mockUpload } from "@/lib/utils.ts";
 
-export default function DefaultPreviewCustomDemo() {
+export default function SimplePreviewCustomDemo() {
   return (
     <UplofileRoot
       upload={mockUpload}

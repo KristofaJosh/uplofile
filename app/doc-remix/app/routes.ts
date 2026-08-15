@@ -18,7 +18,7 @@ export default [
   route("api/use-uplofile", "routes/api/use-uplofile.tsx"),
 
   // Examples
-  route("examples/default-preview", "routes/examples/defaultpreview.tsx"),
+  route("examples/simple-preview", "routes/examples/simplepreview.tsx"),
   route("examples/basic", "routes/examples/basicuploader.tsx"),
   route("examples/dropzone", "routes/examples/dropzoneuploader.tsx"),
   route("examples/image-gallery", "routes/examples/imagegallery.tsx"),

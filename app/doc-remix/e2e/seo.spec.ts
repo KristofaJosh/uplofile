@@ -18,7 +18,7 @@ const publicRoutes = [
   "/api/props",
   "/api/actions",
   "/api/use-uplofile",
-  "/examples/default-preview",
+  "/examples/simple-preview",
   "/examples/basic",
   "/examples/dropzone",
   "/examples/image-gallery",
