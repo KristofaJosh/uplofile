@@ -1,14 +1,14 @@
 import { Slot } from "../shared/Slot";
 import { HTMLAttributes, useCallback, useRef, useState } from "react";
 
-import { useUplofile } from "./hook";
+import { useUplofileStable } from "../shared/hook";
 
 export type DropzoneProps = {
   asChild?: boolean;
 } & HTMLAttributes<HTMLElement>;
 
 export const Dropzone = ({ asChild, ...rest }: DropzoneProps) => {
-  const { getDropzoneProps, disabled } = useUplofile();
+  const { getDropzoneProps, disabled } = useUplofileStable();
   const Comp: any = asChild ? Slot : "div";
   const [isDragging, setIsDragging] = useState(false);
   const dragCounter = useRef(0);
