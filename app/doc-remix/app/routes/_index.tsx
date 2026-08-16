@@ -9,6 +9,7 @@ import {
 import { CodeBlock } from "@/components/CodeBlock";
 import { Header } from "@/components/Header";
 import { useCopy } from "@/hooks/use-copy";
+import { useCountUp } from "@/hooks/use-count-up";
 import { withPageMeta } from "@/lib/seo";
 
 export const meta: MetaFunction = () => {
@@ -57,7 +58,12 @@ function formatDownloads(value: number) {
 
 export default function Index() {
   const [copied, copy] = useCopy();
-  const [stats, setStats] = useState({ week: "—", month: "—", total: "—" });
+  const [stats, setStats] = useState<{
+    week: number | null;
+    month: number | null;
+    total: number | null;
+  }>({ week: null, month: null, total: null });
+  const [statsError, setStatsError] = useState(false);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -74,13 +80,17 @@ export default function Index() {
     ])
       .then(([week, month, total]) =>
         setStats({
-          week: formatDownloads(week.downloads),
-          month: formatDownloads(month.downloads),
-          total: formatDownloads(total.downloads),
+          week: week.downloads,
+          month: month.downloads,
+          total: total.downloads,
         }),
       )
-      .catch(() => undefined);
+      .catch(() => setStatsError(true));
   }, []);
+
+  const week = useCountUp(stats.week);
+  const month = useCountUp(stats.month);
+  const total = useCountUp(stats.total);
 
   return (
     <div className="docs-page">
@@ -127,15 +137,15 @@ export default function Index() {
           aria-label="Uplofile download statistics"
         >
           <div>
-            <strong>{stats.week}</strong>
+            <strong>{statsError ? "—" : formatDownloads(week)}</strong>
             <span>downloads / week</span>
           </div>
           <div>
-            <strong>{stats.month}</strong>
+            <strong>{statsError ? "—" : formatDownloads(month)}</strong>
             <span>downloads / month</span>
           </div>
           <div>
-            <strong>{stats.total}</strong>
+            <strong>{statsError ? "—" : formatDownloads(total)}</strong>
             <span>total downloads</span>
           </div>
           <div>
