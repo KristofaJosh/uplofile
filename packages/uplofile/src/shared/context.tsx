@@ -2,24 +2,93 @@ import {
   createContext,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 
-import type {
-  ImageUploaderContextValue,
-  ItemActions,
-  RootProps,
-  UploadFileItem,
-} from "./types";
+import type { ItemActions, RootProps, UploadFileItem } from "./types";
 import { getErrorMessage, uid } from "./utils";
+
+// A minimal external store (subscribe/getSnapshot/setItems) for the items
+// array. Consumers read it through useSyncExternalStore so each one only
+// re-renders for the slice it actually selects, instead of every consumer
+// re-rendering on every progress tick via a single Context value.
+export type ItemsStore<TMeta = any, TFileSource = unknown> = {
+  getSnapshot: () => UploadFileItem<TMeta, TFileSource>[];
+  subscribe: (listener: () => void) => () => void;
+  setItems: (
+    next:
+      | UploadFileItem<TMeta, TFileSource>[]
+      | ((
+          prev: UploadFileItem<TMeta, TFileSource>[],
+        ) => UploadFileItem<TMeta, TFileSource>[]),
+  ) => void;
+};
+
+export function createItemsStore<TMeta = any, TFileSource = unknown>(
+  initial: UploadFileItem<TMeta, TFileSource>[] = [],
+): ItemsStore<TMeta, TFileSource> {
+  let current = initial;
+  const listeners = new Set<() => void>();
+  return {
+    getSnapshot: () => current,
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    setItems: (next) => {
+      current =
+        typeof next === "function"
+          ? (next as (prev: typeof current) => typeof current)(current)
+          : next;
+      listeners.forEach((listener) => listener());
+    },
+  };
+}
+
+export function computeHiddenInputValue<TMeta = any, TFileSource = unknown>(
+  items: UploadFileItem<TMeta, TFileSource>[],
+): string {
+  const done = items.filter((i) => i.status === "done" && i.url);
+  return JSON.stringify(
+    done.map(
+      ({
+        uid: _u,
+        previewUrl: _p,
+        file: _f,
+        status: _s,
+        progress: _pr,
+        error: _e,
+        ...rest
+      }) => rest,
+    ),
+  );
+}
+
+// Stable slice of context: everything a consumer needs that does NOT change
+// on a progress tick (actions, dropzone/file-input wiring, disabled/accept,
+// and the store itself). `items` deliberately lives outside this object —
+// it's read from `store` via useSyncExternalStore/useUplofileSelector so a
+// component that only needs e.g. `disabled` never re-renders on ticks.
+export type StableUploaderCtxValue<TMeta = any, TFileSource = unknown> = {
+  store: ItemsStore<TMeta, TFileSource>;
+  setItems: ItemsStore<TMeta, TFileSource>["setItems"];
+  isLoading: boolean;
+  disabled?: boolean;
+  multiple: boolean;
+  accept: string;
+  actions: ItemActions;
+  openFileDialog: () => void;
+  fileInputProps: Record<string, any>;
+  getDropzoneProps: () => Record<string, any>;
+  name: string;
+};
 
 // TFileSource is intentionally `any` here: the context must hold whichever
 // concrete file-source type a given platform's Root provides. `useUplofile`
 // re-asserts the caller's requested generics when reading.
-export const UploaderCtx = createContext<ImageUploaderContextValue<
+export const UploaderCtx = createContext<StableUploaderCtxValue<
   any,
   any
 > | null>(null);
@@ -46,8 +115,9 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
   revokePreviewUrl: (url: string) => void;
   getFileName: (source: TFileSource) => string;
 }) {
-  const [items, setItems] = useState<UploadFileItem<TMeta, TFileSource>[]>([]);
-  const itemsRef = useRef(items);
+  const storeRef = useRef<ItemsStore<TMeta, TFileSource> | null>(null);
+  if (!storeRef.current) storeRef.current = createItemsStore([]);
+  const store = storeRef.current;
   const [isLoading, setIsLoading] = useState(
     Array.isArray(initial) ? initial.length > 0 : !!initial,
   );
@@ -62,11 +132,16 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
   const getFileNameRef = useRef(getFileName);
   const createPreviewUrlRef = useRef(createPreviewUrl);
   const revokePreviewUrlRef = useRef(revokePreviewUrl);
-  const prevItemsForOnChangeRef = useRef(items);
 
-  useLayoutEffect(() => {
-    itemsRef.current = items;
-  }, [items]);
+  // Fire onChange whenever the store actually publishes a new items array.
+  // Unlike the old useState + effect pair, the store only notifies on real
+  // setItems calls, so there's no need to guard against the initial-mount
+  // "reference matches" case.
+  useEffect(() => {
+    return store.subscribe(() => {
+      onChangeRef.current?.(store.getSnapshot());
+    });
+  }, [store]);
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -93,13 +168,6 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
     onLoadingChangeRef.current?.(isLoading);
   }, [isLoading]);
 
-  // Call onChange when items change (skip initial mount where reference matches)
-  useEffect(() => {
-    if (prevItemsForOnChangeRef.current === items) return;
-    prevItemsForOnChangeRef.current = items;
-    onChangeRef.current?.(items);
-  }, [items]);
-
   // Hydrate initial items from the server and keep them marked as done
   useEffect(() => {
     if (hasHydratedInitialRef.current) return;
@@ -120,7 +188,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
           } as UploadFileItem<TMeta, TFileSource>;
         });
 
-        setItems((prev) => {
+        store.setItems((prev) => {
           if (prev.length === 0) return mapped;
           const existing = new Set(prev.map((i) => i.uid));
           const toAppend = mapped.filter((m) => !existing.has(m.uid));
@@ -135,23 +203,6 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
 
     void hydrate();
   }, [initial]);
-
-  const hiddenInputValue = useMemo(() => {
-    const done = items.filter((i) => i.status === "done" && i.url);
-    return JSON.stringify(
-      done.map(
-        ({
-          uid: _u,
-          previewUrl: _p,
-          file: _f,
-          status: _s,
-          progress: _pr,
-          error: _e,
-          ...rest
-        }) => rest,
-      ),
-    );
-  }, [items]);
 
   // Internal wrappers that track preview URLs in blobUrlsRef for cleanup on unmount.
   // Why: the original createBlobUrl/revokeBlobUrl managed this set internally.
@@ -168,18 +219,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
     }
   }, []);
 
-  const emitChange = useCallback(
-    (
-      next:
-        | UploadFileItem<TMeta, TFileSource>[]
-        | ((
-            prev: UploadFileItem<TMeta, TFileSource>[],
-          ) => UploadFileItem<TMeta, TFileSource>[]),
-    ) => {
-      setItems(next as any);
-    },
-    [],
-  );
+  const emitChange = store.setItems;
 
   const startUpload = useCallback(
     async (item: UploadFileItem<TMeta, TFileSource>) => {
@@ -253,7 +293,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
   const selectFiles = useCallback(
     async (sources: TFileSource[]) => {
       if (sources.length === 0) return;
-      const currentItems = itemsRef.current;
+      const currentItems = store.getSnapshot();
       const remaining = maxCount
         ? Math.max(
             0,
@@ -351,7 +391,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
         ctrl?.abort();
       },
       remove: async (uidStr: string) => {
-        const item = itemsRef.current.find((i) => i.uid === uidStr);
+        const item = store.getSnapshot().find((i) => i.uid === uidStr);
         if (!item) return;
         if (item.status === "removing") return;
 
@@ -373,7 +413,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
         removeControllers.current.set(uidStr, ctrl);
 
         if (removeMode === "optimistic") {
-          const removed = itemsRef.current.find((i) => i.uid === uidStr);
+          const removed = store.getSnapshot().find((i) => i.uid === uidStr);
           emitChange((list) => list.filter((i) => i.uid !== uidStr));
           try {
             await onRemove(item, ctrl.signal);
@@ -422,7 +462,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
         }
       },
       retry: (uidStr: string) => {
-        const item = itemsRef.current.find((i) => i.uid === uidStr);
+        const item = store.getSnapshot().find((i) => i.uid === uidStr);
         if (!item) return;
         if (item.file) {
           void startUpload({
@@ -450,14 +490,12 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
   );
 
   return {
-    items,
-    setItems,
+    store,
     isLoading,
     emitChange,
     startUpload,
     selectFiles,
     actions,
-    hiddenInputValue,
     name,
     controllers,
     blobUrlsRef,
