@@ -8,10 +8,10 @@
       "android"
     ],
     "ios": {
-      "bundleIdentifier": "com.chrisjosh.doc-native"
+      "bundleIdentifier": "com.uplofile.native"
     },
     "android": {
-      "package": "com.chrisjosh.docnative"
+      "package": "com.uplofile.native"
     },
     "plugins": [
       "expo-status-bar",

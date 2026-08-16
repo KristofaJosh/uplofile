@@ -1,4 +1,4 @@
-appId: com.chrisjosh.doc-native
+appId: com.uplofile.native
 ---
 - launchApp
 - runFlow:
