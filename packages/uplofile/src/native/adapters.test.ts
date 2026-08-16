@@ -174,6 +174,47 @@ describe("adapterExpoImagePicker", () => {
 
     warnSpy.mockRestore();
   });
+
+  it("suppresses the accept-mismatch warning when __DEV__ is false (RN production build)", async () => {
+    const g = globalThis as { __DEV__?: boolean };
+    const previousDev = g.__DEV__;
+    g.__DEV__ = false;
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const launchImageLibraryAsync = vi.fn(async () => ({
+      canceled: true as const,
+      assets: null,
+    }));
+    const pickFiles = adapterExpoImagePicker(launchImageLibraryAsync);
+
+    await pickFiles("application/pdf", { multiple: true });
+
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    warnSpy.mockRestore();
+    g.__DEV__ = previousDev;
+  });
+
+  it("suppresses the accept-mismatch warning via NODE_ENV=production when __DEV__ is unset", async () => {
+    const g = globalThis as { __DEV__?: boolean };
+    const previousDev = g.__DEV__;
+    delete g.__DEV__;
+    const previousNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const launchImageLibraryAsync = vi.fn(async () => ({
+      canceled: true as const,
+      assets: null,
+    }));
+    const pickFiles = adapterExpoImagePicker(launchImageLibraryAsync);
+
+    await pickFiles("application/pdf", { multiple: true });
+
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    warnSpy.mockRestore();
+    process.env.NODE_ENV = previousNodeEnv;
+    g.__DEV__ = previousDev;
+  });
 });
 
 describe("adapterReactNativeImagePicker", () => {
