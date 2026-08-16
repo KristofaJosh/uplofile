@@ -28,8 +28,14 @@ export const useUplofile = <TMeta = any, TFileSource = unknown>() => {
     [items],
   );
 
+  // Strip `store` before returning — it's an internal implementation detail
+  // of the stable ctx, not part of the documented ImageUploaderContextValue
+  // shape. Spreading `ctx` directly would leak it onto the public hook's
+  // return value at runtime even though the TS type hides it.
+  const { store: _store, ...publicCtx } = ctx;
+
   return {
-    ...ctx,
+    ...publicCtx,
     items,
     hiddenInputValue,
   } as ImageUploaderContextValue<TMeta, TFileSource>;

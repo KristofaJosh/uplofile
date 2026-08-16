@@ -1,13 +1,12 @@
 /**
  * @vitest-environment jsdom
  *
- * Benchmark for issue #32 / #45, run against the pub-sub store
- * implementation in this worktree (perf/32-pubsub-store). The first
- * describe block is copied unmodified from the bench-subscription
- * worktree's main baseline, so the numbers are apples-to-apples. The
- * second describe block adds the comparison the baseline couldn't make:
- * whether PreviewItem's own shell (not just Dropzone) stops re-rendering
- * on a progress tick, which is what the store buys beyond React.memo alone.
+ * Benchmark for issue #32, run against the pub-sub store implementation in
+ * this branch. Scenarios and method (React.Profiler + vi.spyOn call counts)
+ * match a separate baseline run against unmodified main, so the numbers are
+ * directly comparable; that baseline isn't included here since it requires
+ * `Dropzone`/`PreviewItem` to be spy-able the same way, which main doesn't
+ * support out of the box. See the PR body for the side-by-side numbers.
  *
  * Not part of the CI test suite. Run directly:
  *   pnpm --filter uplofile exec vitest run src/web/benchmark.progress.test.tsx
@@ -45,7 +44,7 @@ function makeProfilerCollector() {
   return { totals, onRender };
 }
 
-describe("baseline benchmark: main's setItems-per-tick architecture", () => {
+describe("fixed: same scenarios run against this branch (compare against main separately)", () => {
   it(`single item ticking inside a 20-item batch, 100 ticks`, async () => {
     const ITEM_COUNT = 20;
     const TICKS = 100;
@@ -106,10 +105,9 @@ describe("baseline benchmark: main's setItems-per-tick architecture", () => {
     expect(refHolder.current!.getItems()[0].progress).toBe(TICKS % 100);
 
     console.log(
-      `[baseline single-item] batch=${ITEM_COUNT} ticks=${TICKS} -> ` +
+      `[fixed single-item] batch=${ITEM_COUNT} ticks=${TICKS} -> ` +
         `commits=${totals.commits} actualDuration=${totals.actualDurationMs.toFixed(2)}ms ` +
-        `wallClock=${wallMs.toFixed(2)}ms dropzoneCalls=${dropzoneSpy.mock.calls.length} ` +
-        `(main has no re-render isolation: Dropzone is expected to re-render on every tick)`,
+        `wallClock=${wallMs.toFixed(2)}ms dropzoneCalls=${dropzoneSpy.mock.calls.length}`,
     );
 
     dropzoneSpy.mockRestore();
@@ -178,7 +176,7 @@ describe("baseline benchmark: main's setItems-per-tick architecture", () => {
     );
 
     console.log(
-      `[baseline all-items] batch=${ITEM_COUNT} ticksPerItem=${TICKS_PER_ITEM} ` +
+      `[fixed all-items] batch=${ITEM_COUNT} ticksPerItem=${TICKS_PER_ITEM} ` +
         `totalSetItemsCalls=${ITEM_COUNT * TICKS_PER_ITEM} -> ` +
         `commits=${totals.commits} actualDuration=${totals.actualDurationMs.toFixed(2)}ms ` +
         `wallClock=${wallMs.toFixed(2)}ms dropzoneCalls=${dropzoneSpy.mock.calls.length} ` +
@@ -245,7 +243,7 @@ describe("baseline benchmark: main's setItems-per-tick architecture", () => {
       expect(refHolder.current!.getItems()[0].progress).toBe(TICKS);
 
       console.log(
-        `[baseline scaling] batch=${itemCount} ticks=${TICKS} (1 item changing) -> ` +
+        `[fixed scaling] batch=${itemCount} ticks=${TICKS} (1 item changing) -> ` +
           `actualDuration=${totals.actualDurationMs.toFixed(2)}ms ` +
           `(${(totals.actualDurationMs / TICKS).toFixed(3)}ms/tick) ` +
           `wallClock=${wallMs.toFixed(2)}ms (${(wallMs / TICKS).toFixed(3)}ms/tick)`,
