@@ -1,86 +1,118 @@
 import type { MetaFunction } from "react-router";
+import { IoArrowForwardOutline } from "react-icons/io5";
 import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import { PropRows, type Prop } from "@/components/PropRow";
 import code from "./action.demo.tsx?raw";
+import { withPageMeta } from "@/lib/seo";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/api/actions", [
     { title: "Actions API - Uplofile" },
     {
       name: "description",
       content:
         "Learn about actions available for controlling Uplofile components programmatically.",
     },
-  ];
+  ]);
 };
+
+const itemActions: Prop[] = [
+  {
+    name: "cancel",
+    signature: "(uid: string) => void",
+    description:
+      'Aborts an in-flight upload through its AbortSignal. The item then moves to "canceled".',
+  },
+  {
+    name: "remove",
+    signature: "(uid: string) => void",
+    description: (
+      <>
+        Runs <code>onRemove</code> if you passed one, honoring{" "}
+        <code>removeMode</code>; otherwise just drops the item.
+      </>
+    ),
+  },
+  {
+    name: "retry",
+    signature: "(uid: string) => void",
+    description:
+      "Calls upload() again for an item with a local file source, resetting progress to 0%. It is intended for errored or canceled uploads; pre-hydrated items have no local source.",
+  },
+];
+
+const sources: Prop[] = [
+  {
+    name: "useUplofile()",
+    signature: ".actions",
+    description:
+      "Anywhere inside Root. The usual way to build custom controls.",
+  },
+  {
+    name: "<Preview render>",
+    signature: "({ actions }) => …",
+    description: "Scoped to the render prop, alongside items.",
+  },
+  {
+    name: "<Root ref>",
+    signature: ".actions",
+    description: (
+      <>
+        From outside the context. See Root&rsquo;s{" "}
+        <a href="/components/root#ref">Ref API</a>.
+      </>
+    ),
+  },
+];
 
 const ApiActions = () => {
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">Actions Reference</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          Programmatic actions available via render props and hooks.
+      <article className="doc-article">
+        <h1>Actions</h1>
+        <p className="doc-lead">
+          Three verbs cover everything a file can do after it&rsquo;s selected.
+          Every entry point below hands you the same shape.
         </p>
 
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Available Actions
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-2 font-semibold">Action</th>
-                  <th className="text-left py-3 px-2 font-semibold">
-                    Signature
-                  </th>
-                  <th className="text-left py-3 px-2 font-semibold">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-muted-foreground">
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">remove</code>
-                  </td>
-                  <td className="py-3 px-2">(uid: string) =&gt; void</td>
-                  <td className="py-3 px-2">Remove a specific file</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">cancel</code>
-                  </td>
-                  <td className="py-3 px-2">(uid: string) =&gt; void</td>
-                  <td className="py-3 px-2">Cancel an in-flight upload</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">retry</code>
-                  </td>
-                  <td className="py-3 px-2">(uid: string) =&gt; void</td>
-                  <td className="py-3 px-2">Retry a failed upload</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">openFileDialog</code>
-                  </td>
-                  <td className="py-3 px-2">() =&gt; void</td>
-                  <td className="py-3 px-2">Open the file picker</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <section id="actions">
+          <h2>Item actions</h2>
+          <p>
+            Each takes the item&rsquo;s <code>uid</code>, not the item itself.
+            Call <code>retry</code> only for items selected in this session;
+            pre-hydrated items do not have a local file to upload again.
+          </p>
+          <PropRows items={itemActions} />
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Using the Hook
-          </h2>
-          <CodeBlock code={code} language="tsx" />
+        <section id="ref">
+          <h2>Where you get them</h2>
+          <PropRows items={sources} />
         </section>
+
+        <section id="hook">
+          <h2>Using the hook</h2>
+          <p>
+            <code>openFileDialog</code> ships alongside <code>actions</code> on
+            the same context, so there&rsquo;s no separate import for the
+            &quot;select files&quot; button.
+          </p>
+          <CodeBlock code={code} filename="CustomControls.tsx" />
+        </section>
+
+        <div className="doc-pagination">
+          <a href="/api/props">
+            <small>Previous</small>
+            <span>Types</span>
+          </a>
+          <a href="/examples/simple-preview">
+            <small>Next</small>
+            <span>
+              Examples <IoArrowForwardOutline size={14} />
+            </span>
+          </a>
+        </div>
       </article>
     </DocsLayout>
   );

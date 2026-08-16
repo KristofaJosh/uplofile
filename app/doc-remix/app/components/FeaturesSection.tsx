@@ -1,5 +1,10 @@
 import { useMemo, useState } from "react";
-import { IoPencilOutline, IoAccessibilityOutline, IoColorPaletteOutline, IoBookOutline } from "react-icons/io5";
+import {
+  IoPencilOutline,
+  IoAccessibilityOutline,
+  IoColorPaletteOutline,
+  IoBookOutline,
+} from "react-icons/io5";
 import { FeatureCard } from "./FeatureCard";
 import BasicUploaderDemo from "@/routes/examples/basicuploader.demo";
 import DropzoneUploaderDemo from "@/routes/examples/dropzoneuploader.demo";

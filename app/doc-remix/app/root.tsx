@@ -7,55 +7,13 @@ import {
   ScrollRestoration,
   type MetaFunction,
 } from "react-router";
+import { Analytics } from "@vercel/analytics/react";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 
 export const meta: MetaFunction = () => {
-  return [
-    { charset: "utf-8" },
-    { title: "Uplofile - React File Upload Components" },
-    { name: "viewport", content: "width=device-width, initial-scale=1" },
-    {
-      name: "description",
-      content:
-        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
-    },
-
-    // Open Graph / Facebook
-    { property: "og:type", content: "website" },
-    { property: "og:url", content: "https://uplofile.kristofajosh.dev/" },
-    {
-      property: "og:title",
-      content: "Uplofile - React File Upload Components",
-    },
-    {
-      property: "og:description",
-      content:
-        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
-    },
-    {
-      property: "og:image",
-      content: "https://uplofile.kristofajosh.dev/og-image.png",
-    },
-
-    // Twitter
-    { property: "twitter:card", content: "summary_large_image" },
-    { property: "twitter:url", content: "https://uplofile.kristofajosh.dev/" },
-    {
-      property: "twitter:title",
-      content: "Uplofile - React File Upload Components",
-    },
-    {
-      property: "twitter:description",
-      content:
-        "Unstyled, composable React file upload library. Bring your own upload logic, style it however you want.",
-    },
-    {
-      property: "twitter:image",
-      content: "https://uplofile.kristofajosh.dev/og-image.png",
-    },
-  ];
+  return [{ name: "viewport", content: "width=device-width, initial-scale=1" }];
 };
 
 export const links: Route.LinksFunction = () => [
@@ -81,17 +39,23 @@ export const links: Route.LinksFunction = () => [
   { rel: "manifest", href: "/site.webmanifest" },
 ];
 
+// Runs synchronously before first paint so a stored/preferred dark theme is
+// applied before any CSS renders. Keep the storage key and fallback logic in
+// sync with Header.tsx's theme effect.
+const themeInitScript = `(function(){try{var t=localStorage.getItem("uplofile-theme");var d=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);}catch(e){}})();`;
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Meta />
         <Links />
       </head>
       <body>
         {children}
+        <Analytics />
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -128,6 +128,16 @@ export const isImageFile = (
   return false;
 };
 
+/**
+ * Extract a human-readable message from a caught rejection value.
+ *
+ * @param err - The value thrown or rejected with.
+ * @param fallback - Message to use when `err` has no usable `.message`.
+ * @returns `err.message` if present, otherwise `fallback`.
+ */
+export const getErrorMessage = (err: any, fallback: string): string =>
+  err?.message || fallback;
+
 export const getValidAcceptTokens = (
   accept: string | undefined,
 ): string[] | undefined => {
@@ -174,9 +184,7 @@ export const getNativePickerAcceptTypes = (
   const tokens = getValidAcceptTokens(accept);
   if (!tokens) return undefined;
 
-  return tokens.some((token) => token.startsWith("."))
-    ? undefined
-    : tokens;
+  return tokens.some((token) => token.startsWith(".")) ? undefined : tokens;
 };
 
 /**

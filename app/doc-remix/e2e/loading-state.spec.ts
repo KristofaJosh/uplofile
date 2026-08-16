@@ -7,7 +7,9 @@ test.describe("Loading State", () => {
       .filter({ hasText: "Declarative gating" })
       .locator('[data-part="root"]');
 
-  test("shows loading state during async initial hydration", async ({ page }) => {
+  test("shows loading state during async initial hydration", async ({
+    page,
+  }) => {
     await page.goto("/examples/loading-state");
     const root = declarativeRoot(page);
 
@@ -15,9 +17,9 @@ test.describe("Loading State", () => {
       root.getByRole("button", { name: /loading initial files/i }),
     ).toBeVisible({ timeout: 8000 });
 
-    await expect(
-      root.getByText("Select Images").first(),
-    ).toBeVisible({ timeout: 10000 });
+    await expect(root.getByText("Select Images").first()).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("shows initial file after hydration completes", async ({ page }) => {
@@ -25,9 +27,9 @@ test.describe("Loading State", () => {
     const root = declarativeRoot(page);
     await root.waitFor();
 
-    await expect(
-      root.getByAltText("server-image.jpg"),
-    ).toBeVisible({ timeout: 10000 });
+    await expect(root.getByAltText("server-image.jpg")).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(
       root.getByRole("button", { name: /loading initial files/i }),

@@ -1,16 +1,18 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./avataruploader.demo.tsx";
-import code from "./avataruploader.demo.tsx?raw";
+import demoCode from "./avataruploader.demo.tsx?raw";
+import avatarPreviewCode from "./avataruploader.avatarpreview.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/avatar", [
     { title: "Avatar Uploader Example - Uplofile" },
     {
       name: "description",
       content: "An avatar upload example with image cropping.",
     },
-  ];
+  ]);
 };
 
 const ExampleAvatarUploader = () => {
@@ -18,7 +20,10 @@ const ExampleAvatarUploader = () => {
     <ExamplePage
       title="Avatar Uploader"
       description="A circular avatar uploader with hover overlay for profile pictures."
-      code={code}
+      codeTabs={[
+        { label: "Avatar uploader demo", code: demoCode },
+        { label: "Avatar preview", code: avatarPreviewCode },
+      ]}
       keyPoints={[
         <>
           Single file upload (no <code className="code-inline">multiple</code>{" "}

@@ -5,6 +5,7 @@ Welcome to the Uplofile project. This guide provides essential context and instr
 ## Agent Constraints
 
 - **Minimize Output Tokens:** Keep responses concise, clear, and specific. Avoid unnecessary verbosity or repetition.
+- **No Commit Attribution:** Never add `Co-authored-by` trailers or AI attribution to commits.
 - **Stay Updated:** This guide must be updated whenever project requirements, architecture, or core logic changes significantly. Agents are responsible for ensuring this file reflects the current state of the project.
 
 ## Project Overview

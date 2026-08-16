@@ -14,6 +14,7 @@ export default function LoadingStateDeclarativeDemo() {
       multiple
     >
       <UplofileTrigger
+        asChild
         render={({ isLoading, open }) => (
           <button
             onClick={open}

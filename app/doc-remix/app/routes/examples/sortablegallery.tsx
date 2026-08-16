@@ -1,17 +1,20 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import { ClientOnly } from "@/components/ClientOnly";
 import Demo from "./sortablegallery.demo.tsx";
-import code from "./sortablegallery.demo.tsx?raw";
+import demoCode from "./sortablegallery.demo.tsx?raw";
+import gridCode from "./sortablegallery.grid.demo.tsx?raw";
+import sortableImageItemCode from "./sortablegallery.sortableimageitem.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/sortable-gallery", [
     { title: "Sortable Gallery Example - Uplofile" },
     {
       name: "description",
       content: "A sortable image gallery with drag-and-drop reordering.",
     },
-  ];
+  ]);
 };
 
 const ExampleSortableGallery = () => {
@@ -19,7 +22,11 @@ const ExampleSortableGallery = () => {
     <ExamplePage
       title="Sortable Image Gallery"
       description="An image gallery uploader that allows reordering completed items using drag and drop."
-      code={code}
+      codeTabs={[
+        { label: "Sortable gallery demo", code: demoCode },
+        { label: "Sortable gallery grid", code: gridCode },
+        { label: "Sortable image item", code: sortableImageItemCode },
+      ]}
       keyPoints={[
         <>
           Integrated with <code className="code-inline">@dnd-kit</code> for

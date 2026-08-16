@@ -136,6 +136,7 @@ const PreviewItem = ({
   item: WebUploadFileItem;
   actions: PreviewRenderProps["actions"];
 }) => {
+  const hasError = item.status === "error" || Boolean(item.error);
   const stateLabel =
     item.status === "removing"
       ? "Removing"
@@ -145,7 +146,9 @@ const PreviewItem = ({
           ? "Error"
           : item.status === "canceled"
             ? "Canceled"
-            : "Done";
+            : item.error
+              ? "Done (error)"
+              : "Done";
 
   return (
     <div
@@ -155,17 +158,17 @@ const PreviewItem = ({
       aria-label={`${item.name} - ${stateLabel}`}
       aria-busy={item.status === "uploading" || item.status === "removing"}
     >
-      {item.status === "error" && <ErrorBadge />}
+      {hasError && <ErrorBadge />}
       <MediaContent item={item} />
       {item.status === "uploading" && (
         <UploadingOverlay progress={item.progress} />
       )}
       <div
         className="uplofile-preview__overlay"
-        data-error={item.status === "error" ? "true" : undefined}
+        data-error={hasError ? "true" : undefined}
       >
         <ActionButtons item={item} actions={actions} />
-        {item.status === "error" && (
+        {hasError && (
           <span className="uplofile-preview__error-message">
             {item.error || "Upload failed"}
           </span>

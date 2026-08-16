@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/uplofile";
 import { mockOnRemove, mockUpload } from "@/lib/utils.ts";
 
-export default function DefaultPreviewCustomDemo() {
+export default function SimplePreviewCustomDemo() {
   return (
     <UplofileRoot
       upload={mockUpload}
@@ -59,7 +59,9 @@ export default function DefaultPreviewCustomDemo() {
                     disabled={item.status === "removing"}
                     className="inline-flex h-8 shrink-0 items-center justify-center gap-2 rounded-md border border-border px-3 text-xs font-medium text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground disabled:pointer-events-none disabled:text-muted-foreground"
                     aria-label={`${
-                      item.status === "uploading" ? "Cancel upload for" : "Remove"
+                      item.status === "uploading"
+                        ? "Cancel upload for"
+                        : "Remove"
                     } ${item.name} (${item.uid})`}
                   >
                     {item.status === "removing" && (

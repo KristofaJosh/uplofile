@@ -1,225 +1,195 @@
+import { IoArrowForwardOutline } from "react-icons/io5";
 import type { MetaFunction } from "react-router";
-import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
-import code from "./root.demo.tsx?raw";
-import codeImperative from "./rootimperativeintro.demo.tsx?raw";
+import { CodeTabs } from "@/components/CodeTabs";
+import { DocsLayout } from "@/components/DocsLayout";
+import { ImportLine } from "@/components/ImportLine";
+import { PropRows, type Prop } from "@/components/PropRow";
+import minimal from "./root.demo.tsx?raw";
+import withProgress from "./root.progress.demo.tsx?raw";
+import strictRemove from "./root.strict.demo.tsx?raw";
+import preHydrated from "./root.hydrated.demo.tsx?raw";
+import refDemo from "./rootimperativeintro.demo.tsx?raw";
+import { withPageMeta } from "@/lib/seo";
 
-export const meta: MetaFunction = () => {
-  return [
+export const meta: MetaFunction = () =>
+  withPageMeta("/components/root", [
     { title: "Root Component - Uplofile" },
     {
       name: "description",
       content:
-        "The Root component is the main container for Uplofile file upload functionality.",
+        "The Root component manages upload state and provides context to its children.",
     },
-  ];
-};
+  ]);
 
-const ComponentRoot = () => {
+const props: Prop[] = [
+  {
+    name: "upload",
+    required: true,
+    signature: "(file, signal, setProgress?) => Promise<UploadResult>",
+    description: (
+      <>
+        Your transport. Resolve with{" "}
+        <code>{"{ url, id?, meta?, previewUrl? }"}</code>; throw to mark the
+        item errored and enable retry.
+      </>
+    ),
+  },
+  {
+    name: "removeMode",
+    signature: '"optimistic" | "strict"',
+    description: (
+      <>
+        Optimistic drops the item at once and restores it if{" "}
+        <code>onRemove</code> rejects. Strict waits for the promise.
+      </>
+    ),
+    default: '"optimistic"',
+  },
+  {
+    name: "beforeUpload",
+    signature:
+      "(items, state) => boolean | Array<{ uid, valid, meta?, id?, reason? }>",
+    description: (
+      <>
+        Gate or enrich files before transport. Async allowed. Return per-file
+        verdicts to reject some and keep the rest; <code>state</code> carries{" "}
+        <code>prevItems</code>, <code>remaining</code>, <code>maxCount</code>,
+        and <code>accept</code>.
+      </>
+    ),
+  },
+  {
+    name: "onRemove",
+    signature: "(item, signal) => Promise<unknown>",
+    description: (
+      <>
+        Server-side delete. Pair with <code>removeMode</code>. If it throws
+        or rejects, the item stays (or is restored, in optimistic mode) at{" "}
+        <code>status: "done"</code> with <code>error</code> set to the
+        failure message; a new removal attempt clears it.
+      </>
+    ),
+  },
+  {
+    name: "initial",
+    signature: "InitialItem[] | Promise<InitialItem[]>",
+    description: (
+      <>
+        Files already on your server. Each item needs <code>uid</code>,{" "}
+        <code>name</code>, and <code>url</code>; <code>id</code> and{" "}
+        <code>meta</code> are optional. If you pass a promise, you own its
+        rejection — <code>Root</code> does not attach a <code>.catch</code>.
+      </>
+    ),
+    default: "[]",
+  },
+  {
+    name: "onChange",
+    signature: "(items: UploadFileItem[]) => void | Promise<void>",
+    description: "Fires on every list change, where you can sync form state.",
+  },
+  {
+    name: "onLoadingChange",
+    signature: "(isLoading: boolean) => void",
+    description: (
+      <>
+        True while <code>initial</code> is still resolving.
+      </>
+    ),
+  },
+  {
+    name: [
+      { name: "accept", signature: "string" },
+      { name: "multiple", signature: "boolean" },
+      { name: "maxCount", signature: "number" },
+    ],
+    description: (
+      <>
+        Passed straight to the file input. <code>maxCount</code> is also
+        readable inside <code>beforeUpload</code>.
+      </>
+    ),
+    default: ['"image/*"', "true", "—"],
+  },
+  {
+    name: [
+      { name: "name", signature: "string" },
+      { name: "disabled", signature: "boolean" },
+    ],
+    description: (
+      <>
+        The field name for <code>HiddenInput</code>, and a blanket interaction
+        lock.
+      </>
+    ),
+    default: ['"image"', "false"],
+  },
+];
+
+const refMethods: Prop[] = [
+  { name: "getItems()", default: "read" },
+  { name: "setItems(next)", default: "write" },
+  { name: "onDrop(e)", default: "event" },
+  { name: "onDragOver(e)", default: "event" },
+  { name: "openFileDialog()", default: "action" },
+  { name: "actions", default: "cancel · remove · retry" },
+  { name: "isLoading", default: "boolean" },
+];
+
+export default function ComponentRoot() {
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">Root</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          The container component that manages file state and provides context
-          to child components.
+      <article className="doc-article">
+        <h1>Root</h1>
+        <p className="doc-lead">
+          Holds the file list and hands it to every child through context. One
+          required prop: <code>upload</code>.
         </p>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Usage
-          </h2>
-
-          <CodeBlock code={code} language="tsx" />
+        <ImportLine names="Root" />
+        <section id="usage">
+          <h2>Usage</h2>
+          <p>
+            Every variant below is the same component. Switch tabs to see what
+            each prop changes.
+          </p>
+          <CodeTabs
+            tabs={[
+              { label: "minimal", code: minimal },
+              { label: "with progress", code: withProgress },
+              { label: "strict remove", code: strictRemove },
+              { label: "pre-hydrated", code: preHydrated },
+            ]}
+          />
         </section>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Using Ref for Imperative Control
-          </h2>
-
+        <section id="props">
+          <h2>Props</h2>
+          <PropRows items={props} />
+        </section>
+        <section id="ref">
+          <h2>Ref API</h2>
           <p>
-            You can access Root's methods outside the context using a ref. This
-            is useful when you need to use drop handlers or methods from a
-            parent component while maintaining context for children.
+            A ref reaches the same methods from outside the context. It is how
+            you make a whole page a drop target while children still read state.
           </p>
-
-          <p>
-            The following example demonstrates how to turn a whole parent
-            container into a dropzone by imperatively calling{" "}
-            <code className="code-inline">onDrop</code> and{" "}
-            <code className="code-inline">onDragOver</code> on the ref.
-          </p>
-
-          <CodeBlock code={codeImperative} language="tsx" />
-
-          <div className="mt-4">
-            <h3 className="font-semibold mb-2">Available ref methods:</h3>
-            <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-              <li>
-                <code className="code-inline">setItems(items | updater)</code> -
-                Update items state
-              </li>
-              <li>
-                <code className="code-inline">getItems()</code> - Get current
-                items
-              </li>
-              <li>
-                <code className="code-inline">onDrop(e)</code> - Handle drop
-                events
-              </li>
-              <li>
-                <code className="code-inline">onDragOver(e)</code> - Handle drag
-                over events
-              </li>
-              <li>
-                <code className="code-inline">openFileDialog()</code> - Open
-                file picker
-              </li>
-              <li>
-                <code className="code-inline">actions</code> - Access cancel,
-                remove, retry methods
-              </li>
-            </ul>
+          <div className="ref-grid">
+            <CodeBlock code={refDemo} filename="PageDropTarget.tsx" />
+            <PropRows items={refMethods} />
           </div>
         </section>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Props
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-2 font-semibold">Prop</th>
-                  <th className="text-left py-3 px-2 font-semibold">Type</th>
-                  <th className="text-left py-3 px-2 font-semibold">Default</th>
-                  <th className="text-left py-3 px-2 font-semibold">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-muted-foreground">
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">upload</code>
-                  </td>
-                  <td className="py-3 px-2">Function</td>
-                  <td className="py-3 px-2">-</td>
-                  <td className="py-3 px-2">
-                    <strong>Required</strong>. Function that handles the file
-                    upload. Must return a Promise with{" "}
-                    <code className="code-inline">{`{ url: string, id?: string }`}</code>
-                    .
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">multiple</code>
-                  </td>
-                  <td className="py-3 px-2">boolean</td>
-                  <td className="py-3 px-2">true</td>
-                  <td className="py-3 px-2">
-                    Whether to allow multiple file selection
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">maxCount</code>
-                  </td>
-                  <td className="py-3 px-2">number</td>
-                  <td className="py-3 px-2">-</td>
-                  <td className="py-3 px-2">Maximum number of files allowed</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">accept</code>
-                  </td>
-                  <td className="py-3 px-2">string</td>
-                  <td className="py-3 px-2">"image/*"</td>
-                  <td className="py-3 px-2">
-                    Accepted file types (HTML5 input accept attribute)
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">beforeUpload</code>
-                  </td>
-                  <td className="py-3 px-2">Function</td>
-                  <td className="py-3 px-2">-</td>
-                  <td className="py-3 px-2">
-                    Hook to validate or enrich files before upload begins.
-                    Supports async validation and per-file granular control.
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">initial</code>
-                  </td>
-                  <td className="py-3 px-2">Array</td>
-                  <td className="py-3 px-2">[]</td>
-                  <td className="py-3 px-2">Pre-hydrated files from server</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">removeMode</code>
-                  </td>
-                  <td className="py-3 px-2">"optimistic" | "strict"</td>
-                  <td className="py-3 px-2">"optimistic"</td>
-                  <td className="py-3 px-2">
-                    <strong>optimistic</strong>: UI updates immediately.
-                    <br />
-                    <strong>strict</strong>: UI waits for{" "}
-                    <code className="code-inline">onRemove</code> to resolve.
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">onChange</code>
-                  </td>
-                  <td className="py-3 px-2">(items) =&gt; void</td>
-                  <td className="py-3 px-2">-</td>
-                  <td className="py-3 px-2">
-                    Called when the file list changes
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">onRemove</code>
-                  </td>
-                  <td className="py-3 px-2">(item, signal) =&gt; Promise</td>
-                  <td className="py-3 px-2">-</td>
-                  <td className="py-3 px-2">
-                    Function to handle server-side file deletion
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">name</code>
-                  </td>
-                  <td className="py-3 px-2">string</td>
-                  <td className="py-3 px-2">"images"</td>
-                  <td className="py-3 px-2">
-                    Name used for the hidden input field
-                  </td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">disabled</code>
-                  </td>
-                  <td className="py-3 px-2">boolean</td>
-                  <td className="py-3 px-2">false</td>
-                  <td className="py-3 px-2">Disable all interactions</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <div className="doc-pagination">
+          <a href="/quick-start">
+            <small>Previous</small>
+            <span>Quick start</span>
+          </a>
+          <a href="/components/trigger">
+            <small>Next</small>
+            <span>
+              Trigger <IoArrowForwardOutline size={14} />
+            </span>
+          </a>
+        </div>
       </article>
     </DocsLayout>
   );
-};
-
-export default ComponentRoot;
+}

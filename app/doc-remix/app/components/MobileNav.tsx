@@ -1,9 +1,8 @@
+import { IoCloseOutline } from "react-icons/io5";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { sidebarItems } from "./DocsSidebar";
-import { IoCloseOutline } from "react-icons/io5";
-import { Button } from "./ui/button";
-import { useEffect } from "react";
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -14,61 +13,72 @@ export const MobileNav = ({ isOpen, onClose }: MobileNavProps) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 lg:hidden">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60 animate-in fade-in duration-300"
+    <div
+      className="mobile-nav"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Documentation navigation"
+    >
+      <button
+        className="mobile-nav__backdrop"
+        type="button"
         onClick={onClose}
+        aria-label="Close navigation"
       />
-
-      {/* Sidebar Content */}
-      <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-background border-r p-6 shadow-xl animate-in slide-in-from-left duration-300">
-        <div className="flex items-center justify-between mb-8">
-          <span className="text-lg font-bold">Menu</span>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <IoCloseOutline className="h-6 w-6" />
-          </Button>
+      <aside className="mobile-nav__panel">
+        <div className="mobile-nav__title">
+          <span>Navigation</span>
+          <button
+            className="icon-button"
+            type="button"
+            onClick={onClose}
+            aria-label="Close navigation"
+          >
+            <IoCloseOutline size={18} />
+          </button>
         </div>
-
-        <nav className="space-y-6 overflow-y-auto max-h-[calc(100vh-8rem)]">
+        <nav aria-label="Documentation navigation">
           {sidebarItems.map((section) => (
-            <div key={section.title}>
-              <h4 className="font-semibold text-sm mb-2">{section.title}</h4>
-              <ul className="space-y-1">
-                {section.items.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      to={item.href}
-                      onClick={onClose}
-                      className={cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors",
-                        location.pathname === item.href
-                          ? "bg-primary/10 text-primary font-medium"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted",
-                      )}
-                    >
-                      {item.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <section key={section.title} className="sidebar-section">
+              <h2>{section.title}</h2>
+              {section.items.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={onClose}
+                  className={cn(
+                    "sidebar-link",
+                    section.code && "sidebar-link--code",
+                    location.pathname === item.href && "sidebar-link--active",
+                  )}
+                >
+                  <span>{item.title}</span>
+                  {item.badge && (
+                    <small className="sidebar-link__badge">{item.badge}</small>
+                  )}
+                </Link>
+              ))}
+            </section>
           ))}
         </nav>
-      </div>
+        <a
+          href="https://kristofajosh.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="sidebar-credit"
+        >
+          Built by Chris Josh
+        </a>
+      </aside>
     </div>
   );
 };

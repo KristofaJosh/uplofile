@@ -1,73 +1,67 @@
 import type { MetaFunction } from "react-router";
-import { DocsLayout } from "@/components/DocsLayout";
 import { CodeBlock } from "@/components/CodeBlock";
+import { DocsLayout } from "@/components/DocsLayout";
+import { ImportLine } from "@/components/ImportLine";
+import { PropRows, type Prop } from "@/components/PropRow";
 import code from "./hiddeninput.demo.tsx?raw";
+import { withPageMeta } from "@/lib/seo";
 
-export const meta: MetaFunction = () => {
-  return [
+export const meta: MetaFunction = () =>
+  withPageMeta("/components/hidden-input", [
     { title: "HiddenInput Component - Uplofile" },
     {
       name: "description",
-      content: "HiddenInput renders a hidden form input used to carry upload data for forms.",
+      content: "HiddenInput carries completed upload data in a form field.",
     },
-  ];
-};
+  ]);
+const props: Prop[] = [
+  {
+    name: "name",
+    signature: "string",
+    description: (
+      <>
+        Field name posted with the form. Falls back to <code>Root</code>'s own{" "}
+        <code>name</code> prop when omitted.
+      </>
+    ),
+    default: '"image"',
+  },
+];
 
-const ComponentHiddenInput = () => {
+export default function ComponentHiddenInput() {
   return (
     <DocsLayout>
-      <article className="prose prose-slate dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2">HiddenInput</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          A hidden input that holds file data for form submissions.
+      <article className="doc-article">
+        <h1>HiddenInput</h1>
+        <p className="doc-lead">
+          A single <code>{'<input type="hidden">'}</code> carrying completed
+          items with URLs as JSON, for classic form posts that never touch{" "}
+          <code>fetch</code>.
         </p>
-
-        <section className="space-y-4 mb-12">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Usage
-          </h2>
-          <p className="text-muted-foreground">
-            Include this component to make files available in form submissions:
+        <ImportLine names="HiddenInput" />
+        <section id="usage">
+          <h2>Usage</h2>
+          <p>
+            Drop it anywhere inside <code>Root</code>. The value updates as
+            uploads finish.
           </p>
-
-          <CodeBlock code={code} language="tsx" />
+          <CodeBlock code={code} filename="Uploader.tsx" />
         </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b border-border pb-2">
-            Props
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-2 font-semibold">Prop</th>
-                  <th className="text-left py-3 px-2 font-semibold">Type</th>
-                  <th className="text-left py-3 px-2 font-semibold">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-muted-foreground">
-                <tr className="border-b border-border">
-                  <td className="py-3 px-2">
-                    <code className="code-inline">name</code>
-                  </td>
-                  <td className="py-3 px-2">string</td>
-                  <td className="py-3 px-2">
-                    Form field name. If not provided, it uses the{" "}
-                    <code className="code-inline">name</code> from{" "}
-                    <code className="code-inline">UplofileRoot</code>.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <section id="props">
+          <h2>Props</h2>
+          <PropRows items={props} />
         </section>
+        <div className="doc-pagination">
+          <a href="/components/dropzone">
+            <small>Previous</small>
+            <span>Dropzone</span>
+          </a>
+          <a href="/api/props">
+            <small>Next</small>
+            <span>Types</span>
+          </a>
+        </div>
       </article>
     </DocsLayout>
   );
-};
-
-export default ComponentHiddenInput;
+}

@@ -1,23 +1,21 @@
-import { UplofileRoot, UplofileTrigger } from "@/components/ui/uplofile";
+import { Root, Trigger } from "uplofile";
 
-export default function TriggerDemo() {
+const upload = async (file: File) => ({ url: URL.createObjectURL(file) });
+
+export function Uploader() {
   return (
-    <UplofileRoot upload={async () => ({ url: "" })}>
-      {/* Simple Trigger */}
-      <UplofileTrigger className="underline text-blue-500">
-        Select files
-      </UplofileTrigger>
+    <Root upload={upload}>
+      {/* Renders a <button> by default. */}
+      <Trigger className="btn">Select files</Trigger>
 
-      {/* Trigger with Render Props */}
-      <UplofileTrigger
-        render={({ isUploading, doneCount, uploadingCount }) => (
+      {/* render exposes live counts, so the label can change while uploading. */}
+      <Trigger
+        render={({ isUploading, uploadingCount }) => (
           <span>
-            {isUploading
-              ? `Uploading ${uploadingCount} files...`
-              : "Upload files"}
+            {isUploading ? `Uploading ${uploadingCount}…` : "Upload files"}
           </span>
         )}
       />
-    </UplofileRoot>
+    </Root>
   );
 }

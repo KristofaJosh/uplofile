@@ -1,13 +1,15 @@
 import type { MetaFunction } from "react-router";
+import { withPageMeta } from "@/lib/seo";
 import { ExamplePage } from "@/components/ExamplePage";
 import Demo from "./videouploader.demo.tsx";
-import code from "./videouploader.demo.tsx?raw";
+import demoCode from "./videouploader.demo.tsx?raw";
+import videoItemCode from "./videouploader.videoitem.demo.tsx?raw";
 
 export const meta: MetaFunction = () => {
-  return [
+  return withPageMeta("/examples/video", [
     { title: "Video Uploader Example - Uplofile" },
     { name: "description", content: "A video upload example with preview." },
-  ];
+  ]);
 };
 
 const ExampleVideoUploader = () => {
@@ -15,7 +17,10 @@ const ExampleVideoUploader = () => {
     <ExamplePage
       title="Video Uploader"
       description="A video-specific uploader with progress tracking, cancelable uploads, and retry logic for failed transfers."
-      code={code}
+      codeTabs={[
+        { label: "Video uploader demo", code: demoCode },
+        { label: "Video item", code: videoItemCode },
+      ]}
       keyPoints={[
         <>
           Uses <code className="code-inline">UplofileCancel</code> to abort

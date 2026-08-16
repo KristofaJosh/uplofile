@@ -1,6 +1,6 @@
-import { test, expect } from "@playwright/test";
 import path from "path";
 import { fileURLToPath } from "url";
+import { test, expect } from "./fixtures.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const testFile = path.resolve(__dirname, "fixtures", "test.txt");
@@ -10,7 +10,9 @@ test.describe("Form Integration", () => {
     await page.goto("/examples/form");
     await page.locator('[data-part="root"]').waitFor();
 
-    await page.getByPlaceholder("e.g. Project Proposal Q1").fill("Test Project");
+    await page
+      .getByPlaceholder("e.g. Project Proposal Q1")
+      .fill("Test Project");
 
     const fileChooserPromise = page.waitForEvent("filechooser");
     await page.locator('[data-part="trigger"]').click();

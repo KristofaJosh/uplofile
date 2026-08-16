@@ -1,6 +1,6 @@
 # Uplofile
 
-Uplofile is a headless, composable React file upload library. It manages UI state, orchestration, and complex file upload lifecycles (uploading, removing, retrying) but leaves the network logic ("bring your own upload logic") entirely up to the user. 
+Uplofile is a composable React file upload library built from accessible UI primitives. It manages UI state, orchestration, and complex file upload lifecycles (uploading, removing, retrying) but leaves the network logic ("bring your own upload logic") entirely up to the user.
 
 ## Core Philosophy
 - Uploads are UI state problems disguised as network problems.
@@ -12,7 +12,8 @@ Uplofile is a headless, composable React file upload library. It manages UI stat
 ### 1. `UplofileRoot` (The Provider)
 Manages the entire upload state. Must wrap all other components.
 - **`upload`**: `(file: File, signal: AbortSignal, setProgress: (pct: number) => void) => Promise<{ url: string; id?: string }>` - The core upload logic.
-- **`onRemove`**: `(item: UploadFileItem, signal: AbortSignal) => Promise<void>` - Optional server-side delete logic.
+- **`initial`**: `MaybePromise<Array<Pick<UploadFileItem, 'uid' | 'id' | 'name' | 'url' | 'meta'>>>` - Pre-hydrated files from the server. If you pass a `Promise`, **you must catch/handle its rejection yourself** — `Root` does not attach a `.catch`, so a rejected `initial` promise becomes an unhandled rejection. Initial-load errors are consumer-owned, not surfaced through `item.error`.
+- **`onRemove`**: `(item: UploadFileItem, signal: AbortSignal) => Promise<void>` - Optional server-side delete logic. If it throws/rejects, the item is kept (or restored, in `optimistic` mode) with `status: 'done'` and `item.error` set to the failure message, so `onChange` consumers can distinguish a failed removal from a successful one. `item.error` is cleared as soon as a new removal attempt begins, and `actions.remove(uid)` remains available to retry.
 - **`removeMode`**: `'optimistic'` (default) or `'strict'`.
 - **`beforeUpload`**: Hook to validate or transform files before they start uploading.
 - **`accept`, `multiple`, `maxCount`**: Standard HTML5 file constraints. Extension filters must be dot-prefixed, such as `.pdf` or `.tar.gz`. Invalid `accept` tokens are ignored, matching browser-permissive behavior.
@@ -134,3 +135,4 @@ For more complex usage patterns, refer to the official documentation and interac
 - [Pause / Resume (Resumable Uploads)](https://uplofile.kristofajosh.dev/examples/pause-resume)
 - [Batch Upload — Collect Files, Then Upload as One](https://uplofile.kristofajosh.dev/examples/batch-upload)
 - [Imperative Actions via Ref](https://uplofile.kristofajosh.dev/examples/root-imperative)
+- [useUplofile Hook Reference](https://uplofile.kristofajosh.dev/api/use-uplofile)

@@ -14,7 +14,11 @@ test.describe("Avatar Upload", () => {
     await trigger.click();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles([
-      { name: "avatar.png", mimeType: "image/png", buffer: Buffer.from("fake image") },
+      {
+        name: "avatar.png",
+        mimeType: "image/png",
+        buffer: Buffer.from("fake image"),
+      },
     ]);
 
     const previewImage = root.locator("img");

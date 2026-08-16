@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/KristofaJosh/uplofile/compare/v3.1.2...v3.1.3) (2026-08-15)
+
+
+### Bug Fixes
+
+* preserve and surface removal-failure errors in item state ([#43](https://github.com/KristofaJosh/uplofile/issues/43)) ([a149911](https://github.com/KristofaJosh/uplofile/commit/a149911481b65e1e305fa50ee1be40c6563a33c4)), closes [#31](https://github.com/KristofaJosh/uplofile/issues/31)
+
 ## [3.1.2](https://github.com/KristofaJosh/uplofile/compare/v3.1.1...v3.1.2) (2026-07-31)
 
 

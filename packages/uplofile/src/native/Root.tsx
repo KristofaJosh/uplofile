@@ -7,7 +7,10 @@ import React, {
   useRef,
 } from "react";
 import { View } from "react-native";
-import { pick, type DocumentPickerResponse } from "@react-native-documents/picker";
+import {
+  pick,
+  type DocumentPickerResponse,
+} from "@react-native-documents/picker";
 import { UploaderCtx, useUplofileState } from "../shared/context";
 import type { ItemActions } from "../shared/types";
 import type {

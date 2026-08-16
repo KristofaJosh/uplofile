@@ -1,20 +1,5 @@
-import {
-  UplofileRoot,
-  UplofileDropzone,
-  UplofileTrigger,
-  UplofilePreview,
-  UplofileHiddenInput,
-  type UploadFileItem,
-} from "@/components/ui/uplofile";
-import {
-  IoCloudUploadOutline,
-  IoSendOutline,
-  IoCheckmarkCircleOutline,
-  IoReloadOutline,
-  IoAttachOutline,
-  IoAlertCircleOutline,
-} from "react-icons/io5";
-import { mockUpload } from "@/lib/utils.ts";
+import { IoSendOutline } from "react-icons/io5";
+import { AttachmentsField } from "./formintegration.attachmentsfield.demo.tsx";
 
 export default function FormIntegrationDemo() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,43 +24,7 @@ export default function FormIntegrationDemo() {
         />
       </div>
 
-      <div className="grid gap-2">
-        <label className="text-sm font-bold text-gray-700 uppercase tracking-tight flex items-center gap-2">
-          <IoAttachOutline className="h-3 w-3" />
-          Attachments
-        </label>
-        <UplofileRoot upload={mockUpload} multiple name="attachments">
-          <UplofileHiddenInput />
-
-          <UplofileDropzone className="group relative border-2 border-dashed border-muted-foreground/20 rounded-xl p-8 text-center transition-all hover:border-primary/50 hover:bg-primary/5 data-[dragging=true]:border-primary data-[dragging=true]:bg-primary/10">
-            <UplofileTrigger>
-              <div className="flex flex-col items-center gap-3 cursor-pointer">
-                <div className="p-3 rounded-full bg-primary/10 text-primary group-hover:scale-110 transition-transform">
-                  <IoCloudUploadOutline className="h-6 w-6" />
-                </div>
-                <div className="grid gap-0.5">
-                  <span className="text-sm font-semibold text-gray-900">
-                    Click to upload or drag and drop
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    PDF, PNG, JPG up to 10MB
-                  </span>
-                </div>
-              </div>
-            </UplofileTrigger>
-          </UplofileDropzone>
-
-          <UplofilePreview
-            render={({ items }) => (
-              <div className="mt-4 space-y-2">
-                {items.map((item) => (
-                  <FormFileItem key={item.uid} item={item} />
-                ))}
-              </div>
-            )}
-          />
-        </UplofileRoot>
-      </div>
+      <AttachmentsField />
 
       <div className="pt-4 border-t">
         <button
@@ -87,46 +36,5 @@ export default function FormIntegrationDemo() {
         </button>
       </div>
     </form>
-  );
-}
-
-function FormFileItem({ item }: { item: UploadFileItem }) {
-  return (
-    <div className="flex items-center justify-between p-3 rounded-lg border bg-white shadow-sm animate-in fade-in slide-in-from-top-1">
-      <div className="flex items-center gap-3 overflow-hidden">
-        <div
-          className={`p-1.5 rounded-md ${item.status === "error" ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}
-        >
-          {item.status === "error" ? (
-            <IoAlertCircleOutline className="h-3 w-3" />
-          ) : (
-<IoAttachOutline className="h-3 w-3" />
-          )}
-        </div>
-        <span
-          className={`text-xs font-medium truncate max-w-[200px] ${item.status === "error" ? "text-destructive" : ""}`}
-        >
-          {item.name}
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
-        {item.status === "uploading" && (
-          <>
-            <span className="text-[10px] font-bold text-muted-foreground">
-              {item.progress}%
-            </span>
-            <IoReloadOutline className="h-3 w-3 animate-spin text-primary" />
-          </>
-        )}
-        {item.status === "done" && (
-          <IoCheckmarkCircleOutline className="h-4 w-4 text-emerald-500" />
-        )}
-        {item.status === "error" && (
-          <span className="text-[10px] font-bold text-destructive uppercase">
-            Failed
-          </span>
-        )}
-      </div>
-    </div>
   );
 }

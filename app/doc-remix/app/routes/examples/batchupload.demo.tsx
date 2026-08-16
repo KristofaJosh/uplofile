@@ -1,23 +1,49 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   UplofilePreview,
   UplofileRoot,
   UplofileTrigger,
-  type UploadFileItem,
   type UploadStatus,
 } from "@/components/ui/uplofile";
-import { mockUpload } from "@/lib/utils.ts";
+import { BatchFileItem } from "./batchupload.batchfileitem.demo.tsx";
 
-type BatchStatus = Extract<UploadStatus, "idle" | "uploading" | "done" | "error">;
+type BatchStatus = Extract<
+  UploadStatus,
+  "idle" | "uploading" | "done" | "error"
+>;
 
-const queueFile = async (file: File) => ({
-  id: file.name,
-  url: URL.createObjectURL(file),
-});
+type PendingUpload = {
+  file: File;
+  resolve: (value: { id: string; url: string }) => void;
+  reject: (reason: Error) => void;
+  setProgress?: (progress: number) => void;
+};
 
 export default function BatchUploadDemo() {
   const [status, setStatus] = useState<BatchStatus>("idle");
   const [progress, setProgress] = useState(0);
+  const pendingUploads = useRef(new Map<File, PendingUpload>());
+
+  const queueFile = useCallback(
+    (
+      file: File,
+      signal: AbortSignal,
+      setFileProgress?: (progress: number) => void,
+    ) =>
+      new Promise<{ id: string; url: string }>((resolve, reject) => {
+        const pending = { file, resolve, reject, setProgress: setFileProgress };
+        pendingUploads.current.set(file, pending);
+        signal.addEventListener(
+          "abort",
+          () => {
+            pendingUploads.current.delete(file);
+            reject(new Error("Upload cancelled"));
+          },
+          { once: true },
+        );
+      }),
+    [],
+  );
 
   const uploadBatch = useCallback(async (files: File[]) => {
     if (files.length === 0) return;
@@ -26,7 +52,31 @@ export default function BatchUploadDemo() {
     setProgress(0);
 
     try {
-      await mockBatchUpload(files, setProgress);
+      for (const [index, file] of files.entries()) {
+        const pending = pendingUploads.current.get(file);
+        if (!pending) continue;
+
+        await new Promise<void>((resolve) => {
+          let fileProgress = 0;
+          const interval = window.setInterval(() => {
+            fileProgress = Math.min(fileProgress + 10, 100);
+            pending.setProgress?.(fileProgress);
+            setProgress(
+              Math.round(((index + fileProgress / 100) / files.length) * 100),
+            );
+            if (fileProgress === 100) {
+              window.clearInterval(interval);
+              resolve();
+            }
+          }, 80);
+        });
+
+        pending.resolve({
+          id: file.name,
+          url: `https://example.com/uploads/${encodeURIComponent(file.name)}`,
+        });
+        pendingUploads.current.delete(file);
+      }
       setStatus("done");
     } catch {
       setStatus("error");
@@ -81,7 +131,9 @@ export default function BatchUploadDemo() {
                     Add files, then upload them together as one batch.
                   </p>
                 ) : (
-                  items.map((item) => <BatchFileItem key={item.uid} item={item} />)
+                  items.map((item) => (
+                    <BatchFileItem key={item.uid} item={item} />
+                  ))
                 )}
               </div>
             </div>
@@ -89,25 +141,5 @@ export default function BatchUploadDemo() {
         }}
       />
     </UplofileRoot>
-  );
-}
-
-async function mockBatchUpload(
-  files: File[],
-  setProgress: (progress: number) => void,
-) {
-  await mockUpload(files[0], undefined, setProgress);
-
-  return files.map((file) => ({
-    id: file.name,
-    url: `https://example.com/uploads/${encodeURIComponent(file.name)}`,
-  }));
-}
-
-function BatchFileItem({ item }: { item: UploadFileItem }) {
-  return (
-    <div className="p-3">
-      <p className="truncate text-sm font-medium">{item.name}</p>
-    </div>
   );
 }
