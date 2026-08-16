@@ -5,6 +5,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 
 import type { ItemActions, RootProps, UploadFileItem } from "./types";
@@ -118,6 +119,13 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
   const storeRef = useRef<ItemsStore<TMeta, TFileSource> | null>(null);
   if (!storeRef.current) storeRef.current = createItemsStore([]);
   const store = storeRef.current;
+  // Subscribed here (not just read via getSnapshot) so `onChange` below runs
+  // in a normal useEffect, guaranteed to fire only after React has committed
+  // the update — matching the timing contract the old useState-backed
+  // version had. Calling onChange straight from the store's synchronous
+  // notify loop (the previous version of this file) fired it before React
+  // had even scheduled the re-render, a real behavior change from `main`.
+  const items = useSyncExternalStore(store.subscribe, store.getSnapshot);
   const [isLoading, setIsLoading] = useState(
     Array.isArray(initial) ? initial.length > 0 : !!initial,
   );
@@ -132,16 +140,14 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
   const getFileNameRef = useRef(getFileName);
   const createPreviewUrlRef = useRef(createPreviewUrl);
   const revokePreviewUrlRef = useRef(revokePreviewUrl);
+  const prevItemsForOnChangeRef = useRef(items);
 
-  // Fire onChange whenever the store actually publishes a new items array.
-  // Unlike the old useState + effect pair, the store only notifies on real
-  // setItems calls, so there's no need to guard against the initial-mount
-  // "reference matches" case.
+  // Call onChange when items change (skip initial mount where reference matches)
   useEffect(() => {
-    return store.subscribe(() => {
-      onChangeRef.current?.(store.getSnapshot());
-    });
-  }, [store]);
+    if (prevItemsForOnChangeRef.current === items) return;
+    prevItemsForOnChangeRef.current = items;
+    onChangeRef.current?.(items);
+  }, [items]);
 
   useEffect(() => {
     onChangeRef.current = onChange;
