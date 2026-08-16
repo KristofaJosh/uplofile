@@ -1,9 +1,15 @@
 import { IoCheckmarkOutline, IoCopyOutline } from "react-icons/io5";
 import { useCopy } from "@/hooks/use-copy";
 
-export const ImportLine = ({ names }: { names: string }) => {
+export const ImportLine = ({
+  names,
+  from = "uplofile",
+}: {
+  names: string;
+  from?: string;
+}) => {
   const [copied, copy] = useCopy();
-  const text = `import { ${names} } from "uplofile";`;
+  const text = `import { ${names} } from "${from}";`;
   return (
     <div className="install-command import-line">
       <code>{text}</code>

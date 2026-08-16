@@ -12,6 +12,9 @@ export default [
   route("components/dropzone", "routes/components/dropzone.tsx"),
   route("components/hidden-input", "routes/components/hiddeninput.tsx"),
 
+  // Platforms
+  route("native", "routes/native.tsx"),
+
   // API
   route("api/props", "routes/api/props.tsx"),
   route("api/actions", "routes/api/actions.tsx"),
