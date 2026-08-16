@@ -129,6 +129,7 @@ describe("baseline benchmark: main's setItems-per-tick architecture", () => {
       );
 
     const dropzoneSpy = vi.spyOn(DropzoneModule, "Dropzone");
+    const previewItemSpy = vi.spyOn(PreviewModule.PreviewItem, "type" as any);
     const refHolder: { current: UplofileRootRef | null } = { current: null };
     const { totals, onRender } = makeProfilerCollector();
 
@@ -158,6 +159,7 @@ describe("baseline benchmark: main's setItems-per-tick architecture", () => {
 
     await waitFor(() => expect(progressCallbacks).toHaveLength(ITEM_COUNT));
     dropzoneSpy.mockClear();
+    previewItemSpy.mockClear();
     totals.commits = 0;
     totals.actualDurationMs = 0;
 
@@ -179,10 +181,12 @@ describe("baseline benchmark: main's setItems-per-tick architecture", () => {
       `[baseline all-items] batch=${ITEM_COUNT} ticksPerItem=${TICKS_PER_ITEM} ` +
         `totalSetItemsCalls=${ITEM_COUNT * TICKS_PER_ITEM} -> ` +
         `commits=${totals.commits} actualDuration=${totals.actualDurationMs.toFixed(2)}ms ` +
-        `wallClock=${wallMs.toFixed(2)}ms dropzoneCalls=${dropzoneSpy.mock.calls.length}`,
+        `wallClock=${wallMs.toFixed(2)}ms dropzoneCalls=${dropzoneSpy.mock.calls.length} ` +
+        `previewItemCalls=${previewItemSpy.mock.calls.length}`,
     );
 
     dropzoneSpy.mockRestore();
+    previewItemSpy.mockRestore();
   });
 
   it.each([10, 20, 50, 100])(
