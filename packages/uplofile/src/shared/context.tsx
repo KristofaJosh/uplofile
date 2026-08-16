@@ -125,7 +125,15 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
   // version had. Calling onChange straight from the store's synchronous
   // notify loop (the previous version of this file) fired it before React
   // had even scheduled the re-render, a real behavior change from `main`.
-  const items = useSyncExternalStore(store.subscribe, store.getSnapshot);
+  // Third arg (getServerSnapshot) is required during SSR — omitting it
+  // throws "Missing getServerSnapshot" and crashes the render. The store's
+  // getSnapshot is already environment-agnostic (a pure closure read), so
+  // it doubles as the server snapshot function directly.
+  const items = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
+  );
   const [isLoading, setIsLoading] = useState(
     Array.isArray(initial) ? initial.length > 0 : !!initial,
   );
