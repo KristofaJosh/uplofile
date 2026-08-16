@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Root, Trigger, useUplofile } from "uplofile/native";
 import { mockUpload } from "../mockUpload";
+import { Section } from "./Section";
 
 function ActionsBar() {
   const { items, actions } = useUplofile();
@@ -52,8 +53,7 @@ function ActionsBar() {
 
 export function BasicUpload() {
   return (
-    <View style={styles.section}>
-      <Text style={styles.heading}>Basic Upload</Text>
+    <Section title="Basic Upload">
       <Root upload={mockUpload}>
         <Trigger>
           <View style={styles.trigger}>
@@ -62,13 +62,11 @@ export function BasicUpload() {
         </Trigger>
         <ActionsBar />
       </Root>
-    </View>
+    </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  section: { gap: 12 },
-  heading: { fontSize: 20, fontWeight: "700" },
   trigger: {
     backgroundColor: "#34C759",
     paddingVertical: 12,

@@ -1,8 +1,10 @@
 import React, {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
 } from "react";
 import { View } from "react-native";
 import {
@@ -10,26 +12,49 @@ import {
   type DocumentPickerResponse,
 } from "@react-native-documents/picker";
 import { UploaderCtx, useUplofileState } from "../shared/context";
+import type { ItemActions } from "../shared/types";
 import type {
   ImageUploaderContextValue,
-  ItemActions,
   RootProps,
   UploadFileItem,
-} from "../shared/types";
-import type { UplofileRootRef } from "./types";
+  UplofileRootRef,
+} from "./types";
 import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
 
 export type { DocumentPickerResponse } from "@react-native-documents/picker";
 
-export const Root = forwardRef(
-  <TMeta = any,>(
-    props: RootProps<TMeta, DocumentPickerResponse>,
-    ref: React.Ref<UplofileRootRef<TMeta, DocumentPickerResponse>>,
+const PICK_FILES_DEPRECATION_MESSAGE =
+  "[uplofile] native Root is using the built-in @react-native-documents/picker fallback " +
+  "because no `pickFiles` prop was passed. This fallback (and the @react-native-documents/picker " +
+  "peer dependency) will be removed in the next major version. Pass `pickFiles` — see " +
+  "adapterReactNativeDocumentsPicker, adapterExpoDocumentPicker, adapterExpoImagePicker, and " +
+  "adapterReactNativeImagePicker exported from `uplofile/native` — or pass `suppressDeprecationWarnings` " +
+  "to silence this warning.";
+
+/**
+ * `forwardRef`'s own typings erase a generic render function's type
+ * parameters from the exported component's public type, collapsing
+ * `TFileSource` (and `TMeta`) to their defaults for every consumer
+ * regardless of what they pass to `pickFiles`/`upload`. Casting through
+ * this call-signature type restores per-usage generic inference.
+ */
+type NativeRootComponent = <TMeta = any, TFileSource = DocumentPickerResponse>(
+  props: RootProps<TMeta, TFileSource> & {
+    ref?: React.Ref<UplofileRootRef<TMeta, TFileSource>>;
+  },
+) => React.ReactElement | null;
+
+const RootImpl = forwardRef(
+  <TMeta = any, TFileSource = DocumentPickerResponse>(
+    props: RootProps<TMeta, TFileSource>,
+    ref: React.Ref<UplofileRootRef<TMeta, TFileSource>>,
   ) => {
-    const state = useUplofileState<TMeta, DocumentPickerResponse>({
+    const state = useUplofileState<TMeta, TFileSource>({
       ...props,
-      getFileName: (source) => source?.name ?? "unknown",
-      createPreviewUrl: (source) => source?.uri ?? undefined,
+      getFileName: (source) =>
+        (source as { name?: string } | null | undefined)?.name ?? "unknown",
+      createPreviewUrl: (source) =>
+        (source as { uri?: string } | null | undefined)?.uri ?? undefined,
       revokePreviewUrl: () => {},
     });
 
@@ -37,7 +62,35 @@ export const Root = forwardRef(
       return getNativePickerAcceptTypes(props.accept);
     }, [props.accept]);
 
+    const hasWarnedRef = useRef(false);
+    useEffect(() => {
+      if (props.pickFiles || props.suppressDeprecationWarnings) return;
+      if (hasWarnedRef.current) return;
+      hasWarnedRef.current = true;
+      console.warn(PICK_FILES_DEPRECATION_MESSAGE);
+      // Intentionally mount-only: this reports the fallback in use at mount
+      // time, guarded per-instance by the ref above rather than a
+      // module-level flag, so every Root instance warns exactly once
+      // regardless of how many other Root instances exist or have already
+      // warned.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const openFileDialog = useCallback(async () => {
+      if (props.pickFiles) {
+        try {
+          const results = await props.pickFiles(props.accept, {
+            multiple: props.multiple ?? true,
+          });
+          if (results.length > 0) {
+            void state.selectFiles(results);
+          }
+        } catch {
+          // Consumer-provided pickFiles rejected — treat as cancellation, no-op.
+        }
+        return;
+      }
+
       try {
         const results = await pick({
           type: acceptTypes,
@@ -51,20 +104,24 @@ export const Root = forwardRef(
             },
             props.accept,
           ),
-        );
+        ) as unknown as TFileSource[];
         if (accepted.length > 0) {
           void state.selectFiles(accepted);
         }
       } catch {
         // User cancelled the picker — no-op
       }
-    }, [acceptTypes, props.accept, props.multiple, state.selectFiles]);
+    }, [
+      props.pickFiles,
+      acceptTypes,
+      props.accept,
+      props.multiple,
+      state.selectFiles,
+    ]);
 
-    const ctx = useMemo<
-      ImageUploaderContextValue<TMeta, DocumentPickerResponse>
-    >(
+    const ctx = useMemo<ImageUploaderContextValue<TMeta, TFileSource>>(
       () => ({
-        items: state.items as UploadFileItem<TMeta, DocumentPickerResponse>[],
+        items: state.items as UploadFileItem<TMeta, TFileSource>[],
         setItems: state.setItems,
         isLoading: state.isLoading,
         disabled: props.disabled,
@@ -116,3 +173,5 @@ export const Root = forwardRef(
     );
   },
 );
+
+export const Root = RootImpl as unknown as NativeRootComponent;

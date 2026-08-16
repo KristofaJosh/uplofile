@@ -3,6 +3,7 @@ import type { DocumentPickerResponse } from "@react-native-documents/picker";
 import type {
   BeforeUploadFn as SharedBeforeUploadFn,
   ImageUploaderContextValue as SharedImageUploaderContextValue,
+  PickFilesFn as SharedPickFilesFn,
   PreviewRenderProps as SharedPreviewRenderProps,
   RootProps as SharedRootProps,
   TriggerRenderProps as SharedTriggerRenderProps,
@@ -25,8 +26,27 @@ export type BeforeUploadFn<
   TFileSource = DocumentPickerResponse,
 > = SharedBeforeUploadFn<TMeta, TFileSource>;
 
-export type RootProps<TMeta = any, TFileSource = DocumentPickerResponse> =
-  SharedRootProps<TMeta, TFileSource>;
+export type PickFilesFn<TFileSource = DocumentPickerResponse> =
+  SharedPickFilesFn<TFileSource>;
+
+export type RootProps<
+  TMeta = any,
+  TFileSource = DocumentPickerResponse,
+> = SharedRootProps<TMeta, TFileSource> & {
+  /**
+   * Consumer-supplied replacement for the built-in
+   * `@react-native-documents/picker` call. When provided, `Root` invokes
+   * this instead of `pick()` — see `adapterReactNativeDocumentsPicker`,
+   * `adapterExpoDocumentPicker`, `adapterExpoImagePicker`, and
+   * `adapterReactNativeImagePicker`.
+   */
+  pickFiles?: PickFilesFn<TFileSource>;
+  /**
+   * Silences the one-time deprecation warning logged when `pickFiles`
+   * is omitted and `Root` falls back to `@react-native-documents/picker`.
+   */
+  suppressDeprecationWarnings?: boolean;
+};
 
 export type ImageUploaderContextValue<
   TMeta = any,
