@@ -47,13 +47,18 @@ Use the repository template when required. Otherwise use only the applicable sec
 ```markdown
 ## Summary
 
-State the affected user or workflow, the problem, and the outcome in one short paragraph.
+State what changed, who it affects, and why it matters in one short paragraph.
 
-## What / Why
+## Changes
 
-- **Short change headline** — explain what changed and why in one line.
-- **Another material change** — keep the problem and solution together.
+- **Short change headline** — state a material change clearly.
+- **Another material change** — include implementation detail only when it changes review risk.
 - **While here** — group small related cleanup into one optional bullet.
+
+## Testing
+
+- Report exact checks run and their results.
+- State any relevant checks that were not run.
 
 ## Screenshots
 
@@ -63,20 +68,16 @@ State the affected user or workflow, the problem, and the outcome in one short p
 
 <!-- Include only reviewer decisions, meaningful blast radius, or pending evidence. -->
 
-## Expectation
-
-- Describe observable behavior by relevant scenario.
-- Report exact tests run and their status; state what was not run.
-
 Related to #<issue-number>
 ```
 
 Apply these limits:
 
-- Keep `Summary` to one or two sentences. Describe the outcome, not a feature inventory.
-- Keep `What / Why` to about five one-line bullets. Lead with the problem, then the fix.
+- Keep `Summary` to one to three sentences. State the context and outcome once; do not repeat the rationale in every change bullet.
+- Keep `Changes` to about five one-line bullets. Make it a factual, reviewer-scannable list of material changes.
 - Group incidental cleanup into one `While here` bullet.
-- Omit `Screenshots`, `Notes`, or `Expectation` when they add no reviewer value.
+- Report exact checks run and their result in `Testing`; state relevant checks that were not run.
+- Omit `Screenshots` or `Notes` when they add no reviewer value.
 - Keep technical implementation details only when they affect review, risk, compatibility, migration, or rollout.
 - Leave selector renames, internal refactors, review-finding chronology, and test mechanics to commits or comments.
 - Use plain language and a calm, human tone.
