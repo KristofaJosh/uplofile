@@ -1461,6 +1461,20 @@
       12.5px "JetBrains Mono",
       monospace;
   }
+  .doc-note {
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    max-width: 560px;
+    border-left: 2px solid var(--accent-text);
+    background: color-mix(in srgb, var(--accent-text) 8%, transparent);
+    border-radius: 0 6px 6px 0;
+    color: hsl(var(--muted));
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .doc-note strong {
+    color: hsl(var(--foreground));
+  }
   .status-list span {
     color: hsl(var(--muted));
     font-size: 13.5px;

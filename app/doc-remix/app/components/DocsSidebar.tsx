@@ -28,6 +28,10 @@ export const sidebarItems: SidebarSection[] = [
     ],
   },
   {
+    title: "Platforms",
+    items: [{ title: "React Native", href: "/native" }],
+  },
+  {
     title: "Reference",
     items: [
       { title: "Types", href: "/api/props" },
