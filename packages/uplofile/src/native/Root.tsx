@@ -16,8 +16,8 @@ import {
   UploaderCtx,
   useUplofileState,
 } from "../shared/context";
-import type { ItemActions, RootProps } from "../shared/types";
-import type { UplofileRootRef } from "./types";
+import type { ItemActions } from "../shared/types";
+import type { RootProps, UplofileRootRef } from "./types";
 import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
 
 export type { DocumentPickerResponse } from "@react-native-documents/picker";

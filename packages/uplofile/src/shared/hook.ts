@@ -22,6 +22,7 @@ export const useUplofile = <TMeta = any, TFileSource = unknown>() => {
   const items = useSyncExternalStore(
     ctx.store.subscribe,
     ctx.store.getSnapshot,
+    ctx.store.getSnapshot,
   );
   const hiddenInputValue = useMemo(
     () => computeHiddenInputValue(items),
