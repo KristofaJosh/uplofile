@@ -1,3 +1,5 @@
+## [3.2.1](https://github.com/KristofaJosh/uplofile/compare/v3.2.0...v3.2.1) (2026-08-16)
+
 # [3.2.0](https://github.com/KristofaJosh/uplofile/compare/v3.1.3...v3.2.0) (2026-08-16)
 
 
