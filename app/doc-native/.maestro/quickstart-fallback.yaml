@@ -1,0 +1,17 @@
+appId: com.chrisjosh.doc-native
+---
+# Verifies the deprecated built-in @react-native-documents/picker fallback
+# (Root with no pickFiles prop) still works end to end.
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn:
+          text: "http://.*:8081"
+          index: 0
+- assertVisible: "Quick Start"
+- tapOn:
+    id: "quickstart-trigger"
+- assertVisible: "Recents"
+- tapOn: "Cancel"

@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Root, Trigger, useUplofile, type UploadResult } from "uplofile/native";
+import { Section } from "./Section";
 
 function BatchStatus() {
   const { items } = useUplofile();
@@ -74,11 +75,10 @@ export function BatchUpload() {
   }, []);
 
   return (
-    <View style={styles.section}>
-      <Text style={styles.heading}>Batch Upload</Text>
-      <Text style={styles.description}>
-        Files are collected and sent as a single batch request.
-      </Text>
+    <Section
+      title="Batch Upload"
+      description="Files are collected and sent as a single batch request."
+    >
       <Root upload={upload}>
         <View style={styles.row}>
           <Trigger>
@@ -107,14 +107,11 @@ export function BatchUpload() {
 
         <BatchStatus />
       </Root>
-    </View>
+    </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  section: { gap: 12 },
-  heading: { fontSize: 20, fontWeight: "700" },
-  description: { fontSize: 13, color: "#666" },
   row: { flexDirection: "row", alignItems: "center", gap: 12, flexWrap: "wrap" },
   trigger: {
     backgroundColor: "#34C759",

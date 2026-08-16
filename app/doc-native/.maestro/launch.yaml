@@ -1,0 +1,13 @@
+appId: com.chrisjosh.doc-native
+---
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn:
+          text: "http://.*:8081"
+          index: 0
+- assertVisible: "Uplofile Native"
+- assertVisible: "Quick Start"
+- assertVisible: "pickFiles adapters"

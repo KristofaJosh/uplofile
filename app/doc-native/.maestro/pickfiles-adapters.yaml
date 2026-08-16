@@ -1,0 +1,53 @@
+appId: com.chrisjosh.doc-native
+---
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn:
+          text: "http://.*:8081"
+          index: 0
+- assertVisible: "pickFiles adapters"
+
+# Each adapter's trigger should open the real native picker UI for that
+# package (Files-style document picker for the two document-picker
+# adapters, the OS Photos picker for the two image-picker adapters) and
+# never crash with "Cannot find native module" — confirming the injected
+# pickFiles prop reaches the real adapter with no casting required.
+
+- scrollUntilVisible:
+    element:
+      id: "pickfiles-trigger-rn-documents"
+- tapOn:
+    id: "pickfiles-trigger-rn-documents"
+- assertVisible: "Recents"
+- tapOn: "Cancel"
+- assertVisible: "pickFiles adapters"
+
+- scrollUntilVisible:
+    element:
+      id: "pickfiles-trigger-expo-document"
+- tapOn:
+    id: "pickfiles-trigger-expo-document"
+- assertVisible: "Recents"
+- tapOn: "Cancel"
+- assertVisible: "pickFiles adapters"
+
+- scrollUntilVisible:
+    element:
+      id: "pickfiles-trigger-expo-image"
+- tapOn:
+    id: "pickfiles-trigger-expo-image"
+- assertVisible: "Select Items"
+- tapOn: "Cancel"
+- assertVisible: "pickFiles adapters"
+
+- scrollUntilVisible:
+    element:
+      id: "pickfiles-trigger-rn-image"
+- tapOn:
+    id: "pickfiles-trigger-rn-image"
+- assertVisible: "Select Items"
+- tapOn: "Cancel"
+- assertVisible: "pickFiles adapters"
