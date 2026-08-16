@@ -83,6 +83,14 @@ export const DocsSidebar = () => {
           </section>
         ))}
       </nav>
+      <a
+        href="https://kristofajosh.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="sidebar-credit"
+      >
+        Built by Chris Josh
+      </a>
     </aside>
   );
 };
