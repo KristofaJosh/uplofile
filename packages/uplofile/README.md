@@ -33,15 +33,13 @@ export default function Basic() {
 }
 ```
 
-Unstyled and accessible by default — style it however you like.
-
 ## Why
 
-Your upload component should not own your upload pipeline. Uplofile gives you the upload experience — drag-and-drop, progress, cancel/retry/remove, validation — your app defines what "uploading" means. [Read why it was built](https://www.kristofajosh.dev/blog/why-i-built-uplofile).
+Your upload component should not own your upload pipeline. Uplofile gives you the upload experience: drag-and-drop, progress, cancel/retry/remove, validation. Your app defines what "uploading" means. [Read why it was built](https://www.kristofajosh.dev/blog/why-i-built-uplofile).
 
 ## React Native
 
-Same components, import from `uplofile/native`.
+Same components, import from `uplofile/native`. Pass `pickFiles` to plug in your own picker: Expo, `react-native-image-picker`, or a custom one.
 
 ## Documentation
 

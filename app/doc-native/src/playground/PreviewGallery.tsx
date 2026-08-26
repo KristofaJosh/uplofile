@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { Root, Trigger, useUplofile } from "uplofile/native";
 import { mockUpload } from "../mockUpload";
+import { Section } from "./Section";
 
 function GalleryPreview() {
   const { items, isLoading } = useUplofile();
@@ -46,8 +47,7 @@ function GalleryPreview() {
 
 export function PreviewGallery() {
   return (
-    <View style={styles.section}>
-      <Text style={styles.heading}>Preview Gallery</Text>
+    <Section title="Preview Gallery">
       <Root upload={mockUpload}>
         <Trigger>
           <View style={styles.trigger}>
@@ -56,13 +56,11 @@ export function PreviewGallery() {
         </Trigger>
         <GalleryPreview />
       </Root>
-    </View>
+    </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  section: { gap: 12 },
-  heading: { fontSize: 20, fontWeight: "700" },
   trigger: {
     backgroundColor: "#FF9500",
     paddingVertical: 12,

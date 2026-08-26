@@ -28,6 +28,10 @@ export const sidebarItems: SidebarSection[] = [
     ],
   },
   {
+    title: "Platforms",
+    items: [{ title: "React Native", href: "/native" }],
+  },
+  {
     title: "Reference",
     items: [
       { title: "Types", href: "/api/props" },
@@ -83,6 +87,14 @@ export const DocsSidebar = () => {
           </section>
         ))}
       </nav>
+      <a
+        href="https://kristofajosh.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="sidebar-credit"
+      >
+        Built by Chris Josh
+      </a>
     </aside>
   );
 };

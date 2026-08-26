@@ -71,16 +71,33 @@ export const DocsLayout = ({ children }: PropsWithChildren) => {
       <div className="docs-shell">
         <DocsSidebar />
         <main className="docs-content">{children}</main>
-        {links && (
-          <aside className="docs-toc" aria-label="On this page">
-            <span>On this page</span>
-            {links.map(([href, title]) => (
-              <a href={href} key={href}>
-                {title}
-              </a>
-            ))}
-          </aside>
-        )}
+        <aside className="docs-toc" aria-label="On this page">
+          {links && (
+            <>
+              <span>On this page</span>
+              {links.map(([href, title]) => (
+                <a href={href} key={href}>
+                  {title}
+                </a>
+              ))}
+            </>
+          )}
+          {/* TODO: ad slot, re-enable when ready
+          <div className="creator-card">
+            <span className="creator-card__label">From the creator</span>
+            <strong>Uplofile</strong>
+            <p>Composable React file upload primitives.</p>
+          </div>
+          */}
+          <a
+            href="https://kristofajosh.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="sidebar-credit"
+          >
+            Built by Chris Josh
+          </a>
+        </aside>
       </div>
     </div>
   );

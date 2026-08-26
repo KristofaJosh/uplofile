@@ -62,6 +62,15 @@ export type BeforeUploadResult<TMeta = any> =
       reason?: string;
     }>;
 
+/**
+ * Consumer-supplied replacement for a platform's hardcoded native file picker.
+ * Resolves to the picked file sources, or to an empty array on cancellation.
+ */
+export type PickFilesFn<TFileSource = unknown> = (
+  accept: string | undefined,
+  options: { multiple: boolean },
+) => Promise<TFileSource[]>;
+
 export type RootProps<TMeta = any, TFileSource = unknown> = PropsWithChildren<{
   multiple?: boolean;
   initial?: MaybePromise<

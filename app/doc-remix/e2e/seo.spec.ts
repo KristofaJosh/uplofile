@@ -15,6 +15,7 @@ const publicRoutes = [
   "/components/preview",
   "/components/dropzone",
   "/components/hidden-input",
+  "/native",
   "/api/props",
   "/api/actions",
   "/api/use-uplofile",
@@ -38,6 +39,7 @@ for (const pathname of [
   "/",
   "/quick-start",
   "/components/root",
+  "/native",
   "/api/actions",
   "/examples/batch-upload",
 ]) {

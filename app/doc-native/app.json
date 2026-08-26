@@ -8,7 +8,20 @@
       "android"
     ],
     "ios": {
-      "bundleIdentifier": "com.chrisjosh.doc-native"
-    }
+      "bundleIdentifier": "com.uplofile.native"
+    },
+    "android": {
+      "package": "com.uplofile.native"
+    },
+    "plugins": [
+      "expo-status-bar",
+      "expo-document-picker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Uplofile Native to access your photos to test the pickFiles adapters."
+        }
+      ]
+    ]
   }
 }

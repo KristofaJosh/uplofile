@@ -85,9 +85,9 @@ const ApiProps = () => {
         </section>
 
         <div className="doc-pagination">
-          <a href="/components/hidden-input">
+          <a href="/native">
             <small>Previous</small>
-            <span>HiddenInput</span>
+            <span>React Native</span>
           </a>
           <a href="/api/actions">
             <small>Next</small>

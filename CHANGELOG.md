@@ -1,3 +1,12 @@
+## [3.2.1](https://github.com/KristofaJosh/uplofile/compare/v3.2.0...v3.2.1) (2026-08-16)
+
+# [3.2.0](https://github.com/KristofaJosh/uplofile/compare/v3.1.3...v3.2.0) (2026-08-16)
+
+
+### Features
+
+* make native document picking consumer-injectable via pickFiles ([#46](https://github.com/KristofaJosh/uplofile/issues/46)) ([57fe3b5](https://github.com/KristofaJosh/uplofile/commit/57fe3b5e4dee2c3f115a555ca331697e80ca72b1)), closes [#40](https://github.com/KristofaJosh/uplofile/issues/40)
+
 ## [3.1.3](https://github.com/KristofaJosh/uplofile/compare/v3.1.2...v3.1.3) (2026-08-15)
 
 
@@ -63,6 +72,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **uplofile**: New `uplofile/native` entry point for React Native. Import from `uplofile/native` to get `Root`, `Trigger`, and `Preview` components that use `@react-native-documents/picker` instead of DOM file input. (#new-feature)
 - **uplofile**: Extract platform-agnostic `useUplofileState` hook from the web `Root` component. This hook powers both web and RN entry points with zero code duplication.
 - **uplofile**: Add `getFileName`, `createPreviewUrl`, and `revokePreviewUrl` adapter parameters to `useUplofileState` for platform-agnostic file source handling.
+- **uplofile**: Add an optional `pickFiles` prop to native `Root` so consumers can inject their own document/image picker instead of the hardcoded `@react-native-documents/picker` call, with `Root`'s `TFileSource` generic inferred from it end-to-end. Ships four named exports from `uplofile/native` — `adapterReactNativeDocumentsPicker`, `adapterExpoDocumentPicker`, `adapterExpoImagePicker`, `adapterReactNativeImagePicker` — each wrapping a caller-supplied picker function without importing the picker package itself. (#40)
+
+### Deprecated
+
+- **uplofile**: Omitting `pickFiles` on native `Root` now logs a one-time deprecation warning per `Root` instance (silence with `suppressDeprecationWarnings`). **This release is a minor** — the implicit `@react-native-documents/picker` fallback keeps working exactly as before. The fallback and the `@react-native-documents/picker` peer dependency will be removed in the next major version (follow-up issue to be filed). (#40)
 
 ### Changed
 

@@ -3,12 +3,13 @@ import {
   UplofileTrigger,
   UplofilePreview,
 } from "@/components/ui/uplofile";
-import { mockUpload } from "@/lib/utils.ts";
+import { mockOnRemove, mockUpload } from "@/lib/utils.ts";
 
 export default function SimplePreviewStyledDemo() {
   return (
     <UplofileRoot
       upload={mockUpload}
+      onRemove={mockOnRemove}
       initial={[
         {
           uid: "v1",

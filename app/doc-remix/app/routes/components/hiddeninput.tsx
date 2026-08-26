@@ -56,9 +56,9 @@ export default function ComponentHiddenInput() {
             <small>Previous</small>
             <span>Dropzone</span>
           </a>
-          <a href="/api/props">
+          <a href="/native">
             <small>Next</small>
-            <span>Types</span>
+            <span>React Native</span>
           </a>
         </div>
       </article>

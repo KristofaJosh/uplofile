@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Root, Trigger, Preview } from "uplofile/native";
 import type { BeforeUploadFn } from "uplofile/native";
 import { mockUpload } from "../mockUpload";
+import { Section } from "./Section";
 
 const beforeUpload: BeforeUploadFn = (items) => {
   return items.map((item) => {
@@ -20,13 +21,10 @@ const beforeUpload: BeforeUploadFn = (items) => {
 
 export function WithValidation() {
   return (
-    <View style={styles.section}>
-      <Text style={styles.heading}>With Validation</Text>
-      <Text style={styles.note}>
-        Files over 5MB will be rejected. The picker may not expose file sizes
-        on all platforms, so this may validate silently depending on the
-        device.
-      </Text>
+    <Section
+      title="With Validation"
+      description="Files over 5MB will be rejected. The picker may not expose file sizes on all platforms, so this may validate silently depending on the device."
+    >
       <Root upload={mockUpload} beforeUpload={beforeUpload}>
         <Trigger>
           <View style={styles.trigger}>
@@ -35,14 +33,11 @@ export function WithValidation() {
         </Trigger>
         <Preview />
       </Root>
-    </View>
+    </Section>
   );
 }
 
 const styles = StyleSheet.create({
-  section: { gap: 12 },
-  heading: { fontSize: 20, fontWeight: "700" },
-  note: { fontSize: 12, color: "#666", lineHeight: 18 },
   trigger: {
     backgroundColor: "#AF52DE",
     paddingVertical: 12,
