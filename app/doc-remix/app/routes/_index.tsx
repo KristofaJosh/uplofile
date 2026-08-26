@@ -136,7 +136,7 @@ export default function Index() {
           className="stats-grid"
           aria-label="Uplofile download statistics"
         >
-          <div>
+          <div hidden>
             <strong>{statsError ? "—" : formatDownloads(week)}</strong>
             <span>downloads / week</span>
           </div>
