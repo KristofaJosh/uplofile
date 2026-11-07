@@ -7,9 +7,8 @@ import React, {
 } from "react";
 import { UploaderCtx, useUplofileState } from "../shared/context";
 import type {
-  ImageUploaderContextValue,
   RootProps,
-  UploadFileItem,
+  StableUploaderCtxValue,
   UplofileRootRef,
 } from "../shared/types";
 import { acceptsFile } from "../shared/utils";
@@ -94,10 +93,9 @@ export const Root = forwardRef(
       [onInputChange, props.accept, props.multiple, props.disabled],
     );
 
-    const ctx = useMemo<ImageUploaderContextValue<TMeta, File>>(
+    const ctx = useMemo<StableUploaderCtxValue<TMeta, File>>(
       () => ({
-        items: state.items as UploadFileItem<TMeta, File>[],
-        setItems: state.setItems,
+        store: state.store,
         isLoading: state.isLoading,
         disabled: props.disabled,
         multiple: props.multiple ?? true,
@@ -106,19 +104,16 @@ export const Root = forwardRef(
         openFileDialog,
         fileInputProps,
         getDropzoneProps,
-        hiddenInputValue: state.hiddenInputValue,
         name: props.name ?? "image",
       }),
       [
-        state.items,
-        state.setItems,
+        state.store,
         state.isLoading,
         props.disabled,
         props.multiple,
         props.accept,
         props.name,
         state.actions,
-        state.hiddenInputValue,
         openFileDialog,
         fileInputProps,
         getDropzoneProps,
@@ -128,8 +123,8 @@ export const Root = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        setItems: state.emitChange,
-        getItems: () => state.items,
+        setItems: state.store.setItems,
+        getItems: () => state.store.getSnapshot(),
         isLoading: state.isLoading,
         onDrop,
         onDragOver,
@@ -143,8 +138,7 @@ export const Root = forwardRef(
         },
       }),
       [
-        state.emitChange,
-        state.items,
+        state.store,
         state.isLoading,
         onDrop,
         onDragOver,

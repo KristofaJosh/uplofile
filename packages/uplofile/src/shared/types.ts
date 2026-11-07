@@ -112,15 +112,17 @@ export type ItemActions = {
   retry: (uid: string) => void;
 };
 
+export type SetItems<TMeta = any, TFileSource = unknown> = (
+  items:
+    | UploadFileItem<TMeta, TFileSource>[]
+    | ((
+        prev: UploadFileItem<TMeta, TFileSource>[],
+      ) => UploadFileItem<TMeta, TFileSource>[]),
+) => void;
+
 export type ImageUploaderContextValue<TMeta = any, TFileSource = unknown> = {
   items: UploadFileItem<TMeta, TFileSource>[];
-  setItems: (
-    items:
-      | UploadFileItem<TMeta, TFileSource>[]
-      | ((
-          prev: UploadFileItem<TMeta, TFileSource>[],
-        ) => UploadFileItem<TMeta, TFileSource>[]),
-  ) => void;
+  setItems: SetItems<TMeta, TFileSource>;
   isLoading: boolean;
   disabled?: boolean;
   multiple: boolean;
@@ -145,13 +147,7 @@ export type TriggerRenderProps<TMeta = any, TFileSource = unknown> = {
 };
 
 export type UplofileRootRef<TMeta = any, TFileSource = unknown> = {
-  setItems: (
-    items:
-      | UploadFileItem<TMeta, TFileSource>[]
-      | ((
-          prev: UploadFileItem<TMeta, TFileSource>[],
-        ) => UploadFileItem<TMeta, TFileSource>[]),
-  ) => void;
+  setItems: SetItems<TMeta, TFileSource>;
   getItems: () => UploadFileItem<TMeta, TFileSource>[];
   isLoading: boolean;
   onDrop?: (e: DragEvent) => void;
@@ -164,12 +160,21 @@ export type UplofileRootRef<TMeta = any, TFileSource = unknown> = {
 export type PreviewRenderProps<TMeta = any, TFileSource = unknown> = {
   items: UploadFileItem<TMeta, TFileSource>[];
   isLoading: boolean;
-  setItems: (
-    items:
-      | UploadFileItem<TMeta, TFileSource>[]
-      | ((
-          prev: UploadFileItem<TMeta, TFileSource>[],
-        ) => UploadFileItem<TMeta, TFileSource>[]),
-  ) => void;
+  setItems: SetItems<TMeta, TFileSource>;
   actions: ItemActions;
 };
+
+// Internal: the items store behind useSyncExternalStore. Consumers subscribe
+// to the slice they need instead of re-rendering on every progress tick.
+export type ItemsStore<TMeta = any, TFileSource = unknown> = {
+  getSnapshot: () => UploadFileItem<TMeta, TFileSource>[];
+  subscribe: (listener: () => void) => () => void;
+  setItems: SetItems<TMeta, TFileSource>;
+};
+
+// Internal: the context value. Everything except the tick-driven fields,
+// which are read from `store` instead, so the value stays stable.
+export type StableUploaderCtxValue<TMeta = any, TFileSource = unknown> = Omit<
+  ImageUploaderContextValue<TMeta, TFileSource>,
+  "items" | "setItems" | "hiddenInputValue"
+> & { store: ItemsStore<TMeta, TFileSource> };

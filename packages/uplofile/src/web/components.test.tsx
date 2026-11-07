@@ -475,4 +475,100 @@ describe("Components", () => {
       });
     });
   });
+
+  describe("progress batching", () => {
+    it("coalesces progress ticks from concurrent uploads into one commit per frame", async () => {
+      const progressCallbacks: Array<(pct: number) => void> = [];
+      const uploadMock = vi.fn(
+        (_f: File, _s: AbortSignal, setProgress?: (pct: number) => void) => {
+          progressCallbacks.push(setProgress!);
+          return new Promise<{ url: string }>(() => {});
+        },
+      );
+      const onChange = vi.fn();
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root
+          upload={uploadMock}
+          onChange={onChange}
+          ref={(r) => {
+            ref = r;
+          }}
+        >
+          <Preview />
+        </Root>,
+      );
+
+      ref!.onDrop!({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: ["a", "b", "c"].map(
+            (n) => new File([n], `${n}.jpg`, { type: "image/jpeg" }),
+          ),
+        },
+      } as any);
+      await waitFor(() => expect(progressCallbacks).toHaveLength(3));
+      await waitFor(() =>
+        expect(ref!.getItems().every((i) => i.status === "uploading")).toBe(
+          true,
+        ),
+      );
+
+      const callsBefore = onChange.mock.calls.length;
+      act(() => {
+        progressCallbacks[0](10);
+        progressCallbacks[1](20);
+        progressCallbacks[2](30);
+        progressCallbacks[0](40); // latest value for the same file wins
+      });
+
+      // Deferred to the next frame, not applied synchronously.
+      expect(ref!.getItems().map((i) => i.progress ?? 0)).toEqual([0, 0, 0]);
+
+      await waitFor(() =>
+        expect(ref!.getItems().map((i) => i.progress)).toEqual([40, 20, 30]),
+      );
+      expect(onChange.mock.calls.length - callsBefore).toBe(1);
+    });
+
+    it("does not let a pending progress tick overwrite a finished upload", async () => {
+      let setProgress: ((pct: number) => void) | undefined;
+      let resolve: ((r: { url: string }) => void) | undefined;
+      const uploadMock = vi.fn(
+        (_f: File, _s: AbortSignal, sp?: (pct: number) => void) => {
+          setProgress = sp;
+          return new Promise<{ url: string }>((r) => (resolve = r));
+        },
+      );
+      let ref: UplofileRootRef | null = null;
+
+      render(
+        <Root
+          upload={uploadMock}
+          ref={(r) => {
+            ref = r;
+          }}
+        />,
+      );
+      ref!.onDrop!({
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+        dataTransfer: {
+          files: [new File(["a"], "a.jpg", { type: "image/jpeg" })],
+        },
+      } as any);
+      await waitFor(() => expect(setProgress).toBeDefined());
+
+      await act(async () => {
+        setProgress!(30);
+        resolve!({ url: "https://example.com/a.jpg" });
+      });
+
+      await waitFor(() => expect(ref!.getItems()[0].status).toBe("done"));
+      await new Promise((r) => setTimeout(r, 50));
+      expect(ref!.getItems()[0].progress).toBe(100);
+    });
+  });
 });

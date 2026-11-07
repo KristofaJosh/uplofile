@@ -1,7 +1,7 @@
 import { Slot } from "../shared/Slot";
 import React, { ButtonHTMLAttributes } from "react";
 
-import { useUplofile } from "./hook";
+import { useUplofile, useUplofileSelector } from "./hook";
 import { isVideoFile } from "../shared/utils";
 
 import type { PreviewRenderProps, UploadFileItem } from "../shared/types";
@@ -86,6 +86,16 @@ const UploadingOverlay = ({ progress }: { progress?: number }) => (
   </div>
 );
 
+// Leaf-level isolation: subscribes to just this one item's progress value.
+// A progress tick updates only this component — it never touches
+// PreviewItem, MediaContent, or ActionButtons for the same item.
+const ProgressLeaf = ({ uid }: { uid: string }) => {
+  const progress = useUplofileSelector(
+    (items) => items.find((i) => i.uid === uid)?.progress,
+  );
+  return <UploadingOverlay progress={progress} />;
+};
+
 type ActionButtonsProps = {
   item: WebUploadFileItem;
   actions: PreviewRenderProps["actions"];
@@ -129,54 +139,83 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
   </div>
 );
 
-const PreviewItem = ({
-  item,
-  actions,
-}: {
-  item: WebUploadFileItem;
-  actions: PreviewRenderProps["actions"];
-}) => {
-  const hasError = item.status === "error" || Boolean(item.error);
-  const stateLabel =
-    item.status === "removing"
-      ? "Removing"
-      : item.status === "uploading"
-        ? "Uploading"
-        : item.status === "error"
-          ? "Error"
-          : item.status === "canceled"
-            ? "Canceled"
-            : item.error
-              ? "Done (error)"
-              : "Done";
-
-  return (
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="uplofile-preview__item"
-      data-state={item.status}
-      aria-label={`${item.name} - ${stateLabel}`}
-      aria-busy={item.status === "uploading" || item.status === "removing"}
-    >
-      {hasError && <ErrorBadge />}
-      <MediaContent item={item} />
-      {item.status === "uploading" && (
-        <UploadingOverlay progress={item.progress} />
-      )}
-      <div
-        className="uplofile-preview__overlay"
-        data-error={hasError ? "true" : undefined}
-      >
-        <ActionButtons item={item} actions={actions} />
-        {hasError && (
-          <span className="uplofile-preview__error-message">
-            {item.error || "Upload failed"}
-          </span>
-        )}
-      </div>
-    </div>
-  );
+// Shallow equality that ignores `progress`, so progress ticks skip
+// PreviewItem. Compares every other field, including any added later.
+const isEqualIgnoringProgress = (
+  a: WebUploadFileItem | undefined,
+  b: WebUploadFileItem | undefined,
+): boolean => {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  keys.delete("progress");
+  for (const key of keys) {
+    if (
+      a[key as keyof WebUploadFileItem] !== b[key as keyof WebUploadFileItem]
+    ) {
+      return false;
+    }
+  }
+  return true;
 };
+
+// Reads every field except `progress`; ProgressLeaf handles progress.
+// Exported for the render-isolation tests to spy on.
+export const PreviewItem = React.memo(
+  ({
+    uid,
+    actions,
+  }: {
+    uid: string;
+    actions: PreviewRenderProps["actions"];
+  }) => {
+    const item = useUplofileSelector<WebUploadFileItem | undefined>(
+      (items) => items.find((i) => i.uid === uid),
+      isEqualIgnoringProgress,
+    );
+
+    if (!item) return null;
+
+    const hasError = item.status === "error" || Boolean(item.error);
+    const stateLabel =
+      item.status === "removing"
+        ? "Removing"
+        : item.status === "uploading"
+          ? "Uploading"
+          : item.status === "error"
+            ? "Error"
+            : item.status === "canceled"
+              ? "Canceled"
+              : item.error
+                ? "Done (error)"
+                : "Done";
+
+    return (
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="uplofile-preview__item"
+        data-state={item.status}
+        aria-label={`${item.name} - ${stateLabel}`}
+        aria-busy={item.status === "uploading" || item.status === "removing"}
+      >
+        {hasError && <ErrorBadge />}
+        <MediaContent item={item} />
+        {item.status === "uploading" && <ProgressLeaf uid={uid} />}
+        <div
+          className="uplofile-preview__overlay"
+          data-error={hasError ? "true" : undefined}
+        >
+          <ActionButtons item={item} actions={actions} />
+          {hasError && (
+            <span className="uplofile-preview__error-message">
+              {item.error || "Upload failed"}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  },
+);
 
 export const Preview = <TMeta = any,>({
   render,
@@ -195,7 +234,7 @@ export const Preview = <TMeta = any,>({
         className={["uplofile-preview__wrapper", className].join(" ").trim()}
       >
         {items.map((item) => (
-          <PreviewItem key={item.uid} item={item} actions={actions} />
+          <PreviewItem key={item.uid} uid={item.uid} actions={actions} />
         ))}
       </div>
     </div>

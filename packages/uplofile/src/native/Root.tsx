@@ -12,13 +12,8 @@ import {
   type DocumentPickerResponse,
 } from "@react-native-documents/picker";
 import { UploaderCtx, useUplofileState } from "../shared/context";
-import type { ItemActions } from "../shared/types";
-import type {
-  ImageUploaderContextValue,
-  RootProps,
-  UploadFileItem,
-  UplofileRootRef,
-} from "./types";
+import type { ItemActions, StableUploaderCtxValue } from "../shared/types";
+import type { RootProps, UplofileRootRef } from "./types";
 import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
 
 export type { DocumentPickerResponse } from "@react-native-documents/picker";
@@ -119,10 +114,9 @@ const RootImpl = forwardRef(
       state.selectFiles,
     ]);
 
-    const ctx = useMemo<ImageUploaderContextValue<TMeta, TFileSource>>(
+    const ctx = useMemo<StableUploaderCtxValue<TMeta, TFileSource>>(
       () => ({
-        items: state.items as UploadFileItem<TMeta, TFileSource>[],
-        setItems: state.setItems,
+        store: state.store,
         isLoading: state.isLoading,
         disabled: props.disabled,
         multiple: props.multiple ?? true,
@@ -131,19 +125,16 @@ const RootImpl = forwardRef(
         openFileDialog,
         fileInputProps: {} as Record<string, any>,
         getDropzoneProps: () => ({}),
-        hiddenInputValue: state.hiddenInputValue,
         name: props.name ?? "image",
       }),
       [
-        state.items,
-        state.setItems,
+        state.store,
         state.isLoading,
         props.disabled,
         props.multiple,
         props.accept,
         props.name,
         state.actions,
-        state.hiddenInputValue,
         openFileDialog,
       ],
     );
@@ -151,15 +142,14 @@ const RootImpl = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        setItems: state.emitChange,
-        getItems: () => state.items,
+        setItems: state.store.setItems,
+        getItems: () => state.store.getSnapshot(),
         isLoading: state.isLoading,
         openFileDialog,
         actions: state.actions,
       }),
       [
-        state.emitChange,
-        state.items,
+        state.store,
         state.isLoading,
         openFileDialog,
         state.actions,
