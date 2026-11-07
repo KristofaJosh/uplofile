@@ -46,12 +46,15 @@ Releases are triggered by pushing commits to `main`. **semantic-release** handle
 1. Push commits to `main` following **Conventional Commits** format:
    - `feat: ...` → **minor** version bump
    - `fix: ...` → **patch** version bump
+   - `perf: ...` → **patch** version bump (listed under "Performance Improvements")
+   - `docs(readme): ...` → **patch** version bump (custom rule in `.releaserc`, so README changes reach npm)
    - `BREAKING CHANGE: ...` → **major** version bump
    - `chore: ...`, `docs: ...`, `refactor: ...` → **no release**
 2. `.github/workflows/publish.yml` runs on every push to `main`
 3. The commit-analyzer scans commits since the last tag:
-   - Only `feat`/`fix`/`BREAKING CHANGE` trigger a release
+   - Only `feat`/`fix`/`perf`/`docs(readme)`/`BREAKING CHANGE` trigger a release
    - `chore`/`docs`/`refactor`/`test`/`ci` → analyzer returns `null` → **no release**
+   - Each releasing commit becomes its own `CHANGELOG.md` entry, so squash-merge PRs whose branch has internal `fix:` commits (the PR title becomes the single entry)
 4. If a release is triggered, `semantic-release`:
    - Updates `packages/uplofile/package.json` version
    - Updates `CHANGELOG.md` with release notes
