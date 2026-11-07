@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/KristofaJosh/uplofile/compare/v3.2.1...v3.2.2) (2026-11-07)
+
+
+### Performance Improvements
+
+* leaf-level re-render isolation for progress ticks via pub-sub store ([#56](https://github.com/KristofaJosh/uplofile/issues/56)) ([c061010](https://github.com/KristofaJosh/uplofile/commit/c061010827a3da91317697b58bccf880c7ddd73c)), closes [#32](https://github.com/KristofaJosh/uplofile/issues/32) [#45](https://github.com/KristofaJosh/uplofile/issues/45) [#45](https://github.com/KristofaJosh/uplofile/issues/45) [#46](https://github.com/KristofaJosh/uplofile/issues/46)
+
 ## [3.2.1](https://github.com/KristofaJosh/uplofile/compare/v3.2.0...v3.2.1) (2026-08-16)
 
 # [3.2.0](https://github.com/KristofaJosh/uplofile/compare/v3.1.3...v3.2.0) (2026-08-16)
