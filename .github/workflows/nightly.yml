@@ -6,7 +6,7 @@ name: Nightly
 
 on:
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "0 23 * * *" # midnight WAT (UTC+1)
   workflow_dispatch: {}
 
 permissions:

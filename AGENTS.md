@@ -87,7 +87,7 @@ Two entry points: `uplofile` (web, default) and `uplofile/native` (React Native)
 - **E2E tests** live in `app/doc-remix/e2e/` and use Playwright against the doc-remix dev server.
 - Run e2e tests: `pnpm --filter doc-remix test:e2e`
 - E2E tests run in CI on every PR (see `ci.yml`). The config auto-starts the dev server.
-- **Nightly** (`nightly.yml`, 03:00 UTC, also manual): runs unit, typecheck and e2e against the lockfile, re-runs the library against the newest in-range deps, and audits the library's runtime deps (`.github/scripts/audit-library.mjs`; app-only advisories are ignored). It's named `Nightly`, not `CI`, so it never triggers `publish.yml`.
+- **Nightly** (`nightly.yml`, 23:00 UTC / midnight WAT, also manual): runs unit, typecheck and e2e against the lockfile, re-runs the library against the newest in-range deps, and audits the library's runtime deps (`.github/scripts/audit-library.mjs`; app-only advisories are ignored). It's named `Nightly`, not `CI`, so it never triggers `publish.yml`.
 - **Dependabot** (`.github/dependabot.yml`): library runtime bumps use `fix(deps)` and ship a patch. Dev, app and Actions bumps don't release.
 
 ### Adding New Features
