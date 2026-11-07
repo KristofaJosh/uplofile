@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
+const platform = vi.hoisted(() => ({ OS: "android" as string }));
+vi.mock("react-native", () => ({ Platform: platform }));
+
 import {
   adapterExpoDocumentPicker,
   adapterExpoImagePicker,
@@ -23,6 +26,25 @@ describe("adapterReactNativeDocumentsPicker", () => {
     expect(result).toEqual([
       { uri: "file:///a.pdf", name: "a.pdf", type: "application/pdf" },
     ]);
+  });
+
+  it("maps accept MIME types to UTIs on iOS", async () => {
+    platform.OS = "ios";
+    try {
+      const pick = vi.fn(async (_options: any) => [
+        { uri: "file:///a.png", name: "a.png", type: "image/png" },
+      ]);
+      const pickFiles = adapterReactNativeDocumentsPicker(pick);
+
+      await pickFiles("image/*", { multiple: true });
+
+      expect(pick).toHaveBeenCalledWith({
+        type: ["public.image"],
+        allowMultiSelection: true,
+      });
+    } finally {
+      platform.OS = "android";
+    }
   });
 
   it("filters out results that don't match accept", async () => {

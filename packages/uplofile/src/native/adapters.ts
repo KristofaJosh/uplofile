@@ -1,4 +1,5 @@
 import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
+import { getDocumentsPickerTypes } from "./documentsPickerTypes";
 import type { PickFilesFn } from "../shared/types";
 
 /**
@@ -76,7 +77,7 @@ export function adapterReactNativeDocumentsPicker<
   return async (accept, { multiple }) => {
     try {
       const results = await pick({
-        type: getNativePickerAcceptTypes(accept),
+        type: getDocumentsPickerTypes(accept),
         allowMultiSelection: multiple,
       });
       return results.filter((result) =>
