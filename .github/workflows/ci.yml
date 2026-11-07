@@ -22,7 +22,7 @@ jobs:
       code: ${{ steps.filter.outputs.code }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check for relevant path changes
         uses: dorny/paths-filter@v3
@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: needs.changes.outputs.code == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PNPM
         if: needs.changes.outputs.code == 'true'
@@ -76,7 +76,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: needs.changes.outputs.code == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PNPM
         if: needs.changes.outputs.code == 'true'
