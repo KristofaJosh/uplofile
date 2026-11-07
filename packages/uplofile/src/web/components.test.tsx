@@ -248,7 +248,7 @@ describe("Components", () => {
       } | null = null;
 
       render(
-        <Root upload={uploadMock} ref={(r) => (ref = r)}>
+        <Root upload={uploadMock} ref={(r) => { ref = r; }}>
           <Trigger
             render={(api) => {
               latestApi = api;
@@ -264,7 +264,7 @@ describe("Components", () => {
         new File(["c"], "c.jpg", { type: "image/jpeg" }),
       ];
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files },
@@ -399,7 +399,7 @@ describe("Components", () => {
       const slowUpload = vi.fn().mockReturnValue(new Promise(() => {}));
 
       render(
-        <Root upload={slowUpload} ref={(r) => (ref = r)}>
+        <Root upload={slowUpload} ref={(r) => { ref = r; }}>
           <Preview />
         </Root>,
       );
@@ -443,13 +443,13 @@ describe("Components", () => {
         );
 
       render(
-        <Root upload={uploadMock} ref={(r) => (ref = r)}>
+        <Root upload={uploadMock} ref={(r) => { ref = r; }}>
           <Preview />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },

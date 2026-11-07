@@ -1,11 +1,4 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": { "noEmit": true },
-  // Pre-existing type errors; remove each entry once its file is fixed.
-  "exclude": [
-    "src/native/adapters.test.ts",
-    "src/web/Root.test.tsx",
-    "src/web/benchmark.progress.test.tsx",
-    "src/web/components.test.tsx"
-  ]
+  "compilerOptions": { "noEmit": true }
 }
