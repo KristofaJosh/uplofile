@@ -235,6 +235,58 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
 
   const emitChange = store.setItems;
 
+  // Progress ticks are coalesced into one store update per animation frame.
+  // useSyncExternalStore commits every store notification synchronously, so
+  // without this, N concurrent uploads produce N commits per frame; on a
+  // throttled CPU that per-commit overhead outweighs the leaf-level savings.
+  // Status changes (uploading/done/error) still go through emitChange
+  // immediately — only progress is deferred, by at most one frame.
+  const pendingProgressRef = useRef(new Map<string, number>());
+  const progressFrameRef = useRef<{ cancel: () => void } | null>(null);
+
+  const flushProgress = useCallback(() => {
+    progressFrameRef.current = null;
+    const pending = pendingProgressRef.current;
+    if (pending.size === 0) return;
+    pendingProgressRef.current = new Map();
+    emitChange((items) => {
+      let changed = false;
+      const next = items.map((it) => {
+        const pct = pending.get(it.uid);
+        // Guard on status so a late flush can't overwrite progress on an
+        // item that already finished, failed, or was canceled.
+        if (
+          pct === undefined ||
+          it.status !== "uploading" ||
+          it.progress === pct
+        )
+          return it;
+        changed = true;
+        return { ...it, progress: pct };
+      });
+      return changed ? next : items;
+    });
+  }, [emitChange]);
+
+  const scheduleProgressFlush = useCallback(() => {
+    if (progressFrameRef.current) return;
+    if (typeof requestAnimationFrame === "function") {
+      const id = requestAnimationFrame(flushProgress);
+      progressFrameRef.current = { cancel: () => cancelAnimationFrame(id) };
+    } else {
+      const id = setTimeout(flushProgress, 16);
+      progressFrameRef.current = { cancel: () => clearTimeout(id) };
+    }
+  }, [flushProgress]);
+
+  useEffect(
+    () => () => {
+      progressFrameRef.current?.cancel();
+      progressFrameRef.current = null;
+    },
+    [],
+  );
+
   const startUpload = useCallback(
     async (item: UploadFileItem<TMeta, TFileSource>) => {
       if (!item.file) return;
@@ -242,13 +294,11 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
       controllers.current.set(item.uid, controller);
 
       const setProgress = (pct: number) => {
-        emitChange((items) =>
-          items.map((it) =>
-            it.uid === item.uid
-              ? { ...it, progress: Math.max(0, Math.min(100, pct)) }
-              : it,
-          ),
+        pendingProgressRef.current.set(
+          item.uid,
+          Math.max(0, Math.min(100, pct)),
         );
+        scheduleProgressFlush();
       };
 
       emitChange((items) =>
@@ -301,7 +351,7 @@ export function useUplofileState<TMeta = any, TFileSource = unknown>({
         controllers.current.delete(item.uid);
       }
     },
-    [emitChange, untrackPreviewUrl, upload],
+    [emitChange, scheduleProgressFlush, untrackPreviewUrl, upload],
   );
 
   const selectFiles = useCallback(

@@ -11,7 +11,7 @@
  * Not part of the CI test suite. Run directly:
  *   pnpm --filter uplofile exec vitest run src/web/benchmark.progress.test.tsx
  */
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import React, { Profiler, ProfilerOnRenderCallback } from "react";
 import { act, cleanup, render, waitFor } from "@testing-library/react";
 
@@ -22,6 +22,28 @@ import { Preview } from "./Preview";
 import { UplofileRootRef } from "./types";
 
 afterEach(cleanup);
+
+// Progress ticks are batched per animation frame. Frames are driven by hand
+// here so each scenario controls exactly when a frame boundary happens:
+// single-item scenarios flush after every tick (worst case, one tick per
+// frame); concurrent scenarios flush once per round, since concurrent
+// uploads report progress within the same frame in a real browser.
+const frameQueue: FrameRequestCallback[] = [];
+const flushFrame = () => {
+  const callbacks = frameQueue.splice(0);
+  callbacks.forEach((cb) => cb(performance.now()));
+};
+beforeEach(() => {
+  frameQueue.length = 0;
+  vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+    frameQueue.push(cb);
+    return frameQueue.length;
+  });
+  vi.stubGlobal("cancelAnimationFrame", () => {});
+});
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 declare var global: typeof globalThis;
 
@@ -98,6 +120,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
     for (let t = 1; t <= TICKS; t++) {
       act(() => {
         progressCallbacks[0](t % 100);
+        flushFrame();
       });
     }
     const wallMs = performance.now() - wallStart;
@@ -168,6 +191,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
           progressCallbacks[i](t * 5);
         });
       }
+      act(() => flushFrame());
     }
     const wallMs = performance.now() - wallStart;
 
@@ -236,6 +260,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
       for (let t = 1; t <= TICKS; t++) {
         act(() => {
           progressCallbacks[0](t);
+          flushFrame();
         });
       }
       const wallMs = performance.now() - wallStart;
@@ -312,6 +337,7 @@ describe("pub-sub store: leaf isolation beyond Dropzone (issue #32 decision #4)"
     for (let t = 1; t <= TICKS; t++) {
       act(() => {
         progressCallbacks[0](t % 100);
+        flushFrame();
       });
     }
 
@@ -391,6 +417,7 @@ describe("pub-sub store: large batch (400-500 concurrent uploads)", () => {
       for (let t = 1; t <= TICKS; t++) {
         act(() => {
           progressCallbacks[0](t % 100);
+          flushFrame();
         });
       }
       const wallMs = performance.now() - wallStart;
@@ -468,6 +495,7 @@ describe("pub-sub store: large batch (400-500 concurrent uploads)", () => {
           progressCallbacks[i](50);
         });
       }
+      act(() => flushFrame());
       const wallMs = performance.now() - wallStart;
 
       expect(refHolder.current!.getItems()[itemCount - 1].progress).toBe(50);
