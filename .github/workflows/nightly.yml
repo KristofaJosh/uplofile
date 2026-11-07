@@ -1,6 +1,6 @@
 # Catches breakage that PR CI can't see because nothing in the repo changed:
-# new advisories against the locked tree, new in-range releases of the
-# library's deps (what consumers install), and drift in runners or browsers.
+# new advisories against the library's deps, new in-range releases of those
+# deps (what consumers install), and drift in runners or browsers.
 # Named "Nightly", not "CI", so a run never triggers publish.yml.
 name: Nightly
 
@@ -12,10 +12,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: nightly
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Typecheck and unit tests (lockfile)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -31,6 +36,7 @@ jobs:
   e2e:
     name: E2E tests (lockfile)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -49,12 +55,15 @@ jobs:
   fresh-deps:
     name: Library against latest in-range deps
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       # Re-resolve the library's deps to the newest versions its semver
       # ranges allow, which is what a fresh `npm install uplofile` gets.
@@ -67,13 +76,27 @@ jobs:
   audit:
     name: Audit library runtime deps
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      # Audit a throwaway project holding only the library's `dependencies`,
+      # resolved fresh with peers off. The workspace lockfile can't be used:
+      # it counts the optional `react-native` peer as a library dep, and the
+      # registry caps advisory paths at 100, hiding the library's paths.
       - name: Audit
         run: |
-          pnpm audit --prod --json --ignore-registry-errors > audit.json || true
-          node .github/scripts/audit-library.mjs < audit.json
+          dir="$RUNNER_TEMP/uplofile-audit"
+          mkdir -p "$dir"
+          node -e '
+            const { dependencies } = require("./packages/uplofile/package.json");
+            const pkg = { name: "uplofile-audit", private: true, dependencies };
+            require("fs").writeFileSync(process.argv[1] + "/package.json", JSON.stringify(pkg, null, 2));
+          ' "$dir"
+          cd "$dir"
+          cat package.json
+          pnpm install --lockfile-only --config.auto-install-peers=false
+          pnpm audit --prod --audit-level moderate
