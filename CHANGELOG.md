@@ -1,3 +1,10 @@
+## [3.2.3](https://github.com/KristofaJosh/uplofile/compare/v3.2.2...v3.2.3) (2026-11-07)
+
+
+### Bug Fixes
+
+* **native:** map accept MIME types to iOS UTIs for @react-native-documents/picker ([#65](https://github.com/KristofaJosh/uplofile/issues/65)) ([1b582de](https://github.com/KristofaJosh/uplofile/commit/1b582de9fe3269282a79d3c21bef68370b08c0ec))
+
 ## [3.2.2](https://github.com/KristofaJosh/uplofile/compare/v3.2.1...v3.2.2) (2026-11-07)
 
 
