@@ -1,0 +1,35 @@
+version: 2
+updates:
+  # Library deps. Runtime bumps use fix(deps) so semantic-release ships a
+  # patch; dev-only bumps use chore(deps) and don't release.
+  - package-ecosystem: npm
+    directory: /packages/uplofile
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "fix(deps)"
+      prefix-development: "chore(deps)"
+    groups:
+      library-minor-patch:
+        update-types: [minor, patch]
+
+  # Workspace root and doc apps. Never released, so always chore(deps).
+  - package-ecosystem: npm
+    directories:
+      - /
+      - /app/doc-remix
+      - /app/doc-native
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      apps-minor-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "ci"
