@@ -56,8 +56,8 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "16.3.2",
-    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/use-sync-external-store": "^1.7.0",
@@ -67,7 +67,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "typescript": "6.0.3",
-    "vitest": "4.1.6"
+    "vitest": "4.1.12"
   },
   "peerDependencies": {
     "@react-native-documents/picker": "*",
