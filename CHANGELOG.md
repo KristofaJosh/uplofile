@@ -1,3 +1,13 @@
+# [4.0.0](https://github.com/KristofaJosh/uplofile/compare/v3.2.3...v4.0.0) (2026-11-07)
+
+
+* feat(native)!: require pickFiles and drop the @react-native-documents/picker fallback ([#62](https://github.com/KristofaJosh/uplofile/issues/62)) ([5c9f5fd](https://github.com/KristofaJosh/uplofile/commit/5c9f5fd3fcc031fc8b5eb8d262794c85d915fe3a)), closes [#63](https://github.com/KristofaJosh/uplofile/issues/63)
+
+
+### BREAKING CHANGES
+
+* uplofile/native Root requires a pickFiles prop. To keep v3's behavior, install @react-native-documents/picker and pass pickFiles={adapterReactNativeDocumentsPicker(pick)}. Replace DocumentPickerResponse imports from uplofile/native with NativeFile, or import it from the picker package. Code that read picker-only fields (nativeType, isVirtual, hasRequestedType) through an un-parameterized useUplofile(), render prop, UploadFileItem or ref must now pass the picker type, e.g. useUplofile<any, DocumentPickerResponse>(). Remove suppressDeprecationWarnings. pickFiles rejections now reach onPickError or console.warn.
+
 ## [3.2.3](https://github.com/KristofaJosh/uplofile/compare/v3.2.2...v3.2.3) (2026-11-07)
 
 

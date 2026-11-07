@@ -1,6 +1,6 @@
 {
   "name": "uplofile",
-  "version": "3.2.3",
+  "version": "4.0.0",
   "description": "Composable file‑upload components for React.",
   "license": "MIT",
   "author": "Chris Josh <KristofaJosh>",
