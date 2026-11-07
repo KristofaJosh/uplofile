@@ -1,31 +1,13 @@
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
-  useRef,
 } from "react";
 import { View } from "react-native";
-import {
-  pick,
-  type DocumentPickerResponse,
-} from "@react-native-documents/picker";
 import { UploaderCtx, useUplofileState } from "../shared/context";
 import type { ItemActions, StableUploaderCtxValue } from "../shared/types";
-import type { RootProps, UplofileRootRef } from "./types";
-import { acceptsFile } from "../shared/utils";
-import { getDocumentsPickerTypes } from "./documentsPickerTypes";
-
-export type { DocumentPickerResponse } from "@react-native-documents/picker";
-
-const PICK_FILES_DEPRECATION_MESSAGE =
-  "[uplofile] native Root is using the built-in @react-native-documents/picker fallback " +
-  "because no `pickFiles` prop was passed. This fallback (and the @react-native-documents/picker " +
-  "peer dependency) will be removed in the next major version. Pass `pickFiles` — see " +
-  "adapterReactNativeDocumentsPicker, adapterExpoDocumentPicker, adapterExpoImagePicker, and " +
-  "adapterReactNativeImagePicker exported from `uplofile/native` — or pass `suppressDeprecationWarnings` " +
-  "to silence this warning.";
+import type { NativeFile, RootProps, UplofileRootRef } from "./types";
 
 /**
  * `forwardRef`'s own typings erase a generic render function's type
@@ -34,14 +16,14 @@ const PICK_FILES_DEPRECATION_MESSAGE =
  * regardless of what they pass to `pickFiles`/`upload`. Casting through
  * this call-signature type restores per-usage generic inference.
  */
-type NativeRootComponent = <TMeta = any, TFileSource = DocumentPickerResponse>(
+type NativeRootComponent = <TMeta = any, TFileSource = NativeFile>(
   props: RootProps<TMeta, TFileSource> & {
     ref?: React.Ref<UplofileRootRef<TMeta, TFileSource>>;
   },
 ) => React.ReactElement | null;
 
 const RootImpl = forwardRef(
-  <TMeta = any, TFileSource = DocumentPickerResponse>(
+  <TMeta = any, TFileSource = NativeFile>(
     props: RootProps<TMeta, TFileSource>,
     ref: React.Ref<UplofileRootRef<TMeta, TFileSource>>,
   ) => {
@@ -54,64 +36,23 @@ const RootImpl = forwardRef(
       revokePreviewUrl: () => {},
     });
 
-    const acceptTypes = useMemo(() => {
-      return getDocumentsPickerTypes(props.accept);
-    }, [props.accept]);
-
-    const hasWarnedRef = useRef(false);
-    useEffect(() => {
-      if (props.pickFiles || props.suppressDeprecationWarnings) return;
-      if (hasWarnedRef.current) return;
-      hasWarnedRef.current = true;
-      console.warn(PICK_FILES_DEPRECATION_MESSAGE);
-      // Intentionally mount-only: this reports the fallback in use at mount
-      // time, guarded per-instance by the ref above rather than a
-      // module-level flag, so every Root instance warns exactly once
-      // regardless of how many other Root instances exist or have already
-      // warned.
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const openFileDialog = useCallback(async () => {
-      if (props.pickFiles) {
-        try {
-          const results = await props.pickFiles(props.accept, {
-            multiple: props.multiple ?? true,
-          });
-          if (results.length > 0) {
-            void state.selectFiles(results);
-          }
-        } catch {
-          // Consumer-provided pickFiles rejected — treat as cancellation, no-op.
-        }
-        return;
-      }
-
       try {
-        const results = await pick({
-          type: acceptTypes,
-          allowMultiSelection: props.multiple ?? true,
+        const results = await props.pickFiles(props.accept, {
+          multiple: props.multiple ?? true,
         });
-        const accepted = results.filter((result) =>
-          acceptsFile(
-            {
-              name: result.name ?? "",
-              type: result.type ?? "",
-            },
-            props.accept,
-          ),
-        ) as unknown as TFileSource[];
-        if (accepted.length > 0) {
-          void state.selectFiles(accepted);
-        }
-      } catch {
-        // User cancelled the picker — no-op
+        void state.selectFiles(results);
+      } catch (error) {
+        // Adapters resolve [] on cancel, so a rejection is a real failure
+        // (e.g. a denied permission). Surface it instead of dropping it.
+        if (props.onPickError) props.onPickError(error);
+        else console.warn("[uplofile] pickFiles failed:", error);
       }
     }, [
       props.pickFiles,
-      acceptTypes,
       props.accept,
       props.multiple,
+      props.onPickError,
       state.selectFiles,
     ]);
 

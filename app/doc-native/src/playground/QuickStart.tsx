@@ -1,13 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Root, Trigger, Preview } from "uplofile/native";
+import { pickFiles } from "../pickFiles";
 import { mockUpload } from "../mockUpload";
 import { Section } from "./Section";
 
 export function QuickStart() {
   return (
     <Section title="Quick Start">
-      <Root upload={mockUpload} multiple={false}>
+      <Root upload={mockUpload} multiple={false} pickFiles={pickFiles}>
         <Trigger testID="quickstart-trigger">
           <View style={styles.trigger}>
             <Text style={styles.triggerText}>Pick a file</Text>

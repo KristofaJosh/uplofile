@@ -43,11 +43,12 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "bunchee --dts --external react,react-dom,react-native,@react-native-documents/picker --format esm",
+    "build": "bunchee --dts --external react,react-dom,react-native --format esm",
     "clean": "rm -rf dist",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.typecheck.json",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -56,8 +57,8 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",
-    "@testing-library/react": "16.3.2",
-    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/use-sync-external-store": "^1.7.0",
@@ -67,10 +68,9 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "typescript": "6.0.3",
-    "vitest": "4.1.6"
+    "vitest": "4.1.12"
   },
   "peerDependencies": {
-    "@react-native-documents/picker": "*",
     "react": ">=16.0.0",
     "react-dom": ">=16.0.0",
     "react-native": "*"
@@ -80,9 +80,6 @@
       "optional": true
     },
     "react-native": {
-      "optional": true
-    },
-    "@react-native-documents/picker": {
       "optional": true
     }
   }

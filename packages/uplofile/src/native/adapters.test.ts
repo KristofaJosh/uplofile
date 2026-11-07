@@ -239,8 +239,13 @@ describe("adapterExpoImagePicker", () => {
     const g = globalThis as { __DEV__?: boolean };
     const previousDev = g.__DEV__;
     delete g.__DEV__;
-    const previousNodeEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "production";
+    const proc = (
+      globalThis as unknown as {
+        process: { env: Record<string, string | undefined> };
+      }
+    ).process;
+    const previousNodeEnv = proc.env.NODE_ENV;
+    proc.env.NODE_ENV = "production";
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const launchImageLibraryAsync = vi.fn(async () => ({
       canceled: true as const,
@@ -253,7 +258,7 @@ describe("adapterExpoImagePicker", () => {
     expect(warnSpy).not.toHaveBeenCalled();
 
     warnSpy.mockRestore();
-    process.env.NODE_ENV = previousNodeEnv;
+    proc.env.NODE_ENV = previousNodeEnv;
     g.__DEV__ = previousDev;
   });
 });

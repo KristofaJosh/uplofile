@@ -61,6 +61,10 @@ jobs:
         if: needs.changes.outputs.code == 'true'
         run: pnpm install --frozen-lockfile
 
+      - name: Typecheck library
+        if: needs.changes.outputs.code == 'true'
+        run: pnpm --filter uplofile typecheck
+
       - name: Run tests
         if: needs.changes.outputs.code == 'true'
         run: pnpm test

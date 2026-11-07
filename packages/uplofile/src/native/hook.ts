@@ -1,8 +1,8 @@
-import type { DocumentPickerResponse } from "@react-native-documents/picker";
+import type { NativeFile } from "./types";
 
 import { useUplofile as useUplofileShared } from "../shared/hook";
 
 export const useUplofile = <
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 >() => useUplofileShared<TMeta, TFileSource>();

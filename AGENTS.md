@@ -83,6 +83,7 @@ Two entry points: `uplofile` (web, default) and `uplofile/native` (React Native)
 - Tests are located alongside source files (e.g., `*.test.tsx`).
 - Run unit tests using `pnpm test` in the relevant package or root.
 - Use `screen.getBy...` and user events for testing components.
+- **Typecheck:** `pnpm --filter uplofile typecheck` runs `tsc` over `src` (CI runs it on every PR), so `@ts-expect-error` assertions in type tests are enforced. Files with known errors are listed in `exclude` in `packages/uplofile/tsconfig.typecheck.json`; remove an entry once its file is fixed.
 - **E2E tests** live in `app/doc-remix/e2e/` and use Playwright against the doc-remix dev server.
 - Run e2e tests: `pnpm --filter doc-remix test:e2e`
 - E2E tests run in CI on every PR (see `ci.yml`). The config auto-starts the dev server.

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Root, Trigger, useUplofile } from "uplofile/native";
+import { pickFiles } from "../pickFiles";
 import { mockUpload } from "../mockUpload";
 import { Section } from "./Section";
 
@@ -54,7 +55,7 @@ function ActionsBar() {
 export function BasicUpload() {
   return (
     <Section title="Basic Upload">
-      <Root upload={mockUpload}>
+      <Root upload={mockUpload} pickFiles={pickFiles}>
         <Trigger>
           <View style={styles.trigger}>
             <Text style={styles.triggerText}>Select files</Text>

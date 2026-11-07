@@ -63,8 +63,8 @@ export type BeforeUploadResult<TMeta = any> =
     }>;
 
 /**
- * Consumer-supplied replacement for a platform's hardcoded native file picker.
- * Resolves to the picked file sources, or to an empty array on cancellation.
+ * Opens the platform's file picker and resolves to the picked file sources,
+ * or to an empty array on cancellation.
  */
 export type PickFilesFn<TFileSource = unknown> = (
   accept: string | undefined,

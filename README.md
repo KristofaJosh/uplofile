@@ -49,7 +49,7 @@ Two entry points: `uplofile` (web, default) and `uplofile/native` (React Native)
 The provider component that manages upload state.
 - **Props:** `upload` (required), `onRemove`, `multiple`, `maxCount`, `accept`, `beforeUpload`, `removeMode`.
 - **`upload` function:** Should return a `Promise<UploadResult>`. It receives `file`, `signal` (for cancellation), and `setProgress`.
-- **React Native only:** `Root` also accepts `pickFiles`, to inject a custom document/image picker instead of the built-in `@react-native-documents/picker` call, and `suppressDeprecationWarnings`. `uplofile/native` exports adapters for the common pickers — see [packages/uplofile/README.md](packages/uplofile/README.md#react-native).
+- **React Native only:** `Root` also requires `pickFiles`, which opens your document or image picker and returns the chosen files, and accepts an optional `onPickError` for picker failures. `uplofile/native` exports adapters for the common pickers and a `NativeFile` type for the default file shape — see [packages/uplofile/README.md](packages/uplofile/README.md#react-native).
 
 ### `UplofileDropzone`
 Handles drag-and-drop interactions.

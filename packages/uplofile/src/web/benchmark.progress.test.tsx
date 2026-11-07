@@ -89,7 +89,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
 
     render(
       <Profiler id="bench" onRender={onRender}>
-        <Root upload={uploadMock} ref={(r) => (refHolder.current = r)}>
+        <Root upload={uploadMock} ref={(r) => { refHolder.current = r; }}>
           <DropzoneModule.Dropzone data-testid="dz">
             Drop files here
           </DropzoneModule.Dropzone>
@@ -104,7 +104,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
     );
 
     act(() => {
-      refHolder.current!.onDrop({
+      refHolder.current!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files },
@@ -156,7 +156,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
 
     render(
       <Profiler id="bench" onRender={onRender}>
-        <Root upload={uploadMock} ref={(r) => (refHolder.current = r)}>
+        <Root upload={uploadMock} ref={(r) => { refHolder.current = r; }}>
           <DropzoneModule.Dropzone data-testid="dz">
             Drop files here
           </DropzoneModule.Dropzone>
@@ -171,7 +171,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
     );
 
     act(() => {
-      refHolder.current!.onDrop({
+      refHolder.current!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files },
@@ -230,7 +230,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
 
       render(
         <Profiler id="bench" onRender={onRender}>
-          <Root upload={uploadMock} ref={(r) => (refHolder.current = r)}>
+          <Root upload={uploadMock} ref={(r) => { refHolder.current = r; }}>
             <DropzoneModule.Dropzone data-testid="dz">
               Drop files here
             </DropzoneModule.Dropzone>
@@ -245,7 +245,7 @@ describe("fixed: same scenarios run against this branch (compare against main se
       );
 
       act(() => {
-        refHolder.current!.onDrop({
+        refHolder.current!.onDrop!({
           preventDefault: vi.fn(),
           stopPropagation: vi.fn(),
           dataTransfer: { files },
@@ -302,7 +302,7 @@ describe("pub-sub store: leaf isolation beyond Dropzone (issue #32 decision #4)"
 
     render(
       <Profiler id="bench" onRender={onRender}>
-        <Root upload={uploadMock} ref={(r) => (refHolder.current = r)}>
+        <Root upload={uploadMock} ref={(r) => { refHolder.current = r; }}>
           <DropzoneModule.Dropzone data-testid="dz">
             Drop files here
           </DropzoneModule.Dropzone>
@@ -317,7 +317,7 @@ describe("pub-sub store: leaf isolation beyond Dropzone (issue #32 decision #4)"
     );
 
     act(() => {
-      refHolder.current!.onDrop({
+      refHolder.current!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files },
@@ -385,7 +385,7 @@ describe("pub-sub store: large batch (400-500 concurrent uploads)", () => {
 
       render(
         <Profiler id="bench" onRender={onRender}>
-          <Root upload={uploadMock} ref={(r) => (refHolder.current = r)}>
+          <Root upload={uploadMock} ref={(r) => { refHolder.current = r; }}>
             <DropzoneModule.Dropzone data-testid="dz">
               Drop files here
             </DropzoneModule.Dropzone>
@@ -400,7 +400,7 @@ describe("pub-sub store: large batch (400-500 concurrent uploads)", () => {
       );
 
       act(() => {
-        refHolder.current!.onDrop({
+        refHolder.current!.onDrop!({
           preventDefault: vi.fn(),
           stopPropagation: vi.fn(),
           dataTransfer: { files },
@@ -461,7 +461,7 @@ describe("pub-sub store: large batch (400-500 concurrent uploads)", () => {
 
       render(
         <Profiler id="bench" onRender={onRender}>
-          <Root upload={uploadMock} ref={(r) => (refHolder.current = r)}>
+          <Root upload={uploadMock} ref={(r) => { refHolder.current = r; }}>
             <DropzoneModule.Dropzone data-testid="dz">
               Drop files here
             </DropzoneModule.Dropzone>
@@ -476,7 +476,7 @@ describe("pub-sub store: large batch (400-500 concurrent uploads)", () => {
       );
 
       act(() => {
-        refHolder.current!.onDrop({
+        refHolder.current!.onDrop!({
           preventDefault: vi.fn(),
           stopPropagation: vi.fn(),
           dataTransfer: { files },

@@ -39,7 +39,7 @@ Your upload component should not own your upload pipeline. Uplofile gives you th
 
 ## React Native
 
-Same components, import from `uplofile/native`. Pass `pickFiles` to plug in your own picker: Expo, `react-native-image-picker`, or a custom one.
+Same components, import from `uplofile/native`. `Root` requires a `pickFiles` prop to plug in your picker: `@react-native-documents/picker`, Expo, `react-native-image-picker`, or a custom one. uplofile has no picker dependency of its own.
 
 ## Documentation
 

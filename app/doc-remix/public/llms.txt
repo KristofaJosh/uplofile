@@ -55,10 +55,11 @@ Import from `uplofile/native` for React Native.
 - `Trigger` — Pressable that opens the OS file picker
 - `Preview` — renders thumbnails using RN `<Image>` and action buttons
 
-By default (no `pickFiles` prop), `Root` falls back to `@react-native-documents/picker` and files are typed as `DocumentPickerResponse` instead of `File`. **This fallback is deprecated and will be removed in the next major version** — omitting `pickFiles` now logs a one-time deprecation warning per `Root` instance (silence it with `suppressDeprecationWarnings`).
+`Root` has no built-in picker (since v4.0.0). You pass one through the required `pickFiles` prop; uplofile has no picker dependency of its own.
 
-- **`pickFiles`**: `(accept: string | undefined, options: { multiple: boolean }) => Promise<TFileSource[]>` — optional prop that replaces the built-in picker call entirely. When provided, `Root`'s file-source generic (`TFileSource`) is inferred from it, so `upload`, `beforeUpload`, and item types all get the picked asset's real shape with no casting.
-- **`suppressDeprecationWarnings`**: silences the one-time warning logged when `pickFiles` is omitted.
+- **`pickFiles`** (required): `(accept: string | undefined, options: { multiple: boolean }) => Promise<TFileSource[]>` — opens your picker and resolves to the chosen files (an empty array on cancel). `Root`'s file-source generic (`TFileSource`) is inferred from it, so `upload`, `beforeUpload`, and item types all get the picked asset's real shape with no casting.
+- **`onPickError`** (optional): `(error: unknown) => void` — called when `pickFiles` rejects (e.g. a denied permission). Cancelling is not an error; adapters resolve `[]`. Without it, the error is logged with `console.warn`.
+- **`NativeFile`**: the default `TFileSource` for native types when it isn't inferred: `{ uri: string; name?: string | null; type?: string | null; size?: number | null }`. Results from `@react-native-documents/picker` and `expo-document-picker` match it. `expo-image-picker` assets type-check against it, but their `type` is a media category (`"image"`, `"video"`), not a MIME type, and they use `fileName`/`fileSize`, so names show as "unknown" unless you map them. `react-native-image-picker` types `uri` as optional, so its adapter keeps that package's own asset type.
 
 Four adapters are named exports from `uplofile/native`, each a higher-order function that wraps a picker function you've already imported (the adapter itself never imports the picker package):
 - `adapterReactNativeDocumentsPicker` — wraps `@react-native-documents/picker`'s `pick()`. Throws on cancel (`err.code === "OPERATION_CANCELED"`).
@@ -71,12 +72,14 @@ Four adapters are named exports from `uplofile/native`, each a higher-order func
 ```tsx
 import { Root, Trigger, Preview, adapterExpoDocumentPicker } from 'uplofile/native';
 import * as DocumentPicker from 'expo-document-picker';
+import { Alert } from 'react-native';
 
 function App() {
   return (
     <Root
       upload={handleUpload}
       pickFiles={adapterExpoDocumentPicker(DocumentPicker.getDocumentAsync)}
+      onPickError={(error) => Alert.alert("Couldn't open the picker", String(error))}
     >
       <Trigger>Select Files</Trigger>
       <Preview />
@@ -85,7 +88,7 @@ function App() {
 }
 ```
 
-Peer dependency `@react-native-documents/picker` is only required while relying on the deprecated fallback; it will be dropped from peer dependencies in the next major alongside the fallback itself.
+Migrating from v3: if you relied on the built-in fallback (no `pickFiles`), install `@react-native-documents/picker` yourself and pass `pickFiles={adapterReactNativeDocumentsPicker(pick)}`. Replace `DocumentPickerResponse` imports from `uplofile/native` with `NativeFile`, or import `DocumentPickerResponse` from the picker package directly. Remove `suppressDeprecationWarnings`. Native types now default `file` to `NativeFile`, so code that read picker-only fields (`nativeType`, `isVirtual`, `hasRequestedType`) through an un-parameterized `useUplofile()`, `render` prop, `UploadFileItem` or ref stops compiling: pass the picker type explicitly, e.g. `useUplofile<any, DocumentPickerResponse>()`. A rejected `pickFiles` is no longer silent: handle it with `onPickError`, or it is logged with `console.warn`.
 No Dropzone or HiddenInput component — they are web-only.
 
 ### 5. Action Helpers

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { Root, Trigger, useUplofile } from "uplofile/native";
+import { pickFiles } from "../pickFiles";
 import { mockUpload } from "../mockUpload";
 import { Section } from "./Section";
 
@@ -48,7 +49,7 @@ function GalleryPreview() {
 export function PreviewGallery() {
   return (
     <Section title="Preview Gallery">
-      <Root upload={mockUpload}>
+      <Root upload={mockUpload} pickFiles={pickFiles}>
         <Trigger>
           <View style={styles.trigger}>
             <Text style={styles.triggerText}>Add files</Text>

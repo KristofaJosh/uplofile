@@ -10,6 +10,8 @@ const pickFiles = adapterExpoImagePicker(
   ImagePicker.launchImageLibraryAsync,
 );
 
+declare function showToast(message: string): void; // your app's toast
+
 async function putToS3(file: { uri: string; fileName?: string | null }) {
   const body = new FormData();
   body.append("file", {
@@ -23,7 +25,12 @@ async function putToS3(file: { uri: string; fileName?: string | null }) {
 
 export function Uploader() {
   return (
-    <Root upload={putToS3} pickFiles={pickFiles}>
+    <Root
+      upload={putToS3}
+      pickFiles={pickFiles}
+      // The picker failed (e.g. no photo access). Cancelling doesn't land here.
+      onPickError={() => showToast("Couldn't open your photos.")}
+    >
       <Trigger>Choose photo</Trigger>
       <Preview />
     </Root>

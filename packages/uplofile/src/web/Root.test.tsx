@@ -30,7 +30,7 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+        <Root upload={mockUpload} initial={initial} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
@@ -47,7 +47,7 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+        <Root upload={mockUpload} initial={initial} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
@@ -69,7 +69,7 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+        <Root upload={mockUpload} initial={initial} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
@@ -115,7 +115,7 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+        <Root upload={mockUpload} initial={initial} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
@@ -168,7 +168,7 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={mockUpload} initial={initial} ref={(r) => (ref = r)}>
+        <Root upload={mockUpload} initial={initial} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
@@ -198,7 +198,7 @@ describe("Root Component", () => {
         <Root
           upload={mockUpload}
           beforeUpload={beforeUpload}
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
@@ -206,7 +206,7 @@ describe("Root Component", () => {
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -234,7 +234,7 @@ describe("Root Component", () => {
         <Root
           upload={mockUpload}
           beforeUpload={beforeUpload}
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
@@ -242,7 +242,7 @@ describe("Root Component", () => {
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -271,7 +271,7 @@ describe("Root Component", () => {
         <Root
           upload={mockUpload}
           beforeUpload={beforeUpload}
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
@@ -280,7 +280,7 @@ describe("Root Component", () => {
       const file1 = new File(["test1"], "test1.jpg", { type: "image/jpeg" });
       const file2 = new File(["test2"], "test2.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -311,7 +311,7 @@ describe("Root Component", () => {
         <Root
           upload={mockUpload}
           beforeUpload={beforeUpload}
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
@@ -319,7 +319,7 @@ describe("Root Component", () => {
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -353,7 +353,7 @@ describe("Root Component", () => {
         <Root
           upload={mockUpload}
           beforeUpload={beforeUpload}
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
@@ -361,7 +361,7 @@ describe("Root Component", () => {
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -387,7 +387,7 @@ describe("Root Component", () => {
           beforeUpload={beforeUpload}
           maxCount={10}
           accept="image/*"
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
@@ -395,7 +395,7 @@ describe("Root Component", () => {
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -425,7 +425,7 @@ describe("Root Component", () => {
         <Root
           upload={mockUpload}
           beforeUpload={beforeUpload}
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
@@ -436,7 +436,7 @@ describe("Root Component", () => {
       });
       const newFile = new File(["test"], "new.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -451,7 +451,7 @@ describe("Root Component", () => {
 
       vi.clearAllMocks();
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -478,14 +478,14 @@ describe("Root Component", () => {
       let ref: UplofileRootRef<any> | null = null;
 
       render(
-        <Root upload={upload} ref={(r) => (ref = r)}>
+        <Root upload={upload} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
 
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
@@ -524,13 +524,13 @@ describe("Root Component", () => {
       );
 
       render(
-        <Root upload={slowUpload} ref={(r) => (ref = r)}>
+        <Root upload={slowUpload} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -560,13 +560,13 @@ describe("Root Component", () => {
       });
 
       render(
-        <Root upload={flakyUpload} ref={(r) => (ref = r)}>
+        <Root upload={flakyUpload} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -589,13 +589,13 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} ref={(r) => (ref = r)}>
+        <Root upload={upload} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -614,13 +614,13 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} onRemove={onRemove} ref={(r) => (ref = r)}>
+        <Root upload={upload} onRemove={onRemove} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -642,13 +642,13 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} onRemove={onRemove} ref={(r) => (ref = r)}>
+        <Root upload={upload} onRemove={onRemove} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -683,13 +683,13 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} onRemove={onRemove} ref={(r) => (ref = r)}>
+        <Root upload={upload} onRemove={onRemove} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -731,14 +731,14 @@ describe("Root Component", () => {
           upload={upload}
           onRemove={onRemove}
           removeMode="strict"
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -764,14 +764,14 @@ describe("Root Component", () => {
           upload={upload}
           onRemove={onRemove}
           removeMode="strict"
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -810,14 +810,14 @@ describe("Root Component", () => {
           upload={upload}
           onRemove={onRemove}
           removeMode="strict"
-          ref={(r) => (ref = r)}
+          ref={(r) => { ref = r; }}
         >
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -864,13 +864,13 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} ref={(r) => (ref = r)}>
+        <Root upload={upload} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -886,13 +886,13 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       render(
-        <Root upload={upload} ref={(r) => (ref = r)}>
+        <Root upload={upload} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -915,13 +915,13 @@ describe("Root Component", () => {
       slowUpload.mockReturnValue(new Promise(() => {}));
 
       render(
-        <Root upload={slowUpload} ref={(r) => (ref = r)}>
+        <Root upload={slowUpload} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },
@@ -943,13 +943,13 @@ describe("Root Component", () => {
       let ref: UplofileRootRef | null = null;
 
       const { unmount } = render(
-        <Root upload={neverResolve} ref={(r) => (ref = r)}>
+        <Root upload={neverResolve} ref={(r) => { ref = r; }}>
           <div />
         </Root>,
       );
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      ref!.onDrop({
+      ref!.onDrop!({
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: { files: [file] },

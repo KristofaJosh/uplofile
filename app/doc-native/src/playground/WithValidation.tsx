@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Root, Trigger, Preview } from "uplofile/native";
+import { pickFiles } from "../pickFiles";
 import type { BeforeUploadFn } from "uplofile/native";
 import { mockUpload } from "../mockUpload";
 import { Section } from "./Section";
@@ -25,7 +26,7 @@ export function WithValidation() {
       title="With Validation"
       description="Files over 5MB will be rejected. The picker may not expose file sizes on all platforms, so this may validate silently depending on the device."
     >
-      <Root upload={mockUpload} beforeUpload={beforeUpload}>
+      <Root upload={mockUpload} beforeUpload={beforeUpload} pickFiles={pickFiles}>
         <Trigger>
           <View style={styles.trigger}>
             <Text style={styles.triggerText}>Select files</Text>
