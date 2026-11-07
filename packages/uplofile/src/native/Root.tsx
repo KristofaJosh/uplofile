@@ -11,12 +11,8 @@ import {
   pick,
   type DocumentPickerResponse,
 } from "@react-native-documents/picker";
-import {
-  StableUploaderCtxValue,
-  UploaderCtx,
-  useUplofileState,
-} from "../shared/context";
-import type { ItemActions } from "../shared/types";
+import { UploaderCtx, useUplofileState } from "../shared/context";
+import type { ItemActions, StableUploaderCtxValue } from "../shared/types";
 import type { RootProps, UplofileRootRef } from "./types";
 import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
 
@@ -121,7 +117,6 @@ const RootImpl = forwardRef(
     const ctx = useMemo<StableUploaderCtxValue<TMeta, TFileSource>>(
       () => ({
         store: state.store,
-        setItems: state.emitChange,
         isLoading: state.isLoading,
         disabled: props.disabled,
         multiple: props.multiple ?? true,
@@ -134,7 +129,6 @@ const RootImpl = forwardRef(
       }),
       [
         state.store,
-        state.emitChange,
         state.isLoading,
         props.disabled,
         props.multiple,
@@ -148,14 +142,13 @@ const RootImpl = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        setItems: state.emitChange,
+        setItems: state.store.setItems,
         getItems: () => state.store.getSnapshot(),
         isLoading: state.isLoading,
         openFileDialog,
         actions: state.actions,
       }),
       [
-        state.emitChange,
         state.store,
         state.isLoading,
         openFileDialog,

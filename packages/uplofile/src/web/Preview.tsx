@@ -1,8 +1,7 @@
 import { Slot } from "../shared/Slot";
 import React, { ButtonHTMLAttributes } from "react";
 
-import { useUplofile } from "./hook";
-import { useUplofileSelector } from "../shared/hook";
+import { useUplofile, useUplofileSelector } from "./hook";
 import { isVideoFile } from "../shared/utils";
 
 import type { PreviewRenderProps, UploadFileItem } from "../shared/types";
@@ -140,29 +139,28 @@ const ActionButtons = ({ item, actions }: ActionButtonsProps) => (
   </div>
 );
 
+// Shallow equality that ignores `progress`, so progress ticks skip
+// PreviewItem. Compares every other field, including any added later.
 const isEqualIgnoringProgress = (
   a: WebUploadFileItem | undefined,
   b: WebUploadFileItem | undefined,
 ): boolean => {
   if (a === b) return true;
   if (!a || !b) return false;
-  return (
-    a.uid === b.uid &&
-    a.status === b.status &&
-    a.name === b.name &&
-    a.url === b.url &&
-    a.previewUrl === b.previewUrl &&
-    a.error === b.error &&
-    a.file === b.file &&
-    a.meta === b.meta
-  );
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  keys.delete("progress");
+  for (const key of keys) {
+    if (
+      a[key as keyof WebUploadFileItem] !== b[key as keyof WebUploadFileItem]
+    ) {
+      return false;
+    }
+  }
+  return true;
 };
 
-// Reads everything except `progress` for this uid, so a progress tick never
-// causes this component (or its non-progress children) to re-render — only
-// ProgressLeaf, below, subscribes to progress.
-// Exported (module-internal otherwise) so benchmark/regression tests can
-// spy on it directly, same precedent as PR #45's renderIsolation test.
+// Reads every field except `progress`; ProgressLeaf handles progress.
+// Exported for the render-isolation tests to spy on.
 export const PreviewItem = React.memo(
   ({
     uid,
@@ -171,7 +169,7 @@ export const PreviewItem = React.memo(
     uid: string;
     actions: PreviewRenderProps["actions"];
   }) => {
-    const item = useUplofileSelector<WebUploadFileItem | undefined, any, File>(
+    const item = useUplofileSelector<WebUploadFileItem | undefined>(
       (items) => items.find((i) => i.uid === uid),
       isEqualIgnoringProgress,
     );

@@ -1,7 +1,7 @@
 import { Slot } from "../shared/Slot";
 import { HTMLAttributes, useCallback, useRef, useState } from "react";
 
-import { useUplofileStable } from "../shared/hook";
+import { useUplofileStable } from "./hook";
 
 export type DropzoneProps = {
   asChild?: boolean;

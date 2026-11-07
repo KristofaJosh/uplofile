@@ -5,12 +5,12 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import {
+import { UploaderCtx, useUplofileState } from "../shared/context";
+import type {
+  RootProps,
   StableUploaderCtxValue,
-  UploaderCtx,
-  useUplofileState,
-} from "../shared/context";
-import type { RootProps, UplofileRootRef } from "../shared/types";
+  UplofileRootRef,
+} from "../shared/types";
 import { acceptsFile } from "../shared/utils";
 
 export const Root = forwardRef(
@@ -96,7 +96,6 @@ export const Root = forwardRef(
     const ctx = useMemo<StableUploaderCtxValue<TMeta, File>>(
       () => ({
         store: state.store,
-        setItems: state.emitChange,
         isLoading: state.isLoading,
         disabled: props.disabled,
         multiple: props.multiple ?? true,
@@ -109,7 +108,6 @@ export const Root = forwardRef(
       }),
       [
         state.store,
-        state.emitChange,
         state.isLoading,
         props.disabled,
         props.multiple,
@@ -125,7 +123,7 @@ export const Root = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        setItems: state.emitChange,
+        setItems: state.store.setItems,
         getItems: () => state.store.getSnapshot(),
         isLoading: state.isLoading,
         onDrop,
@@ -140,7 +138,6 @@ export const Root = forwardRef(
         },
       }),
       [
-        state.emitChange,
         state.store,
         state.isLoading,
         onDrop,

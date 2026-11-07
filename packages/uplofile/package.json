@@ -51,7 +51,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@radix-ui/react-slot": "1.2.4"
+    "@radix-ui/react-slot": "1.2.4",
+    "use-sync-external-store": "^1.7.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",
@@ -59,6 +60,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "@types/use-sync-external-store": "^1.7.0",
     "bunchee": "6.10.0",
     "jsdom": "^29.1.1",
     "prettier": "3.8.3",
@@ -68,10 +70,10 @@
     "vitest": "4.1.6"
   },
   "peerDependencies": {
+    "@react-native-documents/picker": "*",
     "react": ">=16.0.0",
     "react-dom": ">=16.0.0",
-    "react-native": "*",
-    "@react-native-documents/picker": "*"
+    "react-native": "*"
   },
   "peerDependenciesMeta": {
     "react-dom": {
