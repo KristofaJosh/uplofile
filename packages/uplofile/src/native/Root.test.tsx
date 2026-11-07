@@ -1,228 +1,33 @@
 /**
  * @vitest-environment jsdom
  */
-import React from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 
-const platform = vi.hoisted(() => ({ OS: "android" as string }));
 vi.mock("react-native", () => ({
   View: ({ children }: any) => <div>{children}</div>,
-  Platform: platform,
-}));
-
-const pickMock = vi.fn();
-vi.mock("@react-native-documents/picker", () => ({
-  pick: (...args: any[]) => pickMock(...args),
+  Platform: { OS: "android" },
 }));
 
 import { Root } from "./Root";
 import { adapterReactNativeDocumentsPicker } from "./adapters";
-import type { DocumentPickerResponse } from "@react-native-documents/picker";
 import type { UplofileRootRef } from "./types";
 
-afterEach(() => {
-  cleanup();
-  pickMock.mockReset();
-  platform.OS = "android";
-});
+// Shape of an @react-native-documents/picker result; uplofile no longer
+// depends on that package, so the test declares it locally.
+type DocumentPickerResult = {
+  uri: string;
+  name: string | null;
+  type: string | null;
+  size: number | null;
+};
+
+afterEach(cleanup);
 
 const mockUpload = vi.fn().mockResolvedValue({ url: "https://example.com/f" });
 
-describe("native Root — pick() fallback (pickFiles omitted)", () => {
-  it("calls pick() with the mapped accept/multiple options and adds accepted results", async () => {
-    pickMock.mockResolvedValueOnce([
-      { uri: "file:///a.png", name: "a.png", type: "image/png" },
-    ]);
-    let ref: UplofileRootRef | null = null;
-
-    render(
-      <Root
-        upload={mockUpload}
-        accept="image/*"
-        multiple={false}
-        suppressDeprecationWarnings
-        ref={(r) => {
-          ref = r;
-        }}
-      >
-        <div />
-      </Root>,
-    );
-
-    await ref!.openFileDialog();
-
-    expect(pickMock).toHaveBeenCalledWith({
-      type: ["image/*"],
-      allowMultiSelection: false,
-    });
-    await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
-    expect(ref!.getItems()[0].name).toBe("a.png");
-  });
-
-  it("maps accept MIME types to UTIs on iOS", async () => {
-    platform.OS = "ios";
-    pickMock.mockResolvedValueOnce([
-      { uri: "file:///a.png", name: "a.png", type: "image/png" },
-    ]);
-    let ref: UplofileRootRef | null = null;
-
-    render(
-      <Root
-        upload={mockUpload}
-        accept="image/*"
-        suppressDeprecationWarnings
-        ref={(r) => {
-          ref = r;
-        }}
-      >
-        <div />
-      </Root>,
-    );
-
-    await ref!.openFileDialog();
-
-    expect(pickMock).toHaveBeenCalledWith({
-      type: ["public.image"],
-      allowMultiSelection: true,
-    });
-    await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
-  });
-
-  it("filters out results that don't match accept, same as before", async () => {
-    pickMock.mockResolvedValueOnce([
-      { uri: "file:///a.pdf", name: "a.pdf", type: "application/pdf" },
-    ]);
-    let ref: UplofileRootRef | null = null;
-
-    render(
-      <Root
-        upload={mockUpload}
-        accept="image/*"
-        suppressDeprecationWarnings
-        ref={(r) => {
-          ref = r;
-        }}
-      >
-        <div />
-      </Root>,
-    );
-
-    await ref!.openFileDialog();
-
-    expect(ref!.getItems()).toHaveLength(0);
-  });
-
-  it("no-ops silently when pick() rejects (cancellation)", async () => {
-    pickMock.mockRejectedValueOnce(
-      Object.assign(new Error("cancelled"), { code: "OPERATION_CANCELED" }),
-    );
-    let ref: UplofileRootRef | null = null;
-
-    render(
-      <Root
-        upload={mockUpload}
-        suppressDeprecationWarnings
-        ref={(r) => {
-          ref = r;
-        }}
-      >
-        <div />
-      </Root>,
-    );
-
-    await expect(ref!.openFileDialog()).resolves.toBeUndefined();
-    expect(ref!.getItems()).toHaveLength(0);
-  });
-});
-
-describe("native Root — deprecation warning", () => {
-  it("fires exactly once per instance, not per render, when pickFiles is omitted", async () => {
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    const { rerender } = render(
-      <Root upload={mockUpload} multiple>
-        <div />
-      </Root>,
-    );
-    rerender(
-      <Root upload={mockUpload} multiple={false}>
-        <div />
-      </Root>,
-    );
-    rerender(
-      <Root upload={mockUpload} multiple>
-        <div />
-      </Root>,
-    );
-
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    expect(warnSpy.mock.calls[0][0]).toContain("pickFiles");
-    warnSpy.mockRestore();
-  });
-
-  it("survives React StrictMode's double effect invocation without double-warning", () => {
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    render(
-      <React.StrictMode>
-        <Root upload={mockUpload}>
-          <div />
-        </Root>
-      </React.StrictMode>,
-    );
-
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    warnSpy.mockRestore();
-  });
-
-  it("warns separately for each mounted Root instance", () => {
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    render(
-      <Root upload={mockUpload}>
-        <div />
-      </Root>,
-    );
-    render(
-      <Root upload={mockUpload}>
-        <div />
-      </Root>,
-    );
-
-    expect(warnSpy).toHaveBeenCalledTimes(2);
-    warnSpy.mockRestore();
-  });
-
-  it("is silenced by suppressDeprecationWarnings", () => {
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    render(
-      <Root upload={mockUpload} suppressDeprecationWarnings>
-        <div />
-      </Root>,
-    );
-
-    expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
-  });
-
-  it("does not fire when pickFiles is provided", () => {
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    render(
-      <Root upload={mockUpload} pickFiles={async () => []}>
-        <div />
-      </Root>,
-    );
-
-    expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
-  });
-});
-
 describe("native Root — pickFiles prop", () => {
-  it("calls pickFiles instead of pick(), and adds the returned results", async () => {
+  it("calls pickFiles and adds the returned results", async () => {
     const customPickFiles = vi
       .fn()
       .mockResolvedValue([
@@ -249,19 +54,22 @@ describe("native Root — pickFiles prop", () => {
     expect(customPickFiles).toHaveBeenCalledWith("text/plain", {
       multiple: true,
     });
-    expect(pickMock).not.toHaveBeenCalled();
     await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
     expect(ref!.getItems()[0].name).toBe("a");
   });
 
-  it("no-ops silently when pickFiles rejects", async () => {
-    const customPickFiles = vi.fn().mockRejectedValue(new Error("boom"));
+  it("passes a pickFiles rejection to onPickError and adds nothing", async () => {
+    const error = new Error("permission denied");
+    const customPickFiles = vi.fn().mockRejectedValue(error);
+    const onPickError = vi.fn();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     let ref: UplofileRootRef | null = null;
 
     render(
       <Root
         upload={mockUpload}
         pickFiles={customPickFiles}
+        onPickError={onPickError}
         ref={(r) => {
           ref = r;
         }}
@@ -271,7 +79,32 @@ describe("native Root — pickFiles prop", () => {
     );
 
     await expect(ref!.openFileDialog()).resolves.toBeUndefined();
+    expect(onPickError).toHaveBeenCalledWith(error);
+    expect(warn).not.toHaveBeenCalled();
     expect(ref!.getItems()).toHaveLength(0);
+    warn.mockRestore();
+  });
+
+  it("warns when pickFiles rejects and no onPickError is given", async () => {
+    const error = new Error("permission denied");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    let ref: UplofileRootRef | null = null;
+
+    render(
+      <Root
+        upload={mockUpload}
+        pickFiles={vi.fn().mockRejectedValue(error)}
+        ref={(r) => {
+          ref = r;
+        }}
+      >
+        <div />
+      </Root>,
+    );
+
+    await ref!.openFileDialog();
+    expect(warn).toHaveBeenCalledWith("[uplofile] pickFiles failed:", error);
+    warn.mockRestore();
   });
 
   it("does not add items when pickFiles resolves to an empty array", async () => {
@@ -295,18 +128,17 @@ describe("native Root — pickFiles prop", () => {
     expect(ref!.getItems()).toHaveLength(0);
   });
 
-  it("wires end-to-end with the real adapterReactNativeDocumentsPicker + a mocked pick(), with TFileSource inferred as DocumentPickerResponse", async () => {
-    pickMock.mockResolvedValueOnce([
+  it("wires end-to-end with the real adapterReactNativeDocumentsPicker + a mocked pick(), with TFileSource set to the picker result type", async () => {
+    const pickMock = vi.fn().mockResolvedValueOnce([
       { uri: "file:///a.png", name: "a.png", type: "image/png" },
     ]);
-    let ref: UplofileRootRef<any, DocumentPickerResponse> | null = null;
+    let ref: UplofileRootRef<any, DocumentPickerResult> | null = null;
 
     render(
-      <Root<any, DocumentPickerResponse>
+      <Root<any, DocumentPickerResult>
         upload={async (file) => {
-          // `file` is typed as DocumentPickerResponse here — .uri is only
-          // valid because generic inference flowed from pickFiles through
-          // to upload without an explicit cast.
+          // `file` is typed as DocumentPickerResult here, so .uri needs
+          // no cast.
           return { url: file.uri };
         }}
         pickFiles={adapterReactNativeDocumentsPicker(pickMock)}

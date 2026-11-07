@@ -1,7 +1,7 @@
 appId: com.uplofile.native
 ---
-# Verifies the deprecated built-in @react-native-documents/picker fallback
-# (Root with no pickFiles prop) still works end to end.
+# Verifies Quick Start opens the document picker through pickFiles
+# (adapterReactNativeDocumentsPicker) and can be cancelled.
 - launchApp
 - runFlow:
     when:

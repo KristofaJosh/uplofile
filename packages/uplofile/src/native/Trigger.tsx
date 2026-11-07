@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { Pressable, PressableProps, Text } from "react-native";
-import type { DocumentPickerResponse } from "@react-native-documents/picker";
+import type { NativeFile } from "./types";
 
 import { useUplofile } from "./hook";
 import { useTriggerStats } from "../shared/triggerStats";
@@ -8,7 +8,7 @@ import type { TriggerRenderProps } from "../shared/types";
 
 type NativeTriggerProps<TMeta = any> = PropsWithChildren<{
   render?: (
-    api: TriggerRenderProps<TMeta, DocumentPickerResponse>,
+    api: TriggerRenderProps<TMeta, NativeFile>,
   ) => React.ReactNode;
 }> &
   PressableProps;

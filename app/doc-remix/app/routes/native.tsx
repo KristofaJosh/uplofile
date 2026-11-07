@@ -24,8 +24,7 @@ const adapters: Prop[] = [
       <>
         Wraps <code>@react-native-documents/picker</code>&apos;s{" "}
         <code>pick()</code>. Catches its <code>OPERATION_CANCELED</code> throw
-        and resolves an empty array instead. This is also the fallback{" "}
-        <code>Root</code> uses when no <code>pickFiles</code> is given.
+        and resolves an empty array instead.
       </>
     ),
     default: "documents",
@@ -71,27 +70,27 @@ const adapters: Prop[] = [
 const nativeProps: Prop[] = [
   {
     name: "pickFiles",
+    required: true,
     signature: "(accept, { multiple }) => Promise<TFileSource[]>",
     description: (
       <>
-        Replaces the built-in picker call. Use one of the four adapters
-        above, or write your own function of this shape.
+        Opens your picker and resolves to the chosen files, or an
+        empty array on cancel. Use one of the four adapters above, or write
+        your own function of this shape.
       </>
     ),
   },
   {
-    name: "suppressDeprecationWarnings",
-    signature: "boolean",
+    name: "onPickError",
+    signature: "(error: unknown) => void",
     description: (
       <>
-        Temporarily silences the one-time warning logged when{" "}
-        <code>pickFiles</code> is omitted and <code>Root</code> falls back
-        to <code>@react-native-documents/picker</code>. It quiets the log,
-        not the removal: that fallback is still going away in the next
-        major version, so treat this as a stopgap while you migrate.
+        Called when <code>pickFiles</code> rejects, for example on a denied
+        permission. Cancelling is not an error: adapters resolve to an empty
+        array. Without this prop, the error is logged with{" "}
+        <code>console.warn</code>.
       </>
     ),
-    default: "false",
   },
 ];
 
@@ -102,7 +101,9 @@ const differences: Prop[] = [
       <>
         No DOM <code>File</code>. Every shared type is generic over{" "}
         <code>TFileSource</code> and infers it from whichever adapter you
-        pass to <code>pickFiles</code>.
+        pass to <code>pickFiles</code>. Where it can&apos;t be inferred, it
+        defaults to <code>NativeFile</code>:{" "}
+        <code>{"{ uri, name?, type?, size? }"}</code>.
       </>
     ),
   },
@@ -155,9 +156,13 @@ export default function Native() {
         <section id="pickfiles">
           <h2>The picker is yours</h2>
           <p>
-            Native <code>Root</code> takes one extra prop,{" "}
-            <code>pickFiles</code>, invoked instead of a built-in call. If
-            you omit it, <code>Root</code> falls back to{" "}
+            Native <code>Root</code> takes one extra, required prop,{" "}
+            <code>pickFiles</code>. uplofile ships no picker and depends on
+            none: you install the picker library you want and hand it to{" "}
+            <code>Root</code> through an adapter.
+          </p>
+          <p className="doc-note">
+            <strong>Upgrading from v3:</strong> the built-in{" "}
             <a
               href="https://www.npmjs.com/package/@react-native-documents/picker"
               target="_blank"
@@ -165,16 +170,19 @@ export default function Native() {
             >
               <code>@react-native-documents/picker</code>
             </a>{" "}
-            directly and logs a one-time deprecation warning. Pass{" "}
-            <code>suppressDeprecationWarnings</code> to silence it if that
-            fallback is intentional.
-          </p>
-          <p className="doc-note">
-            <strong>Deprecated:</strong> this fallback, and the{" "}
-            <code>@react-native-documents/picker</code> peer dependency it
-            requires, will be removed in the next major version. Migrate to{" "}
-            <code>pickFiles</code>, with an adapter above or your own
-            implementation, when you&apos;re able to.
+            fallback and <code>suppressDeprecationWarnings</code> are gone. If
+            you relied on the fallback, install that package and pass{" "}
+            <code>pickFiles={"{adapterReactNativeDocumentsPicker(pick)}"}</code>
+            . Import <code>NativeFile</code> where you used{" "}
+            <code>DocumentPickerResponse</code> from <code>uplofile/native</code>
+            . Types now default <code>file</code> to <code>NativeFile</code>,
+            so if you read picker-only fields such as{" "}
+            <code>nativeType</code> through <code>useUplofile()</code>, a{" "}
+            <code>render</code> prop or the ref, pass the picker type:{" "}
+            <code>{"useUplofile<any, DocumentPickerResponse>()"}</code>. A
+            rejected <code>pickFiles</code> now reaches{" "}
+            <code>onPickError</code> (or <code>console.warn</code>) instead of
+            being dropped.
           </p>
           <CodeBlock code={code} filename="Uploader.native.tsx" />
         </section>

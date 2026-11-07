@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { pick } from "@react-native-documents/picker";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { launchImageLibrary } from "react-native-image-picker";
@@ -8,13 +7,13 @@ import {
   Root,
   Trigger,
   Preview,
-  adapterReactNativeDocumentsPicker,
   adapterExpoDocumentPicker,
   adapterExpoImagePicker,
   adapterReactNativeImagePicker,
   type PickFilesFn,
 } from "uplofile/native";
 import { mockUpload } from "../mockUpload";
+import { pickFiles as reactNativeDocumentsPickFiles } from "../pickFiles";
 import { Section } from "./Section";
 
 const ADAPTERS: {
@@ -29,7 +28,7 @@ const ADAPTERS: {
     label: "adapterReactNativeDocumentsPicker",
     color: "#AF52DE",
     accept: "image/*",
-    pickFiles: adapterReactNativeDocumentsPicker(pick),
+    pickFiles: reactNativeDocumentsPickFiles,
   },
   {
     key: "expo-document",
@@ -89,7 +88,7 @@ export function PickFilesAdapters() {
   return (
     <Section
       title="pickFiles adapters"
-      description="Each card wires a different injected picker via the `pickFiles` prop instead of the deprecated built-in fallback — none of these `Root` instances should log a deprecation warning."
+      description="Each card wires a different picker library into `Root` through the `pickFiles` prop."
     >
       <View style={styles.cards}>
         {ADAPTERS.map(({ key, ...adapter }) => (

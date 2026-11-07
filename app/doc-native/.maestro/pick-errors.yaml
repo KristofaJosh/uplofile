@@ -1,0 +1,21 @@
+appId: com.uplofile.native
+---
+# Verifies a failing pickFiles reaches onPickError and its message renders
+- launchApp
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn:
+          text: "http://.*:8081"
+          index: 0
+- scrollUntilVisible:
+    element:
+      id: pick-errors-trigger
+    direction: DOWN
+- assertVisible: "Picker errors"
+- tapOn:
+    id: pick-errors-trigger
+- assertVisible:
+    id: pick-errors-message
+    text: "Photo library access denied"

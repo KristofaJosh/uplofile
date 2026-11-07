@@ -8,6 +8,7 @@ import { QuickStart } from "./src/playground/QuickStart";
 import { BasicUpload } from "./src/playground/BasicUpload";
 import { PreviewGallery } from "./src/playground/PreviewGallery";
 import { WithValidation } from "./src/playground/WithValidation";
+import { PickErrors } from "./src/playground/PickErrors";
 import { BatchUpload } from "./src/playground/BatchUpload";
 import { PickFilesAdapters } from "./src/playground/PickFilesAdapters";
 
@@ -28,6 +29,7 @@ export default function App() {
           <PickFilesAdapters />
           <PreviewGallery />
           <WithValidation />
+          <PickErrors />
           <BatchUpload />
         </ScrollView>
         <StatusBar style="dark" />

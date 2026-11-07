@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Root, Trigger, useUplofile, type UploadResult } from "uplofile/native";
+import { pickFiles } from "../pickFiles";
 import { Section } from "./Section";
 
 function BatchStatus() {
@@ -79,7 +80,7 @@ export function BatchUpload() {
       title="Batch Upload"
       description="Files are collected and sent as a single batch request."
     >
-      <Root upload={upload}>
+      <Root upload={upload} pickFiles={pickFiles}>
         <View style={styles.row}>
           <Trigger>
             <View style={styles.trigger}>

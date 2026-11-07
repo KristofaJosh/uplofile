@@ -1,5 +1,3 @@
-import type { DocumentPickerResponse } from "@react-native-documents/picker";
-
 import type {
   BeforeUploadFn as SharedBeforeUploadFn,
   ImageUploaderContextValue as SharedImageUploaderContextValue,
@@ -12,55 +10,66 @@ import type {
 } from "../shared/types";
 
 /**
- * Native re-exports of the shared generic types, pinned to the document
- * picker's response shape as the file-source default instead of the DOM
- * `File` type that isn't available in a React Native environment.
+ * Default file-source shape for `uplofile/native`: the fields uplofile reads
+ * from whatever `pickFiles` returns. Document-picker results match it; see
+ * the React Native docs for image-picker caveats.
+ */
+export type NativeFile = {
+  uri: string;
+  name?: string | null;
+  type?: string | null;
+  size?: number | null;
+};
+
+/**
+ * Native re-exports of the shared generic types, defaulting the file source
+ * to `NativeFile` instead of the DOM `File` type, which React Native lacks.
  */
 export type UploadFileItem<
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 > = SharedUploadFileItem<TMeta, TFileSource>;
 
 export type BeforeUploadFn<
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 > = SharedBeforeUploadFn<TMeta, TFileSource>;
 
-export type PickFilesFn<TFileSource = DocumentPickerResponse> =
+export type PickFilesFn<TFileSource = NativeFile> =
   SharedPickFilesFn<TFileSource>;
 
 export type RootProps<
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 > = SharedRootProps<TMeta, TFileSource> & {
   /**
-   * Consumer-supplied replacement for the built-in
-   * `@react-native-documents/picker` call. When provided, `Root` invokes
-   * this instead of `pick()` — see `adapterReactNativeDocumentsPicker`,
-   * `adapterExpoDocumentPicker`, `adapterExpoImagePicker`, and
-   * `adapterReactNativeImagePicker`.
+   * Opens your picker and resolves to the chosen files (an empty array on
+   * cancel). Use `adapterReactNativeDocumentsPicker`,
+   * `adapterExpoDocumentPicker`, `adapterExpoImagePicker` or
+   * `adapterReactNativeImagePicker`, or write your own.
    */
-  pickFiles?: PickFilesFn<TFileSource>;
+  pickFiles: PickFilesFn<TFileSource>;
   /**
-   * Silences the one-time deprecation warning logged when `pickFiles`
-   * is omitted and `Root` falls back to `@react-native-documents/picker`.
+   * Called when `pickFiles` rejects (for example, a denied permission).
+   * Cancelling is not an error: adapters resolve to `[]` instead. Without
+   * this prop, the error is logged with `console.warn`.
    */
-  suppressDeprecationWarnings?: boolean;
+  onPickError?: (error: unknown) => void;
 };
 
 export type ImageUploaderContextValue<
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 > = SharedImageUploaderContextValue<TMeta, TFileSource>;
 
 export type TriggerRenderProps<
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 > = SharedTriggerRenderProps<TMeta, TFileSource>;
 
 export type PreviewRenderProps<
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 > = SharedPreviewRenderProps<TMeta, TFileSource>;
 
 /**
@@ -70,5 +79,5 @@ export type PreviewRenderProps<
  */
 export type UplofileRootRef<
   TMeta = any,
-  TFileSource = DocumentPickerResponse,
+  TFileSource = NativeFile,
 > = Omit<SharedUplofileRootRef<TMeta, TFileSource>, "onDrop" | "onDragOver">;
