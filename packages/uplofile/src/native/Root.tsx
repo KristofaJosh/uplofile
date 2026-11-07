@@ -14,7 +14,8 @@ import {
 import { UploaderCtx, useUplofileState } from "../shared/context";
 import type { ItemActions, StableUploaderCtxValue } from "../shared/types";
 import type { RootProps, UplofileRootRef } from "./types";
-import { acceptsFile, getNativePickerAcceptTypes } from "../shared/utils";
+import { acceptsFile } from "../shared/utils";
+import { getDocumentsPickerTypes } from "./documentsPickerTypes";
 
 export type { DocumentPickerResponse } from "@react-native-documents/picker";
 
@@ -54,7 +55,7 @@ const RootImpl = forwardRef(
     });
 
     const acceptTypes = useMemo(() => {
-      return getNativePickerAcceptTypes(props.accept);
+      return getDocumentsPickerTypes(props.accept);
     }, [props.accept]);
 
     const hasWarnedRef = useRef(false);

@@ -5,8 +5,10 @@ import React from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 
+const platform = vi.hoisted(() => ({ OS: "android" as string }));
 vi.mock("react-native", () => ({
   View: ({ children }: any) => <div>{children}</div>,
+  Platform: platform,
 }));
 
 const pickMock = vi.fn();
@@ -22,6 +24,7 @@ import type { UplofileRootRef } from "./types";
 afterEach(() => {
   cleanup();
   pickMock.mockReset();
+  platform.OS = "android";
 });
 
 const mockUpload = vi.fn().mockResolvedValue({ url: "https://example.com/f" });
@@ -55,6 +58,35 @@ describe("native Root — pick() fallback (pickFiles omitted)", () => {
     });
     await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
     expect(ref!.getItems()[0].name).toBe("a.png");
+  });
+
+  it("maps accept MIME types to UTIs on iOS", async () => {
+    platform.OS = "ios";
+    pickMock.mockResolvedValueOnce([
+      { uri: "file:///a.png", name: "a.png", type: "image/png" },
+    ]);
+    let ref: UplofileRootRef | null = null;
+
+    render(
+      <Root
+        upload={mockUpload}
+        accept="image/*"
+        suppressDeprecationWarnings
+        ref={(r) => {
+          ref = r;
+        }}
+      >
+        <div />
+      </Root>,
+    );
+
+    await ref!.openFileDialog();
+
+    expect(pickMock).toHaveBeenCalledWith({
+      type: ["public.image"],
+      allowMultiSelection: true,
+    });
+    await waitFor(() => expect(ref!.getItems()).toHaveLength(1));
   });
 
   it("filters out results that don't match accept, same as before", async () => {
