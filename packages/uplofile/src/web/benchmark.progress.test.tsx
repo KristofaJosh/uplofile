@@ -12,7 +12,7 @@
  *   pnpm --filter uplofile exec vitest run src/web/benchmark.progress.test.tsx
  */
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
-import React, { Profiler, ProfilerOnRenderCallback } from "react";
+import { Profiler, ProfilerOnRenderCallback } from "react";
 import { act, cleanup, render, waitFor } from "@testing-library/react";
 
 import { Root } from "./Root";
