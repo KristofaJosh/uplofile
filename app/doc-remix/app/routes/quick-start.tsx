@@ -48,6 +48,7 @@ export default function QuickStart() {
             <span>Code</span>
           </div>
           <CodeTabs
+            defaultActiveIndex={1}
             tabs={[
               { label: "upload.ts", code: uploadCode },
               { label: "Uploader.tsx", code: uploaderCode },

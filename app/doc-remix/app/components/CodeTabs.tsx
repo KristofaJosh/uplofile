@@ -8,11 +8,13 @@ export type CodeTab = { label: string; code: string };
 export const CodeTabs = ({
   tabs,
   language = "tsx",
+  defaultActiveIndex = 0,
 }: {
   tabs: CodeTab[];
   language?: string;
+  defaultActiveIndex?: number;
 }) => {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(defaultActiveIndex);
   const [copied, copy] = useCopy();
   const tabListId = useId();
   const activeIndex = active < tabs.length ? active : 0;

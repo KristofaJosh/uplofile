@@ -12,9 +12,16 @@ test("quick start shows both files and previews a mock upload", async ({
 
   await page.goto("/quick-start");
   await expect(page.getByRole("tab", { name: "upload.ts" })).toBeVisible();
-  await page.getByRole("tab", { name: "Uploader.tsx" }).click();
+  await expect(page.getByRole("tab", { name: "Uploader.tsx" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
   await expect(page.getByRole("tabpanel")).toContainText(
     "export default function Uploader",
+  );
+  await page.getByRole("tab", { name: "upload.ts" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "export async function upload",
   );
   await expect(
     page.getByRole("button", { name: "Drop files here" }),
