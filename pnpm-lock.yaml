@@ -73,8 +73,8 @@ importers:
         specifier: ~57.0.1
         version: 57.0.1(expo@58.0.23)
       expo-image-picker:
-        specifier: ~57.0.10
-        version: 57.0.10(expo@58.0.23)
+        specifier: ~58.0.10
+        version: 58.0.10(expo@58.0.23)
       expo-status-bar:
         specifier: ~57.0.1
         version: 57.0.1(expo@58.0.23)(react-native@0.86.2(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.14)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
@@ -195,8 +195,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
       expo-image-picker:
-        specifier: ^57.0.10
-        version: 57.0.10(expo@58.0.23)
+        specifier: ^58.0.10
+        version: 58.0.10(expo@58.0.23)
       tailwindcss:
         specifier: ^4.3.0
         version: 4.3.0
@@ -3441,13 +3441,13 @@ packages:
       react: 19.2.3
       react-native: '*'
 
-  expo-image-loader@57.0.1:
-    resolution: {integrity: sha512-uhrZKLT/cTl2mXyR28kPpVkS5O+PK9N1QA/07IFM4f5T4g0lTW1JHT3NEWwEEsGFldPmVX4j7LwUVVZxE+woug==}
+  expo-image-loader@58.0.3:
+    resolution: {integrity: sha512-zlHudxC8OObyqCHmvdxJqURI7886KJ0cUJyn7R/a8FOD9fP837xKDN+u4SIt7XsSSVPNXzMd4Y7mN0pmup8NGA==}
     peerDependencies:
       expo: '*'
 
-  expo-image-picker@57.0.10:
-    resolution: {integrity: sha512-Zr00cd4RuUJlke8yN8/lKdl55UauoacF45j86zJa6oxJoe+wjlt9kkf0aGxQeoPW1JILT5Ikr3Os4+a9ROJYEw==}
+  expo-image-picker@58.0.10:
+    resolution: {integrity: sha512-yqQC9UYMWSUxk6U0jaS1vE1w+b9Ru0FJmQ3KjUf9Q9oVg5xBxmg8+Ts+usazMAuPoskNIXJ++VZ+uK6br9yUGQ==}
     peerDependencies:
       expo: '*'
 
@@ -6052,7 +6052,7 @@ snapshots:
       debug: 4.4.3(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
-      semver: 6.3.1
+      semver: 6.3.2
     transitivePeerDependencies:
       - supports-color
 
@@ -6094,7 +6094,7 @@ snapshots:
       '@babel/helper-validator-option': 7.29.7
       browserslist: 4.28.7
       lru-cache: 5.1.1
-      semver: 6.3.1
+      semver: 6.3.2
 
   '@babel/helper-create-class-features-plugin@7.29.13(@babel/core@7.29.13(supports-color@8.1.1))(supports-color@8.1.1)':
     dependencies:
@@ -7408,7 +7408,7 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
       '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/remapping@2.3.5':
@@ -7430,7 +7430,7 @@ snapshots:
   '@jridgewell/trace-mapping@0.3.31':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   '@mjackson/node-fetch-server@0.2.0': {}
 
@@ -8404,7 +8404,7 @@ snapshots:
   '@testing-library/dom@10.4.1':
     dependencies:
       '@babel/code-frame': 7.29.7
-      '@babel/runtime': 7.29.2
+      '@babel/runtime': 7.29.13
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
@@ -9480,14 +9480,14 @@ snapshots:
       react: 19.2.3
       react-native: 0.86.2(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.14)(react@19.2.3)(supports-color@8.1.1)
 
-  expo-image-loader@57.0.1(expo@58.0.23):
+  expo-image-loader@58.0.3(expo@58.0.23):
     dependencies:
       expo: 58.0.23(@babel/core@7.29.13(supports-color@8.1.1))(@expo/dom-webview@58.0.2)(react-dom@19.2.3(react@19.2.3))(react-native@0.86.2(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.14)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)(typescript@6.0.3)
 
-  expo-image-picker@57.0.10(expo@58.0.23):
+  expo-image-picker@58.0.10(expo@58.0.23):
     dependencies:
       expo: 58.0.23(@babel/core@7.29.13(supports-color@8.1.1))(@expo/dom-webview@58.0.2)(react-dom@19.2.3(react@19.2.3))(react-native@0.86.2(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.14)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)(typescript@6.0.3)
-      expo-image-loader: 57.0.1(expo@58.0.23)
+      expo-image-loader: 58.0.3(expo@58.0.23)
 
   expo-json-utils@57.0.1: {}
 
