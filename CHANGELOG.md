@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/KristofaJosh/uplofile/compare/v4.0.0...v4.0.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* **deps:** bump @radix-ui/react-slot from 1.2.4 to 1.5.0 in /packages/uplofile in the library-minor-patch group across 1 directory ([#72](https://github.com/KristofaJosh/uplofile/issues/72)) ([576b0a3](https://github.com/KristofaJosh/uplofile/commit/576b0a3f90cfda27408f203c4694999cd9de8d6c))
+
 # [4.0.0](https://github.com/KristofaJosh/uplofile/compare/v3.2.3...v4.0.0) (2026-11-07)
 
 
