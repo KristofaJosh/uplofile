@@ -1,16 +1,27 @@
+import type { ComponentProps } from "react";
 import type { MetaFunction } from "react-router";
 import { Link } from "react-router";
-import { CodeBlock } from "@/components/CodeBlock";
+import { CodeTabs } from "@/components/CodeTabs";
 import { DocsLayout } from "@/components/DocsLayout";
-import quickStartDemo from "./quickstart.demo.tsx?raw";
+import { mockUpload } from "@/lib/utils";
+import Uploader from "./quickstart/Uploader";
+import uploaderCode from "./quickstart/Uploader.tsx?raw";
+import uploadCode from "./quickstart/upload.ts?raw";
 import { withPageMeta } from "@/lib/seo";
+
+const previewUpload: ComponentProps<typeof Uploader>["uploadFile"] = (
+  file,
+  signal,
+  onProgress,
+) => mockUpload(file, signal, onProgress, 0);
 
 export const meta: MetaFunction = () =>
   withPageMeta("/quick-start", [
     { title: "Quick start — Uplofile" },
     {
       name: "description",
-      content: "Build a fully functional Uplofile uploader in one file.",
+      content:
+        "Build a Uplofile uploader with a live preview and two small files.",
     },
   ]);
 
@@ -20,10 +31,28 @@ export default function QuickStart() {
       <article className="doc-article">
         <h1>Quick start</h1>
         <p className="doc-lead">
-          One file. Copy it, replace the fetch call, ship.
+          Keep the upload request and the UI in separate files. Try the preview,
+          then point the upload request at your endpoint.
         </p>
-        <section id="file">
-          <CodeBlock code={quickStartDemo} filename="Uploader.tsx" />
+        <section id="preview">
+          <div className="section-label">
+            <span>Preview</span>
+            <span>mock upload</span>
+          </div>
+          <div className="recipe-preview">
+            <Uploader uploadFile={previewUpload} />
+          </div>
+        </section>
+        <section id="code">
+          <div className="section-label">
+            <span>Code</span>
+          </div>
+          <CodeTabs
+            tabs={[
+              { label: "upload.ts", code: uploadCode },
+              { label: "Uploader.tsx", code: uploaderCode },
+            ]}
+          />
         </section>
         <section id="next">
           <h2>Then change one thing at a time</h2>

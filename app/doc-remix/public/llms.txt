@@ -102,26 +102,21 @@ A file (`UploadFileItem`) moves through these statuses:
 If deleted, it moves to `removing`.
 
 ## Example Usage
+The [quick start](https://uplofile.kristofajosh.dev/quick-start) shows a live preview and two files: `upload.ts` handles the network request, and `Uploader.tsx` composes the UI. The preview uses a mock upload; your app supplies its own endpoint.
+
 ```tsx
-import { UplofileRoot, UplofileDropzone, UplofileTrigger, UplofilePreview } from 'uplofile';
+import { Root, Dropzone, Trigger, Preview } from 'uplofile';
+import { upload } from './upload';
 
 function App() {
-  const handleUpload = async (file, signal, setProgress) => {
-    // Implement your network request here
-    setProgress(100);
-    return { url: URL.createObjectURL(file) };
-  };
-
   return (
-    <UplofileRoot upload={handleUpload} multiple>
-      <UplofileDropzone>
-        <UplofileTrigger>Select Files</UplofileTrigger>
-        <UplofilePreview />
-      </UplofileDropzone>
-    </UplofileRoot>
+    <Root upload={upload}>
+      <Dropzone>Drop files here</Dropzone>
+      <Trigger>Select files</Trigger>
+      <Preview />
+    </Root>
   );
 }
-
 ```
 
 ## Full Examples & References
