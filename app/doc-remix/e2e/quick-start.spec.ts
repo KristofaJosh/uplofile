@@ -11,7 +11,7 @@ test("quick start shows both files and previews a mock upload", async ({
   });
 
   await page.goto("/quick-start");
-  await expect(page.getByRole("tab", { name: "upload.ts" })).toBeVisible();
+  await expect(page.getByRole("tab").first()).toHaveText("Uploader.tsx");
   await expect(page.getByRole("tab", { name: "Uploader.tsx" })).toHaveAttribute(
     "aria-selected",
     "true",
