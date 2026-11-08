@@ -10,7 +10,8 @@ const tocByPath: Record<string, Array<[string, string]>> = {
     ["#exports", "What ships"],
   ],
   "/quick-start": [
-    ["#file", "The file"],
+    ["#preview", "Preview"],
+    ["#code", "Code"],
     ["#next", "Next changes"],
   ],
   "/api/props": [
