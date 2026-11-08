@@ -10,7 +10,7 @@
     "android": "expo run:android"
   },
   "dependencies": {
-    "@react-native-documents/picker": "^10.1.7",
+    "@react-native-documents/picker": "^12.0.3",
     "expo": "~58.0.23",
     "expo-dev-client": "~57.0.12",
     "expo-document-picker": "~57.0.1",
