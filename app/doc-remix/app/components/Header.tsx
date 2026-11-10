@@ -1,3 +1,4 @@
+import { usePostHog } from "@posthog/react";
 import {
   IoCheckmarkOutline,
   IoCloseOutline,
@@ -17,6 +18,7 @@ import { MobileNav } from "./MobileNav";
 type Theme = "dark" | "light";
 
 export const Header = () => {
+  const posthog = usePostHog();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -111,6 +113,13 @@ export const Header = () => {
             </a>
             <a
               href="https://github.com/KristofaJosh/uplofile"
+              onClick={(event) =>
+                posthog?.capture("outbound_click", {
+                  target: "github",
+                  href: event.currentTarget.href,
+                  location: "Header",
+                })
+              }
               target="_blank"
               rel="noreferrer"
               className="icon-button"
@@ -120,6 +129,13 @@ export const Header = () => {
             </a>
             <a
               href="https://www.npmjs.com/package/uplofile"
+              onClick={(event) =>
+                posthog?.capture("outbound_click", {
+                  target: "npm",
+                  href: event.currentTarget.href,
+                  location: "Header",
+                })
+              }
               target="_blank"
               rel="noreferrer"
               className="icon-button"

@@ -69,7 +69,12 @@ export const CodeTabs = ({
         <button
           type="button"
           className="code-tabs__copy"
-          onClick={() => void copy(selectedTab.code.trim())}
+          onClick={() =>
+            void copy(selectedTab.code.trim(), {
+              kind: "snippet",
+              label: selectedTab.label,
+            })
+          }
           aria-label="Copy code"
         >
           {copied ? (

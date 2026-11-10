@@ -7,7 +7,8 @@ import {
   ScrollRestoration,
   type MetaFunction,
 } from "react-router";
-import { Analytics } from "@vercel/analytics/react";
+import { usePostHog } from "@posthog/react";
+import { useEffect } from "react";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -55,7 +56,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
-        <Analytics />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -68,6 +68,14 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    if (!isRouteErrorResponse(error) || error.status !== 404) {
+      posthog?.captureException(error);
+    }
+  }, [error, posthog]);
+
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;

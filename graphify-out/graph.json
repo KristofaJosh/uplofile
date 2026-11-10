@@ -4278,26 +4278,6 @@
       "norm_label": "@react-router/serve"
     },
     {
-      "label": "@vercel/analytics",
-      "file_type": "code",
-      "source_file": "app/doc-remix/package.json",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "app_doc_remix_package_dependencies_vercel_analytics",
-      "community": 78,
-      "norm_label": "@vercel/analytics"
-    },
-    {
-      "label": "@vercel/analytics",
-      "file_type": "concept",
-      "source_file": "app/doc-remix/package.json",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "vercel_analytics",
-      "community": 78,
-      "norm_label": "@vercel/analytics"
-    },
-    {
       "label": "@vercel/react-router",
       "file_type": "code",
       "source_file": "app/doc-remix/package.json",
@@ -15670,17 +15650,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/doc-remix/package.json",
-      "source_location": "L22",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "app_doc_remix_package_dependencies",
-      "target": "app_doc_remix_package_dependencies_vercel_analytics",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "app/doc-remix/package.json",
       "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
@@ -15827,18 +15796,6 @@
       "_origin": "ast",
       "source": "app_doc_remix_package_dependencies_react_router_serve",
       "target": "react_router_serve",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "source_file": "app/doc-remix/package.json",
-      "source_location": "L22",
-      "weight": 1.0,
-      "context": "import",
-      "_origin": "ast",
-      "source": "app_doc_remix_package_dependencies_vercel_analytics",
-      "target": "vercel_analytics",
       "confidence_score": 1.0
     },
     {

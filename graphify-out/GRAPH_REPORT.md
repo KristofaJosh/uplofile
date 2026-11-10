@@ -81,7 +81,6 @@
 - tailwind merge
 - tailwindcss animate
 - uplofile
-- vercel analytics
 - vercel react router
 - vite plugin svgr
 - vite tsconfig paths

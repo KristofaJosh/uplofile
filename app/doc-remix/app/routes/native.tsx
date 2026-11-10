@@ -1,3 +1,4 @@
+import { usePostHog } from "@posthog/react";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import type { MetaFunction } from "react-router";
 import { CodeBlock } from "@/components/CodeBlock";
@@ -120,6 +121,7 @@ const differences: Prop[] = [
 ];
 
 export default function Native() {
+  const posthog = usePostHog();
   return (
     <DocsLayout>
       <article className="doc-article">
@@ -129,6 +131,13 @@ export default function Native() {
           swaps the DOM file dialog for a picker you choose:{" "}
           <a
             href="https://www.npmjs.com/package/expo-image-picker"
+            onClick={(event) =>
+              posthog?.capture("outbound_click", {
+                target: "npm",
+                href: event.currentTarget.href,
+                location: "Native",
+              })
+            }
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -137,6 +146,13 @@ export default function Native() {
           ,{" "}
           <a
             href="https://www.npmjs.com/package/expo-document-picker"
+            onClick={(event) =>
+              posthog?.capture("outbound_click", {
+                target: "npm",
+                href: event.currentTarget.href,
+                location: "Native",
+              })
+            }
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -145,6 +161,13 @@ export default function Native() {
           ,{" "}
           <a
             href="https://www.npmjs.com/package/react-native-image-picker"
+            onClick={(event) =>
+              posthog?.capture("outbound_click", {
+                target: "npm",
+                href: event.currentTarget.href,
+                location: "Native",
+              })
+            }
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -165,6 +188,13 @@ export default function Native() {
             <strong>Upgrading from v3:</strong> the built-in{" "}
             <a
               href="https://www.npmjs.com/package/@react-native-documents/picker"
+              onClick={(event) =>
+                posthog?.capture("outbound_click", {
+                  target: "npm",
+                  href: event.currentTarget.href,
+                  location: "Native",
+                })
+              }
               target="_blank"
               rel="noopener noreferrer"
             >

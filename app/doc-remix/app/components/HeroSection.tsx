@@ -1,8 +1,10 @@
+import { usePostHog } from "@posthog/react";
 import { IoArrowForwardOutline, IoOpenOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import AppIcon from "@/assets/icon.svg?react";
 
 export const HeroSection = () => {
+  const posthog = usePostHog();
   return (
     <section className="relative overflow-hidden hero-gradient">
       <div className="container py-20 md:py-32">
@@ -28,6 +30,13 @@ export const HeroSection = () => {
               <Button variant="outline" size="lg" className="gap-2" asChild>
                 <a
                   href="https://github.com/KristofaJosh/uplofile"
+                  onClick={(event) =>
+                    posthog?.capture("outbound_click", {
+                      target: "github",
+                      href: event.currentTarget.href,
+                      location: "HeroSection",
+                    })
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                 >

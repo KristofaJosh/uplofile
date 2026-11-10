@@ -1,3 +1,17 @@
 {
-  "framework": "react-router"
+  "framework": "react-router",
+  "rewrites": [
+    {
+      "source": "/u-ev/static/:path(.*)",
+      "destination": "https://eu-assets.i.posthog.com/static/:path"
+    },
+    {
+      "source": "/u-ev/array/:path(.*)",
+      "destination": "https://eu-assets.i.posthog.com/array/:path"
+    },
+    {
+      "source": "/u-ev/:path(.*)",
+      "destination": "https://eu.i.posthog.com/:path"
+    }
+  ]
 }

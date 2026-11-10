@@ -9,5 +9,6 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  ssr: { noExternal: ["posthog-js", "@posthog/react"] },
   plugins: [tailwindcss(), reactRouter(), svgr(), viteTsconfigPaths()],
 });
