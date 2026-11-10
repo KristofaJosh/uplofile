@@ -31,8 +31,7 @@ export default function QuickStart() {
       <article className="doc-article">
         <h1>Quick start</h1>
         <p className="doc-lead">
-          Keep the upload request and the UI in separate files. Try the preview,
-          then point the upload request at your endpoint.
+          One file. Copy it, replace the fetch call, ship.
         </p>
         <section id="preview">
           <div className="section-label">

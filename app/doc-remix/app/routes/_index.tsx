@@ -152,7 +152,7 @@ export default function Index() {
           </div>
           <div>
             <strong>React 16+</strong>
-            <span>MIT · zero deps</span>
+            <span>MIT license</span>
           </div>
         </section>
 
