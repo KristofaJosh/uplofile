@@ -66,7 +66,9 @@ export default function Installation() {
               <button
                 type="button"
                 className="install-tabs__copy"
-                onClick={() => void copy(packages[manager])}
+                onClick={() =>
+                  void copy(packages[manager], { kind: "install", label: manager })
+                }
                 aria-label="Copy installation command"
               >
                 {copied ? (

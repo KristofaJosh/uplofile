@@ -27,6 +27,15 @@ This is a monorepo managed with `pnpm`.
 - `app/doc-remix`: The documentation website (Remix + React Router v7 + Tailwind SSR).
 - `app/doc-native`: React Native playground (Expo) for testing `uplofile/native` during development.
 
+## Docs Analytics
+
+`app/doc-remix` uses PostHog EU Cloud in the browser. Set
+`VITE_POSTHOG_PROJECT_TOKEN` and `VITE_POSTHOG_HOST=/u-ev` before the Vercel
+production build. Vercel rewrites forward `/u-ev` to PostHog's EU endpoints.
+The SDK initializes only in production builds with a token. Leave the token
+unset for CI builds and use an ignored `app/doc-remix/.env.local` for local
+production smoke checks.
+
 ## Tech Stack
 
 - **Language:** TypeScript

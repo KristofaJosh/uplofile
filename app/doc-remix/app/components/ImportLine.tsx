@@ -15,7 +15,7 @@ export const ImportLine = ({
       <code>{text}</code>
       <button
         type="button"
-        onClick={() => void copy(text)}
+        onClick={() => void copy(text, { kind: "import", label: from })}
         aria-label="Copy import"
       >
         {copied ? (

@@ -119,7 +119,9 @@ export default function Index() {
               <code>npm i uplofile</code>
               <button
                 type="button"
-                onClick={() => void copy("npm i uplofile")}
+                onClick={() =>
+                  void copy("npm i uplofile", { kind: "install", label: "npm" })
+                }
                 aria-label="Copy install command"
               >
                 {copied ? (

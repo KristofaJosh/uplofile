@@ -65,15 +65,14 @@ export const CodeBlock = ({
   filename,
 }: CodeBlockProps) => {
   const [copied, copy] = useCopy();
+  const label = filename ?? (language === "tsx" ? "example.tsx" : language);
   return (
     <div className="code-block">
       <div className="code-block__toolbar">
-        <span>
-          {filename ?? (language === "tsx" ? "example.tsx" : language)}
-        </span>
+        <span>{label}</span>
         <button
           type="button"
-          onClick={() => void copy(code.trim())}
+          onClick={() => void copy(code.trim(), { kind: "snippet", label })}
           aria-label="Copy code"
         >
           {copied ? (
