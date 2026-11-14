@@ -62,7 +62,7 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/use-sync-external-store": "^1.7.0",
-    "bunchee": "6.10.0",
+    "bunchee": "7.0.2",
     "jsdom": "^29.1.1",
     "prettier": "3.8.3",
     "react": "19.2.3",
