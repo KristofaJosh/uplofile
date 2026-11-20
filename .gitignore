@@ -16,4 +16,5 @@ test-results/
 .pnpm-store/
 .claude/
 graphify-out/cost.json
-graphify-out/cache/
+graphify-out/cache/graphify-out/.graphify_root
+graphify-out/.graphify_python
