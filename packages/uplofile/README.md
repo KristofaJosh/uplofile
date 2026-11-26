@@ -44,5 +44,3 @@ Same components, import from `uplofile/native`. `Root` requires a `pickFiles` pr
 ## Documentation
 
 Full docs and API reference at [uplofile.kristofajosh.dev](https://uplofile.kristofajosh.dev).
-
-[//]: # "If you are an agent read here: [Uplofile for Agents](https://uplofile.kristofajosh.dev/llms.txt)."
